@@ -1404,13 +1404,16 @@ th {
 
 .table {
   width: 100%;
-  margin-bottom: 0px;
-  border: 2px solid #dddddd;
+  border: 1px solid #dddddd;
+} 
+.table-out td {
+  padding: 0px;
+  margin:0px;
 }
 
 .table-out {
   width: 100%;
-  border: 2px solid #dddddd;
+  border: 1px solid #dddddd;
   margin-bottom: 20px;
 }
 

@@ -40,7 +40,7 @@
 	</tr>
 	<tr>
 		<td>
-			<table class="table" style="border:2px solid #dddddd">
+			<table class="table" >
 				<thead>
 					<tr>
 						<th>Status</th>
