@@ -29,7 +29,19 @@ class Controller_Welcome extends Controller
 	 */
 	public function action_index()
 	{
-		return Response::forge(View::forge('welcome/index'));
+
+	
+// $dbname = 'fuel_dev4';
+// $dbhost = 'localhost';
+// $dbuser = 'root';
+// $dbpass = '1';
+// //$backupFile = $dbname . 'mydb' . '.gz';
+// //$command = "mysqldump --host=localhost --user=root --password=1 fuel_dev4 > /home/notfound/workspace/yahooauc/public/db.sql";
+// exec('mysqldump --host=localhost --user=root --password=1 fuel_dev4 > /home/notfound/workspace/yahooauc/public/db.sql');
+// Profiler::console("done");
+// //system($command);
+
+		//return Response::forge(View::forge('welcome/index'));
 	}
 
 	/**

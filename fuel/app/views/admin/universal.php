@@ -3,11 +3,14 @@
 <?php if ($items): ?>
 
 <?php foreach ($items as $item): ?>	
-
+<?php
+$count = 0;
+$summ = 0;
+?>
 <table class="table-out">
 	<tr>
 		<td>
-			<table class="table table-striped">
+			<table class="table table-striped auction">
 				<thead>
 					<tr>
 						<th>Count</th>
@@ -21,6 +24,10 @@
 				</thead>
 				<tbody>	
 					<?php foreach ($item->auctions as $auction): ?>
+					<?php
+					$count += $auction->item_count;
+					$summ += $auction->price;
+					?>
 					<tr>
 						<td><?php echo $auction->item_count; ?></td>
 						<td><?php echo $auction->auc_id; ?></td>
@@ -40,24 +47,24 @@
 	</tr>
 	<tr>
 		<td>
-			<table class="table" >
+			<table class="table part" >
 				<thead>
 					<tr>
-						<th>Status</th>
-						<th>Price</th>
-						<th>Ship number</th>
+						<th>Count</th>
+						<th>Ship price</th>
 						<th>Box number</th>
 						<th>Tracking</th>
+						<th>Totall</th>
 						<th>Memo</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>	<tr>
-						<td><?php echo $item->status; ?></td>
+						<td><?= $count ?></td>
 						<td><?php echo $item->price; ?></td>
-						<td><?php echo $item->ship_number; ?></td>
 						<td><?php echo $item->box_number; ?></td>
 						<td><?php echo $item->tracking; ?></td>
+						<td><?= $item->price + $summ; ?></td>
 						<td><?php echo $item->memo; ?></td>
 						<td style="text-align:right;">
 							<?php echo Html::anchor('admin/part/view/'.$item->id, 'View'); ?> |
