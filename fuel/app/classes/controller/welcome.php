@@ -41,7 +41,7 @@ class Controller_Welcome extends Controller
 // Profiler::console("done");
 // //system($command);
 
-		//return Response::forge(View::forge('welcome/index'));
+		return Response::forge(View::forge('welcome/index'));
 	}
 
 	/**
