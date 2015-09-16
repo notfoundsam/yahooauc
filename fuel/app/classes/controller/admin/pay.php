@@ -8,7 +8,13 @@ class Controller_Admin_Pay extends Controller_Admin
 			'where' => [
 				'status' => \Config::get('my.status.pay'),
 			],
-			'related' => 'auctions',
+			'related' => [
+				'auctions' => [
+					'related' => [
+						'vendor'
+					],
+				],
+			],
 		]);
 
 		$this->template->title = "Pay";

@@ -9,7 +9,13 @@ class Controller_Admin_Sell extends Controller_Admin
 			'where' => [
 				'status' => \Config::get('my.status.sell'),
 			],
-			'related' => 'auctions'
+			'related' => [
+				'auctions' => [
+					'related' => [
+						'vendor'
+					],
+				],
+			],
 		]);
 		$this->template->title = "Pay";
 		$this->template->content = View::forge('admin/universal', $data);

@@ -8,7 +8,13 @@ class Controller_Admin_Ship_View extends Controller_Admin
 			'where' => [
 				'status' => \Config::get('my.status.ship'),
 			],
-			'related' => 'auctions'
+			'related' => [
+				'auctions' => [
+					'related' => [
+						'vendor'
+					],
+				],
+			],
 		]);
 		$this->template->title = "Ship";
 		$this->template->content = View::forge('admin/universal', $data);
