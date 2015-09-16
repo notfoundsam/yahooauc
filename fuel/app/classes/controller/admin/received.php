@@ -8,7 +8,13 @@ class Controller_Admin_Received extends Controller_Admin
 			'where' => [
 				'status' => \Config::get('my.status.received'),
 			],
-			'related' => 'auctions'
+			'related' => [
+				'auctions' => [
+					'related' => [
+						'vendor'
+					],
+				],
+			],
 		]);
 		$this->template->title = "Received";
 		$this->template->content = View::forge('admin/universal', $data);

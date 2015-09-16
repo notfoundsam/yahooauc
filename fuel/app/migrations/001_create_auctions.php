@@ -13,7 +13,7 @@ class Create_auctions
 			'description' => array('constraint' => 80, 'type' => 'varchar'),
 			'price' => array('constraint' => 5, 'type' => 'int'),
 			'won_date' => array('type' => 'datetime', 'null' => true),
-			'vendor' => array('constraint' => 40, 'type' => 'varchar'),
+			'vendor_id' => array('constraint' => 11, 'type' => 'int'),
 			'won_user' => array('constraint' => 20, 'type' => 'varchar'),
 			'part_id' => array('constraint' => 10, 'type' => 'int', 'null' => true),
 			'memo' => array('constraint' => 60, 'type' => 'varchar', 'null' => true),

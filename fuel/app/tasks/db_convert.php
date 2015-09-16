@@ -3,7 +3,8 @@
 namespace Fuel\Tasks;
 
 /**
-* 
+* Convert old DB
+* Don't run if you have BD created through migration
 */
 class Db_convert
 {
@@ -52,7 +53,7 @@ class Db_convert
 				'groupId' => ['constraint' => 10, 'type' => 'int', 'name' => 'part_id', 'null' => true],
 				'itemCount' => ['constraint' => 3, 'type' => 'int', 'name' => 'item_count'],
 				'wonDate' => ['type' => 'datetime', 'name' => 'won_date', 'null' => true],
-				'vendor' => ['constraint' => 40, 'type' => 'varchar'],
+				'vendor' => ['constraint' => 40, 'type' => 'varchar', 'name' => 'vendor_id'],
 				'memo' => ['constraint' => 60, 'type' => 'varchar', 'null' => true],
 				'wonUser' => ['constraint' => 20, 'type' => 'varchar', 'name' => 'won_user', 'null' => true],
 			]
@@ -77,6 +78,45 @@ class Db_convert
 		\DBUtil::add_fields('parts', [
 				'created_at' => ['constraint' => 11, 'type' => 'int', 'null' => true],
 				'updated_at' => ['constraint' => 11, 'type' => 'int', 'null' => true],
+			]
+		);
+
+		// Modify and add fields in table vendors
+		\DBUtil::modify_fields('vendors', [
+				'vendor' => ['constraint' => 40, 'type' => 'varchar', 'name' => 'name'],
+				'byNow' => ['constraint' => 1, 'type' => 'int', 'name' => 'by_now'],
+				'postIndex' => ['constraint' => 20, 'type' => 'varchar', 'name' => 'post_index', 'null' => true],
+				'address' => ['constraint' => 80, 'type' => 'varchar', 'null' => true],
+				'color' => ['constraint' => 10, 'type' => 'varchar', 'null' => true],
+				'memo' => ['constraint' => 200, 'type' => 'varchar', 'null' => true],
+			]
+		);
+		\DBUtil::add_fields('vendors', [
+				'created_at' => ['constraint' => 11, 'type' => 'int', 'null' => true],
+				'updated_at' => ['constraint' => 11, 'type' => 'int', 'null' => true],
+			]
+		);
+
+		// Replace vendor name to vendor id in auctions
+		$vendors = \Model_Vendor::find('all');
+		try {
+			
+			\DB::start_transaction();
+
+			foreach ($vendors as $vendor) {
+				\DB::update('auctions')->value("vendor_id", $vendor->id)->where('vendor_id', '=', $vendor->name)->execute();
+			}
+
+			\DB::commit_transaction();
+			
+		} catch (Exception $e) {
+			
+			\DB::rollback_transaction();
+
+		}
+		// Modify field type from varchat to int in auctions
+		\DBUtil::modify_fields('auctions', [
+				'vendor_id' => ['constraint' => 11, 'type' => 'int'],
 			]
 		);
 

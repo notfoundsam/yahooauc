@@ -8,11 +8,17 @@ class Controller_Admin_Paid extends Controller_Admin
 			'where' => [
 				'status' => Config::get('my.status.paid'),
 			],
-			'related' => 'auctions'
+			'related' => [
+				'auctions' => [
+					'related' => [
+						'vendor'
+					],
+				],
+			],
 		]);
+
 		$this->template->title = "Paid";
 		$this->template->content = View::forge('admin/universal', $data);
-
 	}
 
 	public function action_edit($id = null)

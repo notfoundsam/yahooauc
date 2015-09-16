@@ -8,6 +8,7 @@ return array(
       array(
         0 => '001_create_auctions',
         1 => '002_create_parts',
+        2 => '003_create_vendors',
       ),
     ),
     'module' => 

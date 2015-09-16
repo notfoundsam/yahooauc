@@ -8,7 +8,7 @@ class Model_Auction extends \Orm\Model
 		'description',
 		'price',
 		'won_date',
-		'vendor',
+		'vendor_id',
 		'won_user',
 		'part_id',
 		'memo',
@@ -16,7 +16,7 @@ class Model_Auction extends \Orm\Model
 		'updated_at',
 	);
 
-	protected static $_belongs_to = ['part'];
+	protected static $_belongs_to = ['part', 'vendor'];
 
 	protected static $_observers = array(
 		'Orm\Observer_CreatedAt' => array(

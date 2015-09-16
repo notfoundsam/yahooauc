@@ -27,6 +27,13 @@ class Model_Part extends \Orm\Model
 		'order_by' => [
 			'id' => 'DESC'
 		],
+		'related' => [
+			'auctions' => [
+				'related' => [
+					'vendor'
+				],
+			],
+		],
 	];
 
 	protected static $_observers = array(
