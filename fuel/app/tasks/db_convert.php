@@ -80,6 +80,7 @@ class Db_convert
 			]
 		);
 
+		// Add index to auctions and parts
 		\DBUtil::create_index('auctions', 'part_id', 'part_id');
 		\DBUtil::create_index('parts', 'status', 'status');
 	}
