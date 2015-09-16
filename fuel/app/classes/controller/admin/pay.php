@@ -8,11 +8,11 @@ class Controller_Admin_Pay extends Controller_Admin
 			'where' => [
 				'status' => \Config::get('my.status.pay'),
 			],
-			'related' => 'auctions'
+			'related' => 'auctions',
 		]);
+
 		$this->template->title = "Pay";
 		$this->template->content = View::forge('admin/universal', $data);
-
 	}
 
 	public function action_edit($id = null)
