@@ -13,7 +13,21 @@ class Model_Part extends \Orm\Model
 		'updated_at',
 	);
 
-	protected static $_has_many = ['auctions'];
+	protected static $_has_many = [
+		'auctions' => [
+			'conditions' => [
+				'order_by' => [
+			        'won_date' => 'DESC'
+		        ],
+			],
+		],
+	];
+
+	protected static $_conditions = [
+		'order_by' => [
+			'id' => 'DESC'
+		],
+	];
 
 	protected static $_observers = array(
 		'Orm\Observer_CreatedAt' => array(
