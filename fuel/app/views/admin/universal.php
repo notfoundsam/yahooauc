@@ -1,5 +1,8 @@
 <h2>Listing Pay</h2>
 <br>
+<?php 
+$redirect = Uri::segment(3) ?  Uri::segment(2).'/'.Uri::segment(3) : Uri::segment(2)
+?>
 <?php if ($items): ?>
 
 <?php foreach ($items as $item): ?>	
@@ -30,15 +33,15 @@ $address = '';
 					<?php
 					$count += $auction->item_count;
 					$summ += $auction->price;
-					if (!in_array($auction->vendor->name, $vendors))
+					if (isset($auction->vendor->name) && !in_array($auction->vendor->name, $vendors))
 					{
 						$vendors[] = $auction->vendor->name;
 					}
-					if (!$post_index) 
+					if (isset($auction->vendor->post_index) && !$post_index) 
 					{
 						$post_index = $auction->vendor->post_index;
 					}
-					if (!$address) 
+					if (isset($auction->vendor->address) && !$address) 
 					{
 						$address = $auction->vendor->address;
 					}
@@ -51,8 +54,9 @@ $address = '';
 						<td><?php echo $auction->won_date; ?></td>
 						<td><?php echo $auction->memo; ?></td>
 						<td style="text-align:right;">
-							<?php echo Html::anchor('admin/part/edit/'.$item->id, 'Edit'); ?> |
-							<?php echo Html::anchor('admin/part/delete/'.$item->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
+						<?php Profiler::console(Uri::segments()); ?>
+							<?php echo Html::anchor('admin/auction/edit/'.$auction->id.'/'.$redirect, 'Edit'); ?> |
+							<?php echo Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 						</td>
 					</tr>
 					<?php endforeach; ?>
@@ -91,11 +95,11 @@ $address = '';
 			<table class="table part" >
 				<tr>
 					<td>
-						<p><b>Vendor's ID: 
+						<b>Vendor's ID: 
 						<?php foreach ($vendors as $vendor => $name): ?>
 							<font color="red"><?= $name ?></font>, 
 						<?php endforeach; ?>
-						Part's ID: <?= $item->id ?>, Post Index: <font color="blue"><?= $post_index ?></font>, Address: </b><?= $address ?></p>
+						Part's ID: <?= $item->id ?>, Post Index: <font color="blue"><?= $post_index ?></font>, Address: </b><?= $address ?>
 					</td>
 					<?php Profiler::console($vendors); ?>
 					<td style="text-align:right;">
