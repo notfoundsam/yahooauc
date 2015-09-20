@@ -1,30 +1,30 @@
 <?php
 class Controller_Admin_Part extends Controller_Admin
 {
-	public function action_edit($id = null)
+	public function action_edit($id = null, $one = null, $two = null)
 	{
-		$paid = Model_Part::find($id);
+		$redirect = $two ? $one.'/'.$two : $one;
+		$part = Model_Part::find($id);
 		$val = Model_Part::validate('edit');
 
 		if ($val->run())
 		{
-			$paid->status = Input::post('status');
-			$paid->price = Input::post('price');
-			$paid->ship_number = Input::post('ship_number');
-			$paid->box_number = Input::post('box_number');
-			$paid->tracking = Input::post('tracking');
-			$paid->memo = Input::post('memo');
+			$part->status = Input::post('status');
+			$part->price = Input::post('price');
+			$part->box_number = Input::post('box_number');
+			$part->tracking = Input::post('tracking');
+			$part->memo = Input::post('memo');
 
-			if ($paid->save())
+			if ($part->save())
 			{
-				Session::set_flash('success', e('Updated paid #' . $id));
+				Session::set_flash('success', e('Updated part #' . $id));
 
-				Response::redirect('admin/paid');
+				Response::redirect('admin/'.$redirect);
 			}
 
 			else
 			{
-				Session::set_flash('error', e('Could not update paid #' . $id));
+				Session::set_flash('error', e('Could not update part #' . $id));
 			}
 		}
 
@@ -32,21 +32,21 @@ class Controller_Admin_Part extends Controller_Admin
 		{
 			if (Input::method() == 'POST')
 			{
-				$paid->status = $val->validated('status');
-				$paid->price = $val->validated('price');
-				$paid->ship_number = $val->validated('ship_number');
-				$paid->box_number = $val->validated('box_number');
-				$paid->tracking = $val->validated('tracking');
-				$paid->memo = $val->validated('memo');
+				$part->status = $val->validated('status');
+				$part->price = $val->validated('price');
+				$part->box_number = $val->validated('box_number');
+				$part->tracking = $val->validated('tracking');
+				$part->memo = $val->validated('memo');
 
 				Session::set_flash('error', $val->error());
 			}
 
-			$this->template->set_global('paid', $paid, false);
+			$this->template->set_global('part', $part, false);
 		}
 
-		$this->template->title = "paids";
-		$this->template->content = View::forge('admin/paid/edit');
+		$this->template->set_global('redirect', $redirect, false);
+		$this->template->title = "Part";
+		$this->template->content = View::forge('admin/part/edit');
 
 	}
 }

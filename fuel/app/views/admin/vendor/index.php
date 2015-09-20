@@ -1,14 +1,13 @@
 <h2>Listing Vendors</h2>
 <br>
 <?php if ($vendors): ?>
-<table class="table table-striped">
+<table class="table table-striped vendor">
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>By now</th>
-			<th>Post index</th>
+			<th width="75px">By now</th>
+			<th width="100px">Post index</th>
 			<th>Address</th>
-			<th>Color</th>
 			<th>Memo</th>
 			<th></th>
 		</tr>
@@ -17,16 +16,12 @@
 <?php foreach ($vendors as $item): ?>		<tr>
 
 			<td><?php echo $item->name; ?></td>
-			<td><?php echo $item->by_now; ?></td>
+			<td style="text-align:center;"><?= $item->by_now? 'Yes' : 'No'; ?></td>
 			<td><?php echo $item->post_index; ?></td>
 			<td><?php echo $item->address; ?></td>
-			<td><?php echo $item->color; ?></td>
 			<td><?php echo $item->memo; ?></td>
-			<td>
-				<?php echo Html::anchor('admin/vendor/view/'.$item->id, 'View'); ?> |
-				<?php echo Html::anchor('admin/vendor/edit/'.$item->id, 'Edit'); ?> |
-				<?php echo Html::anchor('admin/vendor/delete/'.$item->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
-
+			<td style="text-align:right;">
+				<?php echo Html::anchor('admin/vendor/edit/'.$item->id, 'Edit'); ?>
 			</td>
 		</tr>
 <?php endforeach; ?>	</tbody>

@@ -60,6 +60,9 @@
 					<li class="<?php echo Uri::segment(3) == 'create' ? 'active' : '' ?>">
 						<a href="<?= \Uri::create('admin/ship/create') ?>">Create Ship</a>
 					</li>
+					<li class="<?php echo Uri::segment(2) == 'sort' ? 'active' : '' ?>">
+						<a href="<?= \Uri::create('admin/vendor') ?>">Vendors</a>
+					</li>
 				</ul>
 				<ul class="nav navbar-nav pull-right">
 					<li class="dropdown">

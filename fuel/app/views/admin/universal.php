@@ -75,7 +75,6 @@ $address = '';
 						<th>Tracking</th>
 						<th>Totall</th>
 						<th>Memo</th>
-						<th></th>
 					</tr>
 				</thead>
 				<tbody>	<tr>
@@ -103,9 +102,7 @@ $address = '';
 					</td>
 					<?php Profiler::console($vendors); ?>
 					<td style="text-align:right;">
-						<?php echo Html::anchor('admin/part/view/'.$item->id, 'View'); ?> |
-						<?php echo Html::anchor('admin/part/edit/'.$item->id, 'Edit'); ?> |
-						<?php echo Html::anchor('admin/part/delete/'.$item->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
+						<?php echo Html::anchor('admin/part/edit/'.$item->id.'/'.$redirect, 'Edit'); ?>
 					</td>
 				</tr>
 			</table>
