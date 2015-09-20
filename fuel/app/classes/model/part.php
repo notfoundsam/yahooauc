@@ -50,12 +50,11 @@ class Model_Part extends \Orm\Model
 	public static function validate($factory)
 	{
 		$val = Validation::forge($factory);
-		$val->add_field('status', 'Status', 'required|valid_string[numeric]');
-		$val->add_field('price', 'Price', 'required|valid_string[numeric]');
-		$val->add_field('ship_number', 'Ship Number', 'required|valid_string[numeric]');
-		$val->add_field('box_number', 'Box Number', 'required|valid_string[numeric]');
-		$val->add_field('tracking', 'Tracking', 'required|max_length[15]');
-		$val->add_field('memo', 'Memo', 'required|max_length[60]');
+		$val->add_field('status', 'Status', 'required|valid_string[numeric]|max_length[3]');
+		$val->add_field('price', 'Price', 'required|valid_string[numeric]|max_length[5]');
+		$val->add_field('box_number', 'Box Number', 'valid_string[numeric]|max_length[3]');
+		$val->add_field('tracking', 'Tracking', 'max_length[15]');
+		$val->add_field('memo', 'Memo', 'max_length[60]');
 
 		return $val;
 	}

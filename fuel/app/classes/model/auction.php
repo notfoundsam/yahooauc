@@ -34,7 +34,6 @@ class Model_Auction extends \Orm\Model
 		$val = Validation::forge($factory);
 		$val->add_field('item_count', 'Item Count', 'required|valid_string[numeric]|max_length[3]');
 		$val->add_field('price', 'Price', 'required|valid_string[numeric]|max_length[5]');
-		//$val->add_field('won_user', 'Won User', 'required|max_length[20]');
 		$val->add_field('memo', 'Memo', 'max_length[60]');
 
 		return $val;

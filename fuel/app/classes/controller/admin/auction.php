@@ -39,8 +39,9 @@ class Controller_Admin_Auction extends Controller_Admin
 
 			$this->template->set_global('auction', $auction, false);
 		}
-
-		$this->template->title = "auctions";
+		
+		$this->template->set_global('redirect', $redirect, false);
+		$this->template->title = $auction->description;
 		$this->template->content = View::forge('admin/auction/edit');
 
 	}

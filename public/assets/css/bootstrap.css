@@ -1415,6 +1415,10 @@ th {
   background-color: #B0C4DE;
 }
 
+.vendor thead > tr {
+  background-color: #66CDAA;
+}
+
 .table-out td {
   padding: 0px;
   margin:0px;
