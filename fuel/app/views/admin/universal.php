@@ -54,7 +54,6 @@ $address = '';
 						<td><?php echo $auction->won_date; ?></td>
 						<td><?php echo $auction->memo; ?></td>
 						<td style="text-align:right;">
-						<?php Profiler::console(Uri::segments()); ?>
 							<?php echo Html::anchor('admin/auction/edit/'.$auction->id.'/'.$redirect, 'Edit'); ?> |
 							<?php echo Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 						</td>
@@ -100,7 +99,6 @@ $address = '';
 						<?php endforeach; ?>
 						Part's ID: <?= $item->id ?>, Post Index: <font color="blue"><?= $post_index ?></font>, Address: </b><?= $address ?>
 					</td>
-					<?php Profiler::console($vendors); ?>
 					<td style="text-align:right;">
 						<?php echo Html::anchor('admin/part/edit/'.$item->id.'/'.$redirect, 'Edit'); ?>
 					</td>
