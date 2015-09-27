@@ -9,6 +9,7 @@ return array(
 		'sell' => 10,
 	),
 
-	'yahoo_user' => 1,
+	'yahoo_user' => 'pekopeko_haraheringu',
+	// 'yahoo_user' => 'notfoundsam',
 );
 

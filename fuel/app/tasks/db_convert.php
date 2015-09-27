@@ -97,14 +97,26 @@ class Db_convert
 			]
 		);
 
-		// Replace vendor name to vendor id in auctions
-		$vendors = \Model_Vendor::find('all');
+		// Replace vendor name to vendor id in auctions and add vendor if not exists
 		try {
 			
+			$auctions = \DB::select_array(['id', 'vendor_id'])->from('auctions')->execute();
+
 			\DB::start_transaction();
 
-			foreach ($vendors as $vendor) {
-				\DB::update('auctions')->value("vendor_id", $vendor->id)->where('vendor_id', '=', $vendor->name)->execute();
+			foreach ($auctions as $auction) {
+
+				$vendor = \DB::select('id')->from('vendors')->where('name', '=', $auction['vendor_id'])->execute()->as_array();
+
+				if (!empty($vendor))
+				{
+					\DB::update('auctions')->value("vendor_id", $vendor[0]['id'])->where('id', '=', $auction['id'])->execute();
+				}
+				else
+				{
+					$result = \DB::insert('vendors')->set(['name' => $auction['vendor_id'],])->execute();
+					\DB::update('auctions')->value("vendor_id", $result[0])->where('id', '=', $auction['id'])->execute();
+				}
 			}
 
 			\DB::commit_transaction();
@@ -114,6 +126,7 @@ class Db_convert
 			\DB::rollback_transaction();
 
 		}
+
 		// Modify field type from varchat to int in auctions
 		\DBUtil::modify_fields('auctions', [
 				'vendor_id' => ['constraint' => 11, 'type' => 'int'],
@@ -123,5 +136,7 @@ class Db_convert
 		// Add index to auctions and parts
 		\DBUtil::create_index('auctions', 'part_id', 'part_id');
 		\DBUtil::create_index('parts', 'status', 'status');
+
+		// delete auc_id g143869725 !!!!
 	}
 }

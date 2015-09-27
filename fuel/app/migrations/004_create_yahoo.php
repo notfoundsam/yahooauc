@@ -10,6 +10,8 @@ class Create_yahoo
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
 			'userid' => array('constraint' => 50, 'type' => 'varchar'),
 			'password' => array('constraint' => 255, 'type' => 'varchar'),
+			'cookies' => array('type' => 'text', 'null' => true),
+			'updated_at' => array('constraint' => 11, 'type' => 'int', 'default' => Date::forge()->get_timestamp()),
 
 		), array('id'));
 	}

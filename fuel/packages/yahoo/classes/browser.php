@@ -21,6 +21,8 @@
 require 'HTTP/Request2.php';
 require 'HTTP/Request2/CookieJar.php';
 
+class BrowserException extends Exception {}
+
 /**
  * Class login and scraping your yahoo.co.jp pages
  *
@@ -36,6 +38,7 @@ class Browser
      * HTTP_Request Class Object
      */
     private static $login = false;
+    private static $select;
     protected static $rq;
     protected static $body;
 
@@ -46,29 +49,31 @@ class Browser
      */
     public static function _init()
     {
-
     	static::$rq = new HTTP_Request2();
 
-    	if (File::exists(APPPATH.'/tmp/yahoo/cookies.txt'))
-        {
-        	$cookies = File::read(APPPATH.'/tmp/yahoo/cookies.txt', true);
-        
-        	$jar = new HTTP_Request2_CookieJar();
-        	$jar->unserialize($cookies);
+    	static::$select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
+
+    	if (empty(static::$select))
+    	{
+    		throw new BrowserException('user in config/my.yahoo_user not found in DB');
+    	}
+    	if (static::$select[0]['cookies'] && (static::$select[0]['updated_at'] > strtotime('-1 months')))
+    	{
+    		$jar = new HTTP_Request2_CookieJar();
+        	$jar->unserialize(static::$select[0]['cookies']);
         	static::$rq->setCookieJar($jar);
-        }
-        else
-        {
-	        static::$rq->setCookieJar(true);
+    	}
+    	else
+    	{
+    		static::$rq->setCookieJar(true);
 	        static::$rq->setHeader(
 	            'User-Agent',
 	            'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)'
 	        );
 	        static::$rq->setHeader('Keep-Alive', 115);
 	        static::$rq->setHeader('Connection', 'keep-alive');
-
 	        static::login();
-        }
+    	}
     }
 
     /**
@@ -79,7 +84,7 @@ class Browser
     {
     	static::$login = true;
 
-    	$select = DB::select()->from('yahoo')->where('id', Config::get('my.yahoo_user'))->execute();
+    	// $select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute();
 
         $login_url = 'https://login.yahoo.co.jp/config/login?';
         $login_params = '.lg=jp&.intl=jp&.src=auc&.done=http://auctions.yahoo.co.jp/';
@@ -96,6 +101,10 @@ class Browser
             $albatross,
             PREG_SET_ORDER
         );
+        if (!$albatross[0][1])
+        {
+        	throw new BrowserException('Login error: albatross key not found');
+        }
         preg_match_all(
             '/<input type="hidden" name="(.*?)" value="(.*?)" ?>/',
             static::$body,
@@ -110,9 +119,9 @@ class Browser
             static::$rq->addPostParameter($entry[1], $entry[2]);
         }
         static::$rq->addPostParameter('.albatross', $albatross[0][1]);
-        static::$rq->addPostParameter('login', $select[0]['userid']);
+        static::$rq->addPostParameter('login', static::$select[0]['userid']);
         static::$rq->addPostParameter('.persistent', 'y');
-        static::$rq->addPostParameter('passwd', $select[0]['password']);
+        static::$rq->addPostParameter('passwd', static::$select[0]['password']);
 
         // need more than 3 sec before submit
         sleep(3);
@@ -135,8 +144,9 @@ class Browser
     */
     public static function getBody($url, $referer = '')
     {
-        if (empty($url)) {
-            return null;
+        if (empty($url))
+        {
+            throw new BrowserException('url can not be null');
         }
         static::$rq->setUrl($url);
         static::$rq->setHeader('Referer', $referer);
@@ -145,25 +155,23 @@ class Browser
 
         if (!static::$login)
         {
-            if (File::exists(APPPATH.'/tmp/yahoo/cookies.txt'))
-            {
-            	File::update(APPPATH.'/tmp/yahoo/', 'cookies.txt', static::$rq->getCookieJar()->serialize());
-            }
-            else
-            {
-            	File::create(APPPATH.'/tmp/yahoo/', 'cookies.txt', static::$rq->getCookieJar()->serialize());
-            }
+			DB::update('yahoo')->set([
+				'cookies'  => static::$rq->getCookieJar()->serialize(),
+				'updated_at' => time()
+			])->where('userid', Config::get('my.yahoo_user'))->execute();
         }
         return static::$rq->send()->getBody();
     }
 
+    //Test function for page of biding saved in local
     public static function getBodyBidding()
     {
-        return File::read(APPPATH.'/tmp/yahoo/bidding.txt', true);
+        return File::read(APPPATH.'/tmp/yahoo/bidding3p.txt', true);
     }
 
+    //Test function for page of won saved in local
     public static function getBodyWon()
     {
-        return File::read(APPPATH.'/tmp/yahoo/won.txt', true);
+        return File::read(APPPATH.'/tmp/yahoo/won1.txt', true);
     }
 }

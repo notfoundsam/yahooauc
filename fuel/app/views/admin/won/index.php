@@ -15,7 +15,7 @@ $count = 0;
 		</tr>
 	</thead>
 	<tbody>	
-		<?php foreach ($items as $auction): ?>
+		<?php foreach ($item->auctions as $auction): ?>
 			<?php
 			$count += $auction->item_count;
 			?>
@@ -25,7 +25,11 @@ $count = 0;
 				<td><?= $auction->description; ?></td>
 				<td><?= $auction->price; ?></td>
 				<td><?= $auction->won_date; ?></td>
+				<td><?= $auction->$auction->vendor->name; ?></td>
+				<td><?= $auction->$auction->user_id->name; ?></td>
 				<td style="text-align:right;">
+					<?php echo Html::anchor('admin/auction/edit/'.$auction->id.'/'.$redirect, 'Edit'); ?> |
+					<?php echo Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -36,7 +40,7 @@ $count = 0;
 
 
 <ul class="nav nav-pills">
-	<li class='<?php echo Arr::get($subnav, "index" ); ?>'><?php echo Html::anchor('admin/sort/index','Index');?></li>
+	<li class='<?php echo Arr::get($subnav, "index" ); ?>'><?php echo Html::anchor('admin/won/index','Index');?></li>
 
 </ul>
 <p>Index</p>
