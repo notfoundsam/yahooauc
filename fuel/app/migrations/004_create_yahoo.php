@@ -11,7 +11,7 @@ class Create_yahoo
 			'userid' => array('constraint' => 50, 'type' => 'varchar'),
 			'password' => array('constraint' => 255, 'type' => 'varchar'),
 			'cookies' => array('type' => 'text', 'null' => true),
-			'updated_at' => array('constraint' => 11, 'type' => 'int', 'default' => Date::forge()->get_timestamp()),
+			'updated_at' => array('constraint' => 11, 'type' => 'int', 'default' => time()),
 
 		), array('id'));
 	}

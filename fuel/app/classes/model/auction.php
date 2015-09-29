@@ -9,14 +9,22 @@ class Model_Auction extends \Orm\Model
 		'price',
 		'won_date',
 		'vendor_id',
-		'won_user',
+		'user_id',
 		'part_id',
 		'memo',
 		'created_at',
 		'updated_at',
 	);
 
-	protected static $_belongs_to = ['part', 'vendor'];
+	protected static $_belongs_to = [
+		'part',
+		'vendor',
+		'user' => [
+			'model_to' => 'Model\\Auth_User',
+			'key_from' => 'user_id',
+			'key_to' => 'id',
+		]
+	];
 
 	protected static $_observers = array(
 		'Orm\Observer_CreatedAt' => array(

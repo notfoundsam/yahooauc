@@ -94,22 +94,9 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{
-		// $data['table'] = Parser::getBidding();
-		// $select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
-    	$auctions = \DB::select_array(['id', 'vendor_id'])->from('auctions')->execute();
-    // 	$vendor = \DB::select('id')->from('vendors')->where('name', '=', 'groove_guard')->execute()->as_array();
-		
-    // 	if (!empty($vendor))
-				// {
-				// 	\DB::update('auctions')->value("vendor_id", $vendor[0]['id'])->where('id', '=', 1)->execute();
-				// }
 
-		// $result = \DB::insert('vendors')->set(['name' => 'ggggg',])->execute();
-    	// Profiler::console($result);
-    	foreach ($auctions as $auction) {
-    		// Profiler::console($auction['vendor_id']);
-    		Profiler::console($auction);
-    	}
+		
+		// Profiler::console($auction);
     	
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');

@@ -9,36 +9,27 @@ class Sql
 {
 	public static function run()
 	{
-		try {
-			
-			$auctions = \DB::select_array(['id', 'vendor_id'])->from('auctions')->execute();
+		try
+		{
+			$users = \DB::select_array(['id', 'username'])->from('users')->execute();
 
 			\DB::start_transaction();
 
-			foreach ($auctions as $auction) {
-
-				$vendor = \DB::select('id')->from('vendors')->where('name', '=', $auction['vendor_id'])->execute()->as_array();
-				\Log::debug('id');
-				\Log::debug($vendor[0]['id']);
-
-				if (!empty($vendor))
-				{
-					\DB::update('auctions')->value("vendor_id", $vendor[0]['id'])->where('id', '=', $auction['id'])->execute();
-				}
-				else
-				{
-					$result = \DB::insert('vendors')->set(['name' => $auction['vendor_id'],])->execute();
-					\DB::update('auctions')->value("vendor_id", $result[0])->where('id', '=', $auction['id'])->execute();
-				}
+			foreach ($users as $user)
+			{
+				\DB::update('auctions')->value('won_user', $user['id'])->where('won_user', '=', $user['username'])->execute();
 			}
 
 			\DB::commit_transaction();
-			
-		} catch (Exception $e) {
-			
-			\DB::rollback_transaction();
 
+			\DBUtil::modify_fields('auctions', [
+				'won_user' => ['constraint' => 11, 'type' => 'int', 'name' => 'user_id'],
+			]);
+			
 		}
-		
+		catch (Exception $e)
+		{
+			\DB::rollback_transaction();
+		}
 	}
 }

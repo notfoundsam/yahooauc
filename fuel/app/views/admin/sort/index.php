@@ -12,6 +12,7 @@ $count = 0;
 			<th>Won date</th>
 			<th>Seller</th>
 			<th>Bidder</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>	
@@ -25,7 +26,11 @@ $count = 0;
 				<td><?= $auction->description; ?></td>
 				<td><?= $auction->price; ?></td>
 				<td><?= $auction->won_date; ?></td>
+				<td><?= $auction->vendor->name; ?></td>
+				<td><?= $auction->user->username; ?></td>
 				<td style="text-align:right;">
+					<?php echo Html::anchor('admin/auction/edit/'.$auction->id.'/'.$redirect, 'Edit'); ?> |
+					<?php echo Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>

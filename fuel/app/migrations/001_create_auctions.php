@@ -14,7 +14,7 @@ class Create_auctions
 			'price' => array('constraint' => 5, 'type' => 'int'),
 			'won_date' => array('type' => 'datetime', 'null' => true),
 			'vendor_id' => array('constraint' => 11, 'type' => 'int'),
-			'won_user' => array('constraint' => 20, 'type' => 'varchar'),
+			'user_id' => array('constraint' => 11, 'type' => 'int'),
 			'part_id' => array('constraint' => 10, 'type' => 'int', 'null' => true),
 			'memo' => array('constraint' => 60, 'type' => 'varchar', 'null' => true),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),

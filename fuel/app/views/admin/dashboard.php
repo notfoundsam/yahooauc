@@ -3,7 +3,7 @@ $select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_use
 ?>
 
 <div class="jumbotron">
-	<?= Date::time() ?><br />
+	<?= Uri::create('controller', [], array('redirect' => 'paid')); ?><br />
 	<?= Date::forge(strtotime('-1 minutes')) ?><br />
 	<?= Date::forge($select[0]['updated_at']) ?><br />
 	<?= strtotime('-1 month') ?>
