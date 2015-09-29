@@ -1430,6 +1430,13 @@ th {
   margin-bottom: 20px;
 }
 
+.bidding thead > tr {
+  background-color: #FFCCCC;
+}
+.bidup {
+  color: #FF6633;
+}
+
 .table thead > tr > th,
 .table tbody > tr > th,
 .table tfoot > tr > th,

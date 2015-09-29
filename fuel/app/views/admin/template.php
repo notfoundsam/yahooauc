@@ -32,6 +32,9 @@
 					<li class="<?php echo Uri::segment(2) == '' ? 'active' : '' ?>">
 						<?php echo Html::anchor('admin', 'Dashboard') ?>
 					</li>
+					<li class="<?php echo Uri::segment(2) == 'sort' ? 'active' : '' ?>">
+						<a href="<?= \Uri::create('admin/bidding') ?>">Bidding</a>
+					</li>
 					<li class="dropdown<?= in_array(\Uri::segment(2), ['pay', 'paid', 'received']) ? ' active' : '' ?><?= \Uri::segment(3) == 'view' ? ' active' : '' ?>">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             Won<b class="caret"></b>

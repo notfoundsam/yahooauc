@@ -94,6 +94,10 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{
+
+		
+		// Profiler::console($auction);
+    	
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
 	}

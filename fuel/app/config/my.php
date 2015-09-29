@@ -8,5 +8,12 @@ return array(
 		'ship' => 3,
 		'sell' => 10,
 	),
+
+	'yahoo_user' => 'pekopeko_haraheringu',
+	// 'yahoo_user' => 'notfoundsam',
+
+	'main_bidder' => 'vyacheslav',
+	// 'main_bidder' => 'sosetcadmin',
+	'second_bidder' => 'sosetcadmin',
 );
 

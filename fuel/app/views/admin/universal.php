@@ -20,7 +20,7 @@ $address = '';
 				<thead>
 					<tr>
 						<th>Count</th>
-						<th>Auction</th>
+						<th>Auction ID</th>
 						<th>Description</th>
 						<th>Price</th>
 						<th>Won date</th>

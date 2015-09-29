@@ -9,23 +9,27 @@ class Sql
 {
 	public static function run()
 	{
-		try {
-			
+		try
+		{
+			$users = \DB::select_array(['id', 'username'])->from('users')->execute();
+
 			\DB::start_transaction();
 
-			$vendors = \Model_Vendor::find('all');
-
-			foreach ($vendors as $vendor) {
-				\DB::update('auctions')->value("vendor_id", $vendor->id)->where('vendor_id', '=', $vendor->name)->execute();
+			foreach ($users as $user)
+			{
+				\DB::update('auctions')->value('won_user', $user['id'])->where('won_user', '=', $user['username'])->execute();
 			}
 
 			\DB::commit_transaction();
-			
-		} catch (Exception $e) {
-			
-			\DB::rollback_transaction();
 
+			\DBUtil::modify_fields('auctions', [
+				'won_user' => ['constraint' => 11, 'type' => 'int', 'name' => 'user_id'],
+			]);
+			
 		}
-		
+		catch (Exception $e)
+		{
+			\DB::rollback_transaction();
+		}
 	}
 }
