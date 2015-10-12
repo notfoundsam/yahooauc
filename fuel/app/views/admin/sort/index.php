@@ -1,3 +1,4 @@
+
 <?php if (!empty($items)) : ?>
 <?php
 $count = 0;
@@ -45,3 +46,18 @@ $count = 0;
 
 </ul>
 <p>Index</p>
+<button class="refresh">refresh won</button>
+<?= Asset::js('http://code.jquery.com/jquery-1.11.3.min.js')?>
+<script type="text/javascript">
+	$('.refresh').click(function(){ 
+		$.ajax({
+            url: '/admin/api/refresh',
+            type: 'POST',
+            data: { csrf_token_key: "<?= \Security::fetch_token();?>"},
+            success: function (result) {
+              alert("Your bookmark has been saved");
+            }
+        });  
+    });
+
+</script>

@@ -94,14 +94,34 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{
+		$page = 1; // Get from post request
+		$auc_ids = array_column(\DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(50*$page)->execute()->as_array(), 'auc_id');
 
-		
-		// Profiler::console($auction);
+		// foreach ($auc_ids as $value) {
+		// 	Log::debug($value);
+		// }
+
+		// g156382047
+		// if (in_array('g156382047', $auc_ids))
+		// 	Log::debug('FOUND');
+		$auctions = Parser::getWon();
+
+		foreach ($auctions as $auction)
+		{
+			if (in_array($auction, $auc_ids))
+			{
+				// $new_auction = Model_Example::forge();
+				// $new_auction->item_count = 1;
+				// $new_auction->auc_id = $auction[0];
+				// $new_auction->description = $auction[1];
+				// $new_auction->price = $auction[0];
+
+				Profiler::console($auction);
+			}
+		}
     	
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
 	}
 
 }
-
-/* End of file admin.php */
