@@ -37,10 +37,10 @@ class Model_Vendor extends \Orm\Model
 		$val = Validation::forge($factory);
 		$val->add_field('name', 'Name', 'required|max_length[40]');
 		$val->add_field('by_now', 'By Now', 'required|valid_string[numeric]');
-		$val->add_field('post_index', 'Post Index', 'required|max_length[20]');
-		$val->add_field('address', 'Address', 'required|max_length[80]');
-		$val->add_field('color', 'Color', 'required');
-		$val->add_field('memo', 'Memo', 'required|max_length[200]');
+		$val->add_field('post_index', 'Post Index', 'max_length[20]');
+		$val->add_field('address', 'Address', 'max_length[80]');
+		$val->add_field('color', 'Color', 'max_length[10]');
+		$val->add_field('memo', 'Memo', 'max_length[200]');
 
 		return $val;
 	}

@@ -88,6 +88,7 @@ class Parser
 		return $table;
 	}
 
+	// return auc_id array
 	public static function getWon()
 	{
 		$table = [];

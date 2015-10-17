@@ -164,9 +164,16 @@ class Browser
     }
 
     // Get XML body of auction
-    public static function getXmlBody($auc_id = null)
+    public static function getXmlObject($auc_id = null)
     {
+        if (empty($auc_id))
+        {
+            throw new BrowserException('auc_id can not be null');
+        }
 
+        $url = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem?appid='.static::$select[0]['appid'].'&auctionID='.$auc_id;
+
+        return simplexml_load_string(static::getBody($url));
     }
 
     // Test function for page of biding saved in local
