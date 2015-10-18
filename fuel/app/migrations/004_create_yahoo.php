@@ -11,6 +11,7 @@ class Create_yahoo
 			'userid' => array('constraint' => 50, 'type' => 'varchar'),
 			'password' => array('constraint' => 255, 'type' => 'varchar'),
 			'cookies' => array('type' => 'text', 'null' => true),
+			'appid' => array('constraint' => 255, 'type' => 'varchar'),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'default' => time()),
 
 		), array('id'));

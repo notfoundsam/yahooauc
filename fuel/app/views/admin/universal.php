@@ -1,7 +1,7 @@
 <h2>Listing Pay</h2>
 <br>
 <?php 
-$redirect = Uri::segment(3) ?  Uri::segment(2).'/'.Uri::segment(3) : Uri::segment(2)
+$redirect = Uri::segment(3) ?  Uri::segment(2).'/'.Uri::segment(3) : Uri::segment(2);
 ?>
 <?php if ($items): ?>
 
@@ -21,7 +21,7 @@ $address = '';
 					<tr>
 						<th>Count</th>
 						<th>Auction ID</th>
-						<th>Description</th>
+						<th>Title</th>
 						<th>Price</th>
 						<th>Won date</th>
 						<th>Memo</th>
@@ -47,15 +47,15 @@ $address = '';
 					}
 					?>
 					<tr>
-						<td><?php echo $auction->item_count; ?></td>
-						<td><?php echo $auction->auc_id; ?></td>
-						<td><?php echo $auction->description; ?></td>
-						<td><?php echo $auction->price; ?></td>
-						<td><?php echo $auction->won_date; ?></td>
-						<td><?php echo $auction->memo; ?></td>
+						<td><?= $auction->item_count; ?></td>
+						<td><?= $auction->auc_id; ?></td>
+						<td><?= $auction->title; ?></td>
+						<td><?= $auction->price; ?></td>
+						<td><?= Date::create_from_string($auction->won_date, 'mysql')->format('display_date'); ?></td>
+						<td><?= $auction->memo; ?></td>
 						<td style="text-align:right;">
-							<?php echo Html::anchor('admin/auction/edit/'.$auction->id.'/'.$redirect, 'Edit'); ?> |
-							<?php echo Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
+							<?= Html::anchor('admin/auction/edit/'.$auction->id.'/'.$redirect, 'Edit'); ?> |
+							<?= Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 						</td>
 					</tr>
 					<?php endforeach; ?>

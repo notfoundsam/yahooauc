@@ -151,7 +151,7 @@ class Browser
         static::$rq->setUrl($url);
         static::$rq->setHeader('Referer', $referer);
 
-        $s_cookies = static::$rq->getCookieJar()->serialize();
+        // $s_cookies = static::$rq->getCookieJar()->serialize();
 
         if (!static::$login)
         {
@@ -163,15 +163,28 @@ class Browser
         return static::$rq->send()->getBody();
     }
 
-    //Test function for page of biding saved in local
+    // Get XML body of auction
+    public static function getXmlObject($auc_id = null)
+    {
+        if (empty($auc_id))
+        {
+            throw new BrowserException('auc_id can not be null');
+        }
+
+        $url = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem?appid='.static::$select[0]['appid'].'&auctionID='.$auc_id;
+
+        return simplexml_load_string(static::getBody($url));
+    }
+
+    // Test function for page of biding saved in local
     public static function getBodyBidding()
     {
         return File::read(APPPATH.'/tmp/yahoo/bidding3p.txt', true);
     }
 
-    //Test function for page of won saved in local
+    // Test function for page of won saved in local
     public static function getBodyWon()
     {
-        return File::read(APPPATH.'/tmp/yahoo/won1.txt', true);
+        return File::read(APPPATH.'/tmp/yahoo/won1p.txt', true);
     }
 }

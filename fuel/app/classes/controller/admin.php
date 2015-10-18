@@ -94,14 +94,31 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{
-
+		$auc_ids = [];
+		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(50)->execute()->as_array();
 		
+		foreach ($select as $value) {
+			$auc_ids[] = $value['auc_id'];
+		}
+
+		foreach ($auc_ids as $auc_id) {
+			Profiler::console($auc_id);
+		}
+
+		// $auc_test = array_reduce($auc_ids, 'array_merge', array());
+		// Profiler::console($auc_test);
+		// $auction = Browser::getXmlBody('x421191361');
+		
+
 		// Profiler::console($auction);
+
+
+		// Profiler::console((string)$auction->Result->AuctionID);
+		// Profiler::console((string)$auction->Result->AnsweredQAndANum);
+		// Profiler::console((string)$auction->Result->Seller->Id);
     	
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
 	}
 
 }
-
-/* End of file admin.php */

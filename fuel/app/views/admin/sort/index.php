@@ -7,7 +7,7 @@ $count = 0;
 		<tr>
 			<th>Count</th>
 			<th>Auction ID</th>
-			<th>Description</th>
+			<th>Title</th>
 			<th>Price</th>
 			<th>Won date</th>
 			<th>Seller</th>
@@ -23,13 +23,13 @@ $count = 0;
 			<tr>
 				<td><?= $auction->item_count; ?></td>
 				<td><?= $auction->auc_id; ?></td>
-				<td><?= $auction->description; ?></td>
+				<td><?= $auction->title; ?></td>
 				<td><?= $auction->price; ?></td>
 				<td><?= $auction->won_date; ?></td>
 				<td><?= $auction->vendor->name; ?></td>
 				<td><?= $auction->user->username; ?></td>
 				<td style="text-align:right;">
-					<?php echo Html::anchor('admin/auction/edit/'.$auction->id.'/'.$redirect, 'Edit'); ?> |
+					<?php echo Html::anchor('admin/auction/edit/'.$auction->id.'/'.Uri::segment(2), 'Edit'); ?> |
 					<?php echo Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 				</td>
 			</tr>
@@ -39,9 +39,30 @@ $count = 0;
 
 <?php endif ; ?>
 
+<div id="result" style="text-align:center"></div>
 
-<ul class="nav nav-pills">
-	<li class='<?php echo Arr::get($subnav, "index" ); ?>'><?php echo Html::anchor('admin/sort/index','Index');?></li>
+<button class="refresh">refresh won</button>
 
-</ul>
-<p>Index</p>
+<script type="text/javascript">
+	$('.refresh').click(function(){ 
+		$.ajax({
+			url: '/admin/api/refresh',
+			type: 'POST',
+			data: { csrf_token_key: "<?= \Security::fetch_token();?>"},
+			success: function (data) {
+				if (data.result) {
+					$('#result').html(data.result + " auction was won, refresh the page");
+					// alert(data.result + " auction was won");
+				}
+				else {
+					$('#result').html("No items was won");
+					// alert("No items");
+				}
+			},
+			error: function(){
+				$('#result').html("API error has occurred");
+				// alert('error!');
+			}
+		});
+	});
+</script>

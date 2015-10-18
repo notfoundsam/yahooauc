@@ -49,10 +49,10 @@ class Db_convert
 		// Modify and add fields in table auctions
 		\DBUtil::modify_fields('auctions', [
 				'auctionID' => ['constraint' => 10, 'type' => 'varchar', 'name' => 'auc_id'],
-				'description' => ['constraint' => 80, 'type' => 'varchar'],
+				'description' => ['constraint' => 80, 'type' => 'varchar', 'name' => 'title'],
 				'groupId' => ['constraint' => 10, 'type' => 'int', 'name' => 'part_id', 'null' => true],
 				'itemCount' => ['constraint' => 3, 'type' => 'int', 'name' => 'item_count'],
-				'wonDate' => ['type' => 'datetime', 'name' => 'won_date', 'null' => true],
+				'wonDate' => ['type' => 'datetime', 'name' => 'won_date'],
 				'vendor' => ['constraint' => 40, 'type' => 'varchar', 'name' => 'vendor_id'],
 				'memo' => ['constraint' => 60, 'type' => 'varchar', 'null' => true],
 				'wonUser' => ['constraint' => 20, 'type' => 'varchar', 'name' => 'won_user', 'null' => true],

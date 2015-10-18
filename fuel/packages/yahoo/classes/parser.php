@@ -88,38 +88,41 @@ class Parser
 		return $table;
 	}
 
+	// return auc_id array
 	public static function getWon()
 	{
-		
-		
 		$table = [];
 
 		$html = new Simple_Html_Dom;
 		// $html = str_get_html(Browser::getBody($r_won_url));
 		$html = str_get_html(Browser::getBodyWon());
 		
-		$a_auctions = [];
+		$auc_id = [];
 
 		if ($a_t1 = $html->find('table', 3))
 		{
-			if ($a_t2 = $a_t1->find('table', 4))
+			if ($auctions = $a_t1->find('table', 5)->children())
 			{
-				Profiler::console($a_t2);
-				// if ($auctions = $a_t2->find('tr'))
-				// {
-				// 	foreach($auctions as $key => $item) {
-				// 		$a_tr = [];
-				// 		if ($key == 0)
-				// 			continue;
-				// 		for ($i=0; $i < 6; $i++) { 
-				// 			$a_tr[] = strip_tags($item->find('td', $i)->innertext);
-				// 		}
-				// 		$a_auctions[] = $a_tr;
-				// 	}
-				// }
+				$first_tr = true;
+
+				foreach($auctions as $key => $tr) {
+
+					$a_tr = [];
+					if (!$tr->children())
+						continue;
+
+					if ($first_tr){
+						$first_tr = false;
+						continue;
+					}
+					
+					$a_td = $tr->children();
+
+					$auc_id[] = strip_tags($a_td[1]->innertext);
+				}
 			}	
 		}
 
-		return Browser::getBodyWon();
+		return $auc_id;
 	}
 }

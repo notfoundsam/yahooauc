@@ -4,6 +4,8 @@ class Controller_Admin_Sort extends Controller_Admin
 
 	public function action_index()
 	{
+		$data['table'] = Parser::getWon();
+
 		$data["subnav"] = array('index'=> 'active' );
 		$data['items'] = Model_Auction::find('all',[
 			'where' => [
