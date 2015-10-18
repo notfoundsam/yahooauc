@@ -16,8 +16,10 @@ class Controller_Admin_Api extends Controller_Rest
 	public function post_refresh()
 	{
 		$result = 0;
+		$val_error = [];
 		$auc_ids = [];
-		$page = 3; // Get from post request
+		$page = \Input::post('pages'); // Get from post request
+		// Log::debug(\Input::post('pages'));
 		$auc_ids = [];
 		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(50*$page)->execute()->as_array();
 		$user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
@@ -25,7 +27,9 @@ class Controller_Admin_Api extends Controller_Rest
 		foreach ($select as $value) {
 			$auc_ids[] = $value['auc_id'];
 		}
-
+		
+		$val = Model_Auction::validate();
+		
 		foreach (Parser::getWon() as $auc_id) {
 			
 			if ( !in_array($auc_id, $auc_ids) ){
@@ -56,25 +60,21 @@ class Controller_Admin_Api extends Controller_Rest
 					}
 				}
 				
-				$auction = Model_Auction::forge()->set($auc_values);
-				$val = Model_Auction::validate();
-				if ( $val->run() )
+				if ( $val->run($auc_values) )
 				{
+					Model_Auction::forge()->set($auc_values)->save();
 					$result++;
 				}
 				else
 				{
 					foreach ($val->error() as $value) {
-						Log::error($value);
+						Log::error('Validation error in controller/admin/api.php: '.$value);
 					}
-					// $val->error();
-					Log::error("Could not save auction ".$auc_values['auc_id']);
+					$val_error[] = "Could not save auction ".$auc_values['auc_id'];
 				}
 			}
 		}
 
-		Log::debug('---------------------');
-		
-		$this->response(['result' => $result]);
+		$this->response(['result' => $result, 'error' => $val_error]);
 	}
 }

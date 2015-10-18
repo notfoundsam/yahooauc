@@ -44,7 +44,7 @@ class Model_Auction extends \Orm\Model
 		$val->add_field('auc_id', 'Auc Id', 'required|max_length[10]');
 		$val->add_field('title', 'Title', 'required|max_length[80]');
 		$val->add_field('price', 'Price', 'required|valid_string[numeric]|max_length[5]');
-		$val->add_field('won_date', 'Won Date', 'required|valid_date[%Y-%m-%d %H:%M:%S]');
+		$val->add_field('won_date', 'Won Date', 'required|valid_date');
 		$val->add_field('vendor_id', 'Vendor Id', 'required|valid_string[numeric]');
 		$val->add_field('user_id', 'User Id', 'required|valid_string[numeric]');
 		$val->add_field('memo', 'Memo', 'max_length[60]');

@@ -1,3 +1,7 @@
+<div class="alert alert-dismissable" style="display: none;">
+	<button type="button" class="close" onclick="$('.alert').hide()">&times;</button>
+	<p></p>
+</div>
 <?php if (!empty($items)) : ?>
 <?php
 $count = 0;
@@ -38,30 +42,44 @@ $count = 0;
 </table>
 
 <?php endif ; ?>
+<br />
+<div style="text-align:center">
+	<label>Count of page for refresh:</label> <input id="pages" type="text" value="1">
+	<button class="refresh">Refresh</button>
+</div>
 
-<div id="result" style="text-align:center"></div>
 
-<button class="refresh">refresh won</button>
 
 <script type="text/javascript">
 	$('.refresh').click(function(){ 
+		var pages = $('#pages').val();
 		$.ajax({
 			url: '/admin/api/refresh',
 			type: 'POST',
-			data: { csrf_token_key: "<?= \Security::fetch_token();?>"},
+			data: {
+				csrf_token_key: "<?= \Security::fetch_token();?>",
+				pages: pages
+			},
 			success: function (data) {
-				if (data.result) {
-					$('#result').html(data.result + " auction was won, refresh the page");
-					// alert(data.result + " auction was won");
+				if (data.error.length == 0){
+
+					if (data.result) {
+						$('.alert p').html(data.result + " auction was won, refresh the page");
+						$('.alert').addClass('alert-success').show();
+					}
+					else {
+						$('.alert p').html("No items was won");
+						$('.alert').addClass('alert-success').show();
+					}
 				}
 				else {
-					$('#result').html("No items was won");
-					// alert("No items");
+					$('.alert p').html("Validation error has occurred, see logs.");
+					$('.alert').addClass('alert-danger').show();
 				}
 			},
 			error: function(){
-				$('#result').html("API error has occurred");
-				// alert('error!');
+				$('.alert p').html("API error has occurred!");
+				$('.alert').addClass('alert-danger').show();
 			}
 		});
 	});
