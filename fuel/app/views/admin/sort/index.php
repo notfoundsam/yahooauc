@@ -6,9 +6,12 @@
 <?php
 $count = 0;
 ?>
+<?= \Form::open(); ?>
+<?= \Form::csrf(); ?>
 <table class="table table-striped">
 	<thead>
 		<tr>
+			<th></th>
 			<th>Count</th>
 			<th>Auction ID</th>
 			<th>Title</th>
@@ -25,6 +28,7 @@ $count = 0;
 			$count += $auction->item_count;
 			?>
 			<tr>
+				<td><?= \Form::checkbox('id', $auction->id); ?></td>
 				<td><?= $auction->item_count; ?></td>
 				<td><?= $auction->auc_id; ?></td>
 				<td><?= $auction->title; ?></td>
@@ -40,15 +44,14 @@ $count = 0;
 		<?php endforeach; ?>
 	</tbody>
 </table>
-
+<?= \Form::submit(); ?>
+<?= \Form::close(); ?>
 <?php endif ; ?>
 <br />
 <div style="text-align:center">
 	<label>Count of page for refresh:</label> <input id="pages" type="text" value="1">
 	<button class="refresh">Refresh</button>
 </div>
-
-
 
 <script type="text/javascript">
 	$('.refresh').click(function(){ 
@@ -66,20 +69,28 @@ $count = 0;
 					if (data.result) {
 						$('.alert p').html(data.result + " auction was won, refresh the page");
 						$('.alert').addClass('alert-success').show();
+						$('html, body').animate({scrollTop: '0px'}, 0);
 					}
 					else {
 						$('.alert p').html("No items was won");
 						$('.alert').addClass('alert-success').show();
+						$('html, body').animate({scrollTop: '0px'}, 0);
 					}
 				}
 				else {
-					$('.alert p').html("Validation error has occurred, see logs.");
+					var error_message = '';
+					for (i = 0; i < data.error.length; i++) {
+						error_message += data.error[i] + "<br>";
+					}
+					$('.alert p').html(error_message);
 					$('.alert').addClass('alert-danger').show();
+					$('html, body').animate({scrollTop: '0px'}, 0);
 				}
 			},
 			error: function(){
 				$('.alert p').html("API error has occurred!");
 				$('.alert').addClass('alert-danger').show();
+				$('html, body').animate({scrollTop: '0px'}, 0);
 			}
 		});
 	});

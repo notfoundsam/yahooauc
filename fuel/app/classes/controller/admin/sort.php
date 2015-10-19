@@ -20,6 +20,17 @@ class Controller_Admin_Sort extends Controller_Admin
 				],
 			],
 		]);
+
+		if (Input::method() == "POST")
+		{
+			$val = \Model_Auction::validate();
+			$ids = \Input::post('id');
+			foreach ($ids as $id) {
+				Log::debug($id);
+			}
+			
+		}
+
 		$this->template->title = 'Admin/sort &raquo; Index';
 		$this->template->content = View::forge('admin/sort/index', $data);
 	}

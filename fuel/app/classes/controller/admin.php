@@ -94,16 +94,19 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{
-		$auc_ids = [];
-		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(50)->execute()->as_array();
+		// x421191361
+		try
+		{
+			$auc_xml = Browser::getXmlObject('xccc42119136');
+		}
+		catch (BrowserException $e)
+		{
+			Profiler::console($e->getMessage().' - '.$e->getCode());
+		}
 		
-		foreach ($select as $value) {
-			$auc_ids[] = $value['auc_id'];
-		}
 
-		foreach ($auc_ids as $auc_id) {
-			Profiler::console($auc_id);
-		}
+		// Profiler::console($auc_xml);
+
 
 		// $auc_test = array_reduce($auc_ids, 'array_merge', array());
 		// Profiler::console($auc_test);
