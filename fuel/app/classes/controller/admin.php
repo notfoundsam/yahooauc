@@ -94,15 +94,21 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{
+
+
+
+		$user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
+		Profiler::console($user_id);
+
 		// x421191361
-		try
-		{
-			$auc_xml = Browser::getXmlObject('xccc42119136');
-		}
-		catch (BrowserException $e)
-		{
-			Profiler::console($e->getMessage().' - '.$e->getCode());
-		}
+		// try
+		// {
+		// 	$auc_xml = Browser::getXmlObject('xccc42119136');
+		// }
+		// catch (BrowserException $e)
+		// {
+		// 	Profiler::console($e->getMessage().' - '.$e->getCode());
+		// }
 		
 
 		// Profiler::console($auc_xml);

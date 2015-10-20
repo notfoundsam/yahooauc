@@ -3,8 +3,12 @@ class Model_Part extends \Orm\Model
 {
 	protected static $_properties = array(
 		'id',
-		'status',
-		'price',
+		'status' => [
+			'default' => 0,
+		],
+		'price' => [
+			'default' => 0,
+		],
 		'ship_number',
 		'box_number',
 		'tracking',

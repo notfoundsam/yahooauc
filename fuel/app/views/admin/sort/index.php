@@ -28,7 +28,7 @@ $count = 0;
 			$count += $auction->item_count;
 			?>
 			<tr>
-				<td><?= \Form::checkbox('id', $auction->id); ?></td>
+				<td><?= \Form::checkbox('ids[]', $auction->id); ?></td>
 				<td><?= $auction->item_count; ?></td>
 				<td><?= $auction->auc_id; ?></td>
 				<td><?= $auction->title; ?></td>
@@ -44,11 +44,15 @@ $count = 0;
 		<?php endforeach; ?>
 	</tbody>
 </table>
-<?= \Form::submit(); ?>
-<?= \Form::close(); ?>
+<div style="margin-top:10px;text-align:right;">
+	<?= \Form::label('Create new part or add to exists:'); ?>
+	<?= \Form::input('part_id'); ?>
+	<?= \Form::submit('','Create/Add to'); ?>
+	<?= \Form::close(); ?>	
+</div>
 <?php endif ; ?>
-<br />
-<div style="text-align:center">
+
+<div style="margin-top:10px;text-align:center;">
 	<label>Count of page for refresh:</label> <input id="pages" type="text" value="1">
 	<button class="refresh">Refresh</button>
 </div>

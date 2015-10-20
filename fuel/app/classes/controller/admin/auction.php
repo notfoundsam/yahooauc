@@ -5,7 +5,7 @@ class Controller_Admin_Auction extends Controller_Admin
 	{
 		$redirect = $two ? $one.'/'.$two : $one;
 		$auction = Model_Auction::find($id);
-		$val = Model_Auction::validate('edit');
+		$val = Model_Auction::validate_edit();
 
 		if ($val->run())
 		{
@@ -15,14 +15,14 @@ class Controller_Admin_Auction extends Controller_Admin
 
 			if ($auction->save())
 			{
-				Session::set_flash('success', e('Updated auction #' . $id));
+				Session::set_flash('success', e('Updated auction #' . $auction->auc_id));
 
 				Response::redirect('admin/'.$redirect);
 			}
 
 			else
 			{
-				Session::set_flash('error', e('Could not update auction #' . $id));
+				Session::set_flash('error', e('Could not update auction #' . $auction->auc_id));
 			}
 		}
 
@@ -30,7 +30,7 @@ class Controller_Admin_Auction extends Controller_Admin
 		{
 			if (Input::method() == 'POST')
 			{
-				$auction->item_count = $val->validated('status');
+				$auction->item_count = $val->validated('item_count');
 				$auction->price = $val->validated('price');
 				$auction->memo = $val->validated('memo');
 
@@ -41,7 +41,7 @@ class Controller_Admin_Auction extends Controller_Admin
 		}
 		
 		$this->template->set_global('redirect', $redirect, false);
-		$this->template->title = $auction->description;
+		$this->template->title = $auction->title;
 		$this->template->content = View::forge('admin/auction/edit');
 
 	}
