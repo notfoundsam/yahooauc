@@ -97,8 +97,8 @@ class Controller_Admin extends Controller_Base
 
 
 
-		$user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
-		Profiler::console($user_id);
+		// $user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
+		// Profiler::console($user_id);
 
 		// x421191361
 		// try
