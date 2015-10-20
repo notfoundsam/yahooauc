@@ -32,7 +32,7 @@
 					<li class="<?php echo Uri::segment(2) == '' ? 'active' : '' ?>">
 						<?php echo Html::anchor('admin', 'Dashboard') ?>
 					</li>
-					<li class="<?php echo Uri::segment(2) == 'sort' ? 'active' : '' ?>">
+					<li class="<?php echo Uri::segment(2) == 'bidding' ? 'active' : '' ?>">
 						<a href="<?= \Uri::create('admin/bidding') ?>">Bidding</a>
 					</li>
 					<li class="dropdown<?= in_array(\Uri::segment(2), ['pay', 'paid', 'received']) ? ' active' : '' ?><?= \Uri::segment(3) == 'view' ? ' active' : '' ?>">
@@ -63,7 +63,7 @@
 					<li class="<?php echo Uri::segment(3) == 'create' ? 'active' : '' ?>">
 						<a href="<?= \Uri::create('admin/ship/create') ?>">Create Ship</a>
 					</li>
-					<li class="<?php echo Uri::segment(2) == 'sort' ? 'active' : '' ?>">
+					<li class="<?php echo Uri::segment(2) == 'vendor' ? 'active' : '' ?>">
 						<a href="<?= \Uri::create('admin/vendor') ?>">Vendors</a>
 					</li>
 				</ul>

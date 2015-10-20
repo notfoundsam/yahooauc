@@ -3,7 +3,9 @@ class Model_Auction extends \Orm\Model
 {
 	protected static $_properties = array(
 		'id',
-		'item_count',
+		'item_count' => [
+			'default' => 0,
+		],
 		'auc_id',
 		'title',
 		'price',
@@ -44,9 +46,19 @@ class Model_Auction extends \Orm\Model
 		$val->add_field('auc_id', 'Auc Id', 'required|max_length[10]');
 		$val->add_field('title', 'Title', 'required|max_length[80]');
 		$val->add_field('price', 'Price', 'required|valid_string[numeric]|max_length[5]');
-		$val->add_field('won_date', 'Won Date', 'required|valid_date[%Y-%m-%d %H:%M:%S]');
+		$val->add_field('won_date', 'Won Date', 'required|valid_date');
 		$val->add_field('vendor_id', 'Vendor Id', 'required|valid_string[numeric]');
 		$val->add_field('user_id', 'User Id', 'required|valid_string[numeric]');
+		$val->add_field('memo', 'Memo', 'max_length[60]');
+
+		return $val;
+	}
+
+	public static function validate_edit($factory = 'default')
+	{
+		$val = Validation::forge($factory);
+		$val->add_field('item_count', 'Item Count', 'required|valid_string[numeric]|max_length[3]');
+		$val->add_field('price', 'Price', 'required|valid_string[numeric]|max_length[5]');
 		$val->add_field('memo', 'Memo', 'max_length[60]');
 
 		return $val;

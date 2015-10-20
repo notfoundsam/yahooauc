@@ -173,6 +173,20 @@ class Browser
 
         $url = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem?appid='.static::$select[0]['appid'].'&auctionID='.$auc_id;
 
+        $auc_xml = simplexml_load_string(static::getBody($url));
+
+        if ($auc_xml->Code)
+        {
+            if ( (int) $auc_xml->Code == 102)
+            {
+                throw new BrowserException('Auction not found', 102);  
+            }
+            else if ( (int) $auc_xml->Code == 302 )
+            {
+                throw new BrowserException('Auction ID is invalid', 302);
+            }
+        }
+
         return simplexml_load_string(static::getBody($url));
     }
 
