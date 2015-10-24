@@ -1,6 +1,6 @@
-HTTP_Request2
-Net_URL
-Net_URL2
-PEAR
+http_request2
+net_url
+net_url2
+pear
 XML_Util
 Net_Socket
