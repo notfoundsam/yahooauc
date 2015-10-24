@@ -1,5 +1,5 @@
 <?php echo Form::open(array("class"=>"form-horizontal")); ?>
-
+<?php echo Form::csrf(); ?>
 	<fieldset>
 		<div class="form-group">
 			<?php echo Form::label('Item count', 'item_count', array('class'=>'control-label')); ?>

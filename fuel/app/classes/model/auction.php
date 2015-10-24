@@ -63,5 +63,4 @@ class Model_Auction extends \Orm\Model
 
 		return $val;
 	}
-
 }

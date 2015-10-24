@@ -4,12 +4,7 @@ class Controller_Admin_Sort extends Controller_Admin
 
 	public function action_index()
 	{
-		// $data['table'] = Parser::getWon();
-
-		// $data["subnav"] = array('index'=> 'active' );
-		
-
-		if (Input::method() == "POST")
+		if (Input::method() == 'POST' && \Security::check_token())
 		{
 			if ( $ids = \Input::post('ids') )
 			{
@@ -18,6 +13,7 @@ class Controller_Admin_Sort extends Controller_Admin
 				if ($combine_id = (int) \Input::post('part_id'))
 				{
 					$part_id = $combine_id;
+					Session::set_flash('success', e('Updated part #' . $part_id));
 				}
 				else
 				{
@@ -27,6 +23,7 @@ class Controller_Admin_Sort extends Controller_Admin
 					{
 						$part_id = $part->id;
 					}
+					Session::set_flash('success', e('Created part #' . $part_id));
 				}
 
 				foreach ($ids as $id)
@@ -35,6 +32,10 @@ class Controller_Admin_Sort extends Controller_Admin
 					$auction->part_id = $part_id;
 					$auction->save();
 				}
+			}
+			else
+			{
+				Session::set_flash('error', e('Could not create new part'));
 			}
 		}
 
@@ -78,5 +79,53 @@ class Controller_Admin_Sort extends Controller_Admin
 		]);
 		$this->template->title = 'Admin/sort &raquo; Index';
 		$this->template->content = View::forge('admin/sort/index', $data);
+	}
+
+	public function action_edit($id = null, $one = null, $two = null)
+	{
+		$redirect = $two ? $one.'/'.$two : $one;
+		$auction = Model_Auction::find($id);
+		$val = Model_Auction::validate_edit();
+		$val->add_field('vendor_id', 'Vendor Id', 'required|valid_string[numeric]');
+
+		if ($val->run())
+		{
+			$auction->item_count = Input::post('item_count');
+			$auction->price = Input::post('price');
+			$auction->vendor_id = Input::post('vendor_id');
+			$auction->memo = Input::post('memo');
+
+			if (\Security::check_token() && $auction->save())
+			{
+				Session::set_flash('success', e('Updated auction #' . $auction->auc_id));
+
+				Response::redirect('admin/'.$redirect);
+			}
+
+			else
+			{
+				Session::set_flash('error', e('Could not update auction #' . $auction->auc_id));
+			}
+		}
+
+		else
+		{
+			if (Input::method() == 'POST')
+			{
+				$auction->item_count = $val->validated('item_count');
+				$auction->price = $val->validated('price');
+				$auction->vendor_id = $val->validated('vendor_id');
+				$auction->memo = $val->validated('memo');
+
+				Session::set_flash('error', $val->error());
+			}
+
+			$this->template->set_global('auction', $auction, false);
+		}
+		
+		$this->template->set_global('redirect', $redirect, false);
+		$this->template->title = $auction->title;
+		$this->template->content = View::forge('admin/sort/edit');
+
 	}
 }

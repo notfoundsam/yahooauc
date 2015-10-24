@@ -14,6 +14,31 @@
 	<script>
 		$(function(){ $('.topbar').dropdown(); });
 	</script>
+	<?php echo Asset::css('smoothDivScroll.css'); ?>
+	<style type="text/css">
+		#makeMeScrollable
+		{
+			width:100%;
+			height: 100px;
+			position: relative;
+		}
+		
+		#makeMeScrollable div.scrollableArea img
+		{
+			position: relative;
+			float: left;
+			margin: 0;
+			padding: 0;
+			/* If you don't want the images in the scroller to be selectable, try the following
+			   block of code. It's just a nice feature that prevent the images from
+			   accidentally becoming selected/inverted when the user interacts with the scroller. */
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+		}
+	</style>
 </head>
 <body>
 	<?php if ($current_user): ?>
@@ -115,5 +140,6 @@
 			</p>
 		</footer>
 	</div>
+<?php echo Asset::js(['jquery-ui-1.10.3.custom.min.js', 'jquery.mousewheel.min.js', 'jquery.kinetic.js', 'jquery.smoothdivscroll-1.3-min.js']); ?>
 </body>
 </html>
