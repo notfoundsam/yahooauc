@@ -1,4 +1,3 @@
-http_request2
 net_url
 net_url2
 pear
