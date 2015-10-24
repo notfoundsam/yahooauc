@@ -37,8 +37,8 @@ $count = 0;
 				<td><?= $auction->vendor->name; ?></td>
 				<td><?= $auction->user->username; ?></td>
 				<td style="text-align:right;">
-					<?php echo Html::anchor('admin/auction/edit/'.$auction->id.'/'.Uri::segment(2), 'Edit'); ?> |
-					<?php echo Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
+					<?php echo Html::anchor('admin/sort/edit/'.$auction->id.'/'.Uri::segment(2), 'Edit'); ?> |
+					<?php echo Html::anchor('admin/sort/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>

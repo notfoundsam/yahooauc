@@ -39,7 +39,6 @@ class Controller_Admin_Api extends Controller_Rest
 					$auc_xml = Browser::getXmlObject($auc_id);
 
 					$auc_values = [];
-					// $auc_values['item_count'] = 1;
 					$auc_values['auc_id'] = (string) $auc_xml->Result->AuctionID;
 					$auc_values['title'] = (string) $auc_xml->Result->Title;
 					$auc_values['price'] = (int) $auc_xml->Result->Price;

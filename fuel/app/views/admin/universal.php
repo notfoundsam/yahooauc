@@ -55,7 +55,7 @@ $address = '';
 						<td><?= $auction->memo; ?></td>
 						<td style="text-align:right;">
 							<?= Html::anchor('admin/auction/edit/'.$auction->id.'/'.$redirect, 'Edit'); ?> |
-							<?= Html::anchor('admin/auction/delete/'.$auction->id, 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
+							<?= Html::anchor('admin/auction/delete/'.$auction->id.'/'.$redirect.'?'.\Config::get('security.csrf_token_key').'='.\Security::fetch_token(), 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 						</td>
 					</tr>
 					<?php endforeach; ?>
@@ -78,11 +78,11 @@ $address = '';
 				</thead>
 				<tbody>	<tr>
 						<td><?= $count ?></td>
-						<td><?php echo $item->price; ?></td>
-						<td><?php echo $item->box_number; ?></td>
-						<td><?php echo $item->tracking; ?></td>
+						<td><?= $item->price; ?></td>
+						<td><?= $item->box_number; ?></td>
+						<td><?= $item->tracking; ?></td>
 						<td><?= $item->price + $summ; ?></td>
-						<td><?php echo $item->memo; ?></td>
+						<td><?= $item->memo; ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -100,7 +100,8 @@ $address = '';
 						Part's ID: <?= $item->id ?>, Post Index: <font color="blue"><?= $post_index ?></font>, Address: </b><?= $address ?>
 					</td>
 					<td style="text-align:right;">
-						<?php echo Html::anchor('admin/part/edit/'.$item->id.'/'.$redirect, 'Edit'); ?>
+						<?= Html::anchor('admin/part/edit/'.$item->id.'/'.$redirect, 'Edit'); ?> | 
+						<?= Html::anchor('admin/part/delete/'.$item->id.'/'.$redirect.'?'.\Config::get('security.csrf_token_key').'='.\Security::fetch_token(), 'Delete', array('onclick' => "return confirm('Are you sure?')")); ?>
 					</td>
 				</tr>
 			</table>

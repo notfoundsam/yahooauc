@@ -15,7 +15,7 @@ class Controller_Admin_Part extends Controller_Admin
 			$part->tracking = Input::post('tracking');
 			$part->memo = Input::post('memo');
 
-			if ($part->save())
+			if (\Security::check_token() && $part->save())
 			{
 				Session::set_flash('success', e('Updated part #' . $id));
 
@@ -48,5 +48,31 @@ class Controller_Admin_Part extends Controller_Admin
 		$this->template->title = "Part";
 		$this->template->content = View::forge('admin/part/edit');
 
+	}
+
+	public function action_delete($id = null, $one = null, $two = null)
+	{
+		$redirect = $two ? $one.'/'.$two : $one;
+
+		if ($part = \Model_Part::find($id) and \Security::check_token())
+		{
+
+			foreach ($part->auctions as $auction)
+			{
+				$auction->part_id = null;
+				$auction->save();
+			}
+
+			$part->delete();
+
+			Session::set_flash('success', e('Deleted part #'.$id));
+		}
+
+		else
+		{
+			Session::set_flash('error', e('Could not delete part #'.$id));
+		}
+
+		Response::redirect('admin/'.$redirect);
 	}
 }

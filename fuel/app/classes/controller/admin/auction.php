@@ -13,7 +13,7 @@ class Controller_Admin_Auction extends Controller_Admin
 			$auction->price = Input::post('price');
 			$auction->memo = Input::post('memo');
 
-			if ($auction->save())
+			if (\Security::check_token() && $auction->save())
 			{
 				Session::set_flash('success', e('Updated auction #' . $auction->auc_id));
 
@@ -44,5 +44,26 @@ class Controller_Admin_Auction extends Controller_Admin
 		$this->template->title = $auction->title;
 		$this->template->content = View::forge('admin/auction/edit');
 
+	}
+
+	public function action_delete($id = null, $one = null, $two = null)
+	{
+		$redirect = $two ? $one.'/'.$two : $one;
+
+		if ($auction = \Model_Auction::find($id) and \Security::check_token())
+		{
+
+			$auction->part_id = null;
+			$auction->save();
+
+			Session::set_flash('success', e('Deleted auction #'.$auction->auc_id));
+		}
+
+		else
+		{
+			Session::set_flash('error', e('Could not delete auction #'.$auction->auc_id));
+		}
+
+		Response::redirect('admin/'.$redirect);
 	}
 }
