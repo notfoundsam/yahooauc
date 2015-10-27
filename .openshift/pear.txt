@@ -1,5 +1,2 @@
-net_url
 net_url2
-pear
-XML_Util
-Net_Socket
+PEAR
