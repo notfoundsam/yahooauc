@@ -1,12 +1,12 @@
-<?php if (!empty(Arr::get($table, 'pages' ))) : ?>
+<?php if (!empty($table['pages'])) : ?>
 <p> Go to page: 
 
-	<?php foreach (Arr::get($table, 'pages' ) as $page) : ?>
+	<?php foreach ($table['pages'] as $page) : ?>
 	<?php echo Html::anchor('admin/bidding/'.$page, $page);?>
 	<?php endforeach ; ?>
 </p>
 <?php endif ; ?>
-<?php if (!empty(Arr::get($table, 'auctions' ))) : ?>
+<?php if (!empty($table['auctions'])) : ?>
 
 <table class="table table-striped bidding">
 	<thead>
@@ -20,7 +20,7 @@
 		</tr>
 	</thead>
 	<tbody>	
-		<?php foreach (Arr::get($table, 'auctions' ) as $tr) : ?>
+		<?php foreach ($table['auctions'] as $tr) : ?>
 		<tr class="<?= $tr[4] != Config::get('my.yahoo_user') ? 'bidup' : ''?>">
 			<?php foreach ($tr as $td) : ?>
 				<td><?= $td?></td>
