@@ -50,6 +50,7 @@ class Browser
     public static function _init()
     {
     	static::$rq = new HTTP_Request2();
+        static::$rq->setAdapter('curl');
 
     	static::$select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
 
