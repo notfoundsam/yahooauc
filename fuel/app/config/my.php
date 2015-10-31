@@ -9,8 +9,8 @@ return array(
 		'sell' => 10,
 	),
 
-	// 'yahoo_user' => 'pekopeko_haraheringu',
-	'yahoo_user' => 'notfoundsam',
+	'yahoo_user' => 'pekopeko_haraheringu',
+	// 'yahoo_user' => 'notfoundsam',
 
 	'main_bidder' => 'vyacheslav',
 	// 'main_bidder' => 'sosetcadmin',

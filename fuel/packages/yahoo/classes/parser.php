@@ -38,8 +38,8 @@ class Parser
 		$table = [];
 
 		$html = new Simple_Html_Dom;
-		$html = str_get_html(Browser::getBody($r_biding_url));
-		// $html = str_get_html(Browser::getBodyBidding());
+		// $html = str_get_html(Browser::getBody($r_biding_url));
+		$html = str_get_html(Browser::getBodyBidding());
 		$a_pages = [];
 
 		if ($p_t1 = $html->find('table', 3))
