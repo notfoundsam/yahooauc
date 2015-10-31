@@ -1,39 +1,19 @@
 #FuelPHP
 
-* Version: 1.7.2
-* [Website](http://fuelphp.com/)
-* [Release Documentation](http://docs.fuelphp.com)
-* [Release API browser](http://api.fuelphp.com)
-* [Development branch Documentation](http://dev-docs.fuelphp.com)
-* [Development branch API browser](http://dev-api.fuelphp.com)
-* [Support Forum](http://fuelphp.com/forums) for comments, discussion and community support
+php 5.4 or late!!!
 
 ## Description
 
 FuelPHP is a fast, lightweight PHP 5.3 framework. In an age where frameworks are a dime a dozen, We believe that FuelPHP will stand out in the crowd.  It will do this by combining all the things you love about the great frameworks out there, while getting rid of the bad.
 
-## More information
+## Install with OpenShift
 
-For more detailed information, see the [development wiki](https://github.com/fuelphp/fuelphp/wiki).
-
-##Development Team
-
-* Harro Verton - Project Manager, Developer ([http://wanwizard.eu/](http://wanwizard.eu/))
-* Frank de Jonge - Developer ([http://frenky.net/](http://frenky.net/))
-* Steve West - Developer
-
-### Want to join?
-
-The FuelPHP development team is always looking for new team members, who are willing
-to help lift the framework to the next level, and have the commitment to not only
-produce awesome code, but also great documentation, and support to our users.
-
-You can not apply for membership. Start by sending in pull-requests, work on outstanding
-feature requests or bugs, and become active in the #fuelphp IRC channel. If your skills
-are up to scratch, we will notice you, and will ask you to become a team member.
-
-### Alumni
-
-* Jelmer Schreuder - Developer ([http://jelmerschreuder.nl/](http://jelmerschreuder.nl/))
-* Phil Sturgeon - Developer ([http://philsturgeon.co.uk](http://philsturgeon.co.uk))
-* Dan Horrigan - Founder, Developer ([http://dhorrigan.com](http://dhorrigan.com))
+1. Clone your clean openshift project
+2. Add this repo as remote repository then merge it
+3. Push repo into OpenShift
+4. Set OpenShift enviroment $ rhc env set FUEL_ENV=production -a App_Name
+5. Go to OpenShift ssh (rhc ssh APP_NAME from command line)
+6. Go to app-root/runtime/repo/ and run composer manually ( ./composer.phar update ) 
+7. When you asked for Token enter your token from github.com (If you do not have yet create one)
+8. Go to php/phplib/pear/pear/php/HTTP/Request2/ and edit file CookieJar.php on line 444 like $path = getenv('OPENSHIFT_HOMEDIR').'/php/phplib/pear/pear/data' . DIRECTORY_SEPARATOR . 'HTTP_Request2';
+9. Restart your application
