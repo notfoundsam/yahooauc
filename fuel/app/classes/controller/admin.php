@@ -93,60 +93,7 @@ class Controller_Admin extends Controller_Base
 	 * @return  void
 	 */
 	public function action_index()
-	{
-
-		$table = [];
-
-		$html = new Simple_Html_Dom;
-		// $html = str_get_html(Browser::getBody($r_biding_url));
-		$html = str_get_html(Browser::getBodyBidding());
-		$a_pages = [];
-
-Log::debug($html);
-
-		if ($p_t1 = $html->find('table', 3))
-		{
-			if ($p_t2 = $p_t1->find('table', 3))
-			{
-				if ($p_td = $p_t2->find('td', 0))
-				{
-					$pages = $p_td->find('a');
-					foreach($pages as $page) {
-			   			$a_pages[] = $page->innertext;
-					}
-				}
-			}	
-		}
-
-		$table['pages'] = $a_pages;
-
-		$a_auctions = [];
-
-		if ($a_t1 = $html->find('table', 3))
-		{
-			Profiler::console($html->find('table', 3));
-			if ($a_t2 = $a_t1->find('table', 4))
-			{
-				if ($auctions = $a_t2->find('tr'))
-				{
-					foreach($auctions as $key => $item) {
-						$a_tr = [];
-						if ($key == 0)
-							continue;
-						for ($i=0; $i < 6; $i++) { 
-							$a_tr[] = strip_tags($item->find('td', $i)->innertext);
-						}
-						$a_auctions[] = $a_tr;
-					}
-				}
-				else
-				{
-					
-				}
-			}	
-		}
-
-		
+	{	
     	
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
