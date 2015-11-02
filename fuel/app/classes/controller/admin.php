@@ -93,38 +93,7 @@ class Controller_Admin extends Controller_Base
 	 * @return  void
 	 */
 	public function action_index()
-	{
-
-
-
-		// $user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
-		// Profiler::console($user_id);
-
-		// x421191361
-		// try
-		// {
-		// 	$auc_xml = Browser::getXmlObject('xccc42119136');
-		// }
-		// catch (BrowserException $e)
-		// {
-		// 	Profiler::console($e->getMessage().' - '.$e->getCode());
-		// }
-		
-
-		// Profiler::console($auc_xml);
-
-
-		// $auc_test = array_reduce($auc_ids, 'array_merge', array());
-		// Profiler::console($auc_test);
-		// $auction = Browser::getXmlBody('x421191361');
-		
-
-		// Profiler::console($auction);
-
-
-		// Profiler::console((string)$auction->Result->AuctionID);
-		// Profiler::console((string)$auction->Result->AnsweredQAndANum);
-		// Profiler::console((string)$auction->Result->Seller->Id);
+	{	
     	
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');

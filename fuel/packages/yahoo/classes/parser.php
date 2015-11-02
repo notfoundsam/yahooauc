@@ -36,10 +36,10 @@ class Parser
 		$r_biding_url = ($page) ? static::$_bidding_url.'picsnum=50&select=won&apg='.$page : static::$_bidding_url;
 
 		$table = [];
-
+		$paging = 4;
 		$html = new Simple_Html_Dom;
-		// $html = str_get_html(Browser::getBody($r_biding_url));
-		$html = str_get_html(Browser::getBodyBidding());
+		$html = str_get_html(Browser::getBody($r_biding_url));
+		// $html = str_get_html(Browser::getBodyBidding());
 		$a_pages = [];
 
 		if ($p_t1 = $html->find('table', 3))
@@ -49,7 +49,12 @@ class Parser
 				if ($p_td = $p_t2->find('td', 0))
 				{
 					$pages = $p_td->find('a');
-					foreach($pages as $page) {
+					foreach($pages as $page)
+					{
+						if ( !(int)$page->innertext ){
+							$paging = 3;
+							break;
+						}
 			   			$a_pages[] = $page->innertext;
 					}
 				}
@@ -62,7 +67,7 @@ class Parser
 
 		if ($a_t1 = $html->find('table', 3))
 		{
-			if ($a_t2 = $a_t1->find('table', 4))
+			if ($a_t2 = $a_t1->find('table', $paging))
 			{
 				if ($auctions = $a_t2->find('tr'))
 				{
@@ -94,8 +99,8 @@ class Parser
 		$table = [];
 
 		$html = new Simple_Html_Dom;
-		// $html = str_get_html(Browser::getBody($r_won_url));
-		$html = str_get_html(Browser::getBodyWon());
+		$html = str_get_html(Browser::getBody($r_won_url));
+		// $html = str_get_html(Browser::getBodyWon());
 		
 		$auc_id = [];
 
