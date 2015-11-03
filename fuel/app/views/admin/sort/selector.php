@@ -8,4 +8,4 @@ $options = array();
 foreach	($users as $user)	{
 	$options[$user->id] = $user->username;
 }
-echo Form::select('user_id', $user_id, $options);
+echo Form::select('user_id', $user_id, $options, ['class' => 'col-md-4 form-control']);

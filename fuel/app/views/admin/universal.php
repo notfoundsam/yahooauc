@@ -1,5 +1,3 @@
-<h2>Listing Pay</h2>
-<br>
 <?php 
 $redirect = Uri::segment(3) ?  Uri::segment(2).'/'.Uri::segment(3) : Uri::segment(2);
 ?>

@@ -2,7 +2,6 @@
 $select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute();
 ?>
 
-
 <div class="jumbotron">
 	<?= Uri::create('controller', [], array('redirect' => 'paid')); ?><br />
 	<?= Date::forge(strtotime('-1 minutes')) ?><br />

@@ -5,4 +5,4 @@
 <p><strong>Auction ID:</strong>
 	<?= $auction->auc_id; ?></p>
 <?php echo render('admin/sort/_form'); ?>
-<p><?php echo Html::anchor('admin/sort/'.$redirect, 'Back'); ?></p>
+<p><?php echo Html::anchor('admin/sort/', 'Back'); ?></p>

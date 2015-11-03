@@ -30,6 +30,8 @@ class Parser
      */
 	private static $_won_url = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus?select=won';
 	private static $_bidding_url = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus?select=bidding';
+	private static $_jp = array("円", "分", "時間", "日");
+	private static $_en   = array("yen", "min", "hour", "day");
 
 	public static function getBidding($page = null)
 	{
@@ -71,12 +73,25 @@ class Parser
 			{
 				if ($auctions = $a_t2->find('tr'))
 				{
-					foreach($auctions as $key => $item) {
+					foreach($auctions as $key => $item)
+					{
 						$a_tr = [];
 						if ($key == 0)
 							continue;
-						for ($i=0; $i < 6; $i++) { 
-							$a_tr[] = strip_tags($item->find('td', $i)->innertext);
+						for ($i=0; $i < 6; $i++)
+						{
+							if ($i == 0)
+							{
+								$a_tr[] = end((explode('/', $item->find('td', $i)->children(0)->href)));
+							}
+							if ($i == 1 || $i == 5)
+							{
+								$a_tr[] = str_replace(static::$_jp, static::$_en, strip_tags($item->find('td', $i)->innertext));
+							}
+							else
+							{
+								$a_tr[] = strip_tags($item->find('td', $i)->innertext);
+							}
 						}
 						$a_auctions[] = $a_tr;
 					}

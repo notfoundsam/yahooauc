@@ -201,6 +201,6 @@ class Browser
     // Test function for page of won saved in local
     public static function getBodyWon()
     {
-        return File::read(APPPATH.'/tmp/yahoo/won5.txt', true);
+        return File::read(APPPATH.'/tmp/yahoo/won1p.txt', true);
     }
 }
