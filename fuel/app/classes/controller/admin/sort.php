@@ -57,7 +57,7 @@ class Controller_Admin_Sort extends Controller_Admin
 			],
 		]);
 
-		$this->template->title = 'Admin/sort &raquo; Index';
+		$this->template->title = 'Sorting list';
 		$this->template->content = View::forge('admin/sort/index', $data);
 	}
 
@@ -83,22 +83,24 @@ class Controller_Admin_Sort extends Controller_Admin
 
 	public function action_edit($id = null, $one = null, $two = null)
 	{
+		Log::debug('START');
 		$redirect = $two ? $one.'/'.$two : $one;
-		$auction = Model_Auction::find($id);
+		$auction = Model_Auction::find($id, ['related' => ['vendor']]);
 		$val = Model_Auction::validate_edit();
-		$val->add_field('vendor_id', 'Vendor Id', 'required|valid_string[numeric]');
+		$val->add_field('user_id', 'User Id', 'required|valid_string[numeric]');
 
 		if ($val->run())
 		{
+			Log::debug('RUN');
 			$auction->item_count = Input::post('item_count');
 			$auction->price = Input::post('price');
-			$auction->vendor_id = Input::post('vendor_id');
+			$auction->user_id = Input::post('user_id');
 			$auction->memo = Input::post('memo');
 
 			if (\Security::check_token() && $auction->save())
 			{
 				Session::set_flash('success', e('Updated auction #' . $auction->auc_id));
-
+				Log::debug($redirect);
 				Response::redirect('admin/'.$redirect);
 			}
 
@@ -112,6 +114,7 @@ class Controller_Admin_Sort extends Controller_Admin
 		{
 			if (Input::method() == 'POST')
 			{
+				Log::debug('POST');
 				$auction->item_count = $val->validated('item_count');
 				$auction->price = $val->validated('price');
 				$auction->vendor_id = $val->validated('vendor_id');

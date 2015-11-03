@@ -4,6 +4,8 @@
 	<meta charset="utf-8">
 	<title><?php echo $title; ?></title>
 	<?php echo Asset::css('bootstrap.css'); ?>
+	<?php echo Asset::css('admin.css'); ?>
+	<?php echo Asset::css('dist/ladda-themeless.min.css'); ?>
 	<style>
 		body { margin: 50px; }
 	</style>
@@ -115,5 +117,6 @@
 			</p>
 		</footer>
 	</div>
+<?= Asset::js(['admin.js', 'dist/spin.min.js', 'dist/ladda.min.js']); ?>
 </body>
 </html>
