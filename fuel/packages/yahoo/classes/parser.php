@@ -33,7 +33,7 @@ class Parser
 
 	public static function getBidding($page = null)
 	{
-		$r_biding_url = ($page) ? static::$_bidding_url.'picsnum=50&select=won&apg='.$page : static::$_bidding_url;
+		$r_biding_url = ($page) ? static::$_bidding_url.'picsnum=50&apg='.$page : static::$_bidding_url;
 
 		$table = [];
 		$paging = 4;
@@ -94,8 +94,10 @@ class Parser
 	}
 
 	// return auc_id array
-	public static function getWon()
+	public static function getWon($page = null)
 	{
+		$r_won_url = ($page) ? static::$_won_url.'picsnum=50&apg='.$page : static::$_won_url;
+
 		$table = [];
 
 		$html = new Simple_Html_Dom;
