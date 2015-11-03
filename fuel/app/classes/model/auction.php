@@ -4,7 +4,7 @@ class Model_Auction extends \Orm\Model
 	protected static $_properties = array(
 		'id',
 		'item_count' => [
-			'default' => 0,
+			'default' => 1,
 		],
 		'auc_id',
 		'title',
@@ -42,7 +42,7 @@ class Model_Auction extends \Orm\Model
 	public static function validate($factory = 'default')
 	{
 		$val = Validation::forge($factory);
-		$val->add_field('item_count', 'Item Count', 'required|valid_string[numeric]|max_length[3]');
+		// $val->add_field('item_count', 'Item Count', 'required|valid_string[numeric]|max_length[3]');
 		$val->add_field('auc_id', 'Auc Id', 'required|max_length[10]');
 		$val->add_field('title', 'Title', 'required|max_length[80]');
 		$val->add_field('price', 'Price', 'required|valid_string[numeric]|max_length[5]');
