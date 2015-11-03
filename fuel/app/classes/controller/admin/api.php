@@ -19,7 +19,7 @@ class Controller_Admin_Api extends Controller_Rest
 		$result = 0;
 		$val_error = [];
 		$auc_ids = [];
-		$page = \Input::post('pages');
+		$page = (int)\Input::post('pages');
 		$auc_ids = [];
 		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(60*$page)->execute()->as_array();
 		$user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
