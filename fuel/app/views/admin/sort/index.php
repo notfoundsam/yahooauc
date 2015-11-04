@@ -11,7 +11,7 @@ $count = 0;
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th></th>
+			<th><input type="checkbox" id="select_all"/></th>
 			<th>Auction ID</th>
 			<th>Title</th>
 			<th>Price</th>
@@ -47,6 +47,8 @@ $count = 0;
 	<?= \Form::submit('','Create/Add to'); ?>
 	<?= \Form::close(); ?>	
 </div>
+<?php else : ?>
+	<h4>No auctions for sort...</h4>
 <?php endif ; ?>
 
 <div style="margin-top:10px;text-align:center;">

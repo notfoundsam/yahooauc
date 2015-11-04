@@ -31,4 +31,6 @@
 	</tbody>
 </table>
 
+<?php else : ?>
+	<h4>Nothing for show...</h4>
 <?php endif ; ?>
