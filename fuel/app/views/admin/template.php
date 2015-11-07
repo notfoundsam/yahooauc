@@ -3,16 +3,14 @@
 <head>
 	<meta charset="utf-8">
 	<title><?php echo $title; ?></title>
-	<?php echo Asset::css('bootstrap.css'); ?>
-	<?php echo Asset::css('admin.css'); ?>
-	<?php echo Asset::css('dist/ladda-themeless.min.css'); ?>
+	<?php echo Asset::css(['bootstrap.css', 'admin.css', 'dist/ladda-themeless.min.css']); ?>
 	<style>
 		body { margin: 50px; }
 	</style>
-	<?php echo Asset::js(array(
+	<?php echo Asset::js([
 		'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
 		'bootstrap.js',
-	)); ?>
+	]); ?>
 	<script>
 		$(function(){ $('.topbar').dropdown(); });
 	</script>

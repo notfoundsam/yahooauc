@@ -1,4 +1,16 @@
 
+.center-form {
+  position: relative;
+  left: 50%;
+  margin-left: -200px;
+  margin-bottom: 50px;
+  padding: 20px;
+  background-color: #eeeeee;
+  text-align: center;
+  width: 400px;
+  border-radius: 20px;
+}​
+
 .loader {
   width: 250px;
   height: 50px;
