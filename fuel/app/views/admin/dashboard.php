@@ -4,8 +4,8 @@
 </div>
 
 <div class="center-form">
-	<label class="control-label">Lot ID:</label> <input class="form-control" id="lot_id" type="text" placeholder="Enter lot ID"><br />
-	<label class="control-label">Price:</label> <input class="form-control" id="lot_price" type="text" placeholder="Enter wishful price"><br />
+	<label class="control-label">Lot ID:</label> <input class="form-control" id="auc_id" type="text" placeholder="Enter lot ID"><br />
+	<label class="control-label">Price:</label> <input class="form-control" id="price" type="text" placeholder="Enter wishful price"><br />
 	<button id="form-bid" class="btn btn-primary ladda-button" data-style="zoom-in"><span class="ladda-label">Bid</span></button>
 </div>
 
@@ -24,29 +24,30 @@
 	$('#form-bid').click(function(){ 
 		var l = Ladda.create(this);
 		l.start();
-		var lot_id = $('#lot_id').val();
-		var lot_price = $('#lot_price').val();
+		var auc_id = $('#auc_id').val();
+		var price = $('#price').val();
 		$.ajax({
 			url: '/admin/api/bid',
 			type: 'POST',
 			data: {
 				csrf_token_key: "<?= \Security::fetch_token();?>",
-				lot_id: lot_id,
-				lot_price: lot_price
+				auc_id: auc_id,
+				price: price
 			},
 			success: function (data) {
 				if (data.error.length == 0){
 
 					if (data.result) {
-						$('.ajax p').html(data.result + " auction was won, refresh the page");
+						$('.ajax p').html(data.result);
+						$('.ajax').removeClass('alert-danger');
 						$('.ajax').addClass('alert-success').show();
 						$('html, body').animate({scrollTop: '0px'}, 0);
 					}
-					else {
-						$('.ajax p').html("No items was won");
-						$('.ajax').addClass('alert-success').show();
-						$('html, body').animate({scrollTop: '0px'}, 0);
-					}
+					// else {
+					// 	$('.ajax p').html("No items was won");
+					// 	$('.ajax').addClass('alert-success').show();
+					// 	$('html, body').animate({scrollTop: '0px'}, 0);
+					// }
 				}
 				else {
 					var error_message = '';
@@ -54,6 +55,7 @@
 						error_message += data.error[i] + "<br>";
 					}
 					$('.ajax p').html(error_message);
+					$('.ajax').removeClass('alert-success');
 					$('.ajax').addClass('alert-danger').show();
 					$('html, body').animate({scrollTop: '0px'}, 0);
 				}
@@ -62,6 +64,7 @@
 			error: function(){
 				l.stop();
 				$('.ajax p').html("API error has occurred!");
+				$('.ajax').removeClass('alert-success');
 				$('.ajax').addClass('alert-danger').show();
 				$('html, body').animate({scrollTop: '0px'}, 0);
 			}
