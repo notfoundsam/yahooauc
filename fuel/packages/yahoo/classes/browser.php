@@ -37,43 +37,45 @@ class Browser
     /*
      * HTTP_Request Class Object
      */
-    private static $login = false;
-    private static $select;
-    protected static $rq;
-    protected static $body;
+    private $login = false;
+    private $select;
+    private $auc_id;
+    protected $rq;
+    protected $body;
 
     /**
      * init function
      *
      * @return void
      */
-    public static function _init()
+    public function __construct($auc_id = null)
     {
-    	static::$rq = new HTTP_Request2();
-        static::$rq->setAdapter('curl');
+        $this->auc_id = $auc_id;
+    	$this->rq = new HTTP_Request2();
+        $this->rq->setAdapter('curl');
 
-    	static::$select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
+    	$this->select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
 
-    	if (empty(static::$select))
+    	if (empty($this->select))
     	{
     		throw new BrowserException('user in config/my.yahoo_user not found in DB');
     	}
-    	if (static::$select[0]['cookies'] && (static::$select[0]['updated_at'] > strtotime('-1 months')))
+    	if ($this->select[0]['cookies'] && ($this->select[0]['updated_at'] > strtotime('-1 months')))
     	{
     		$jar = new HTTP_Request2_CookieJar();
-        	$jar->unserialize(static::$select[0]['cookies']);
-        	static::$rq->setCookieJar($jar);
+        	$jar->unserialize($this->select[0]['cookies']);
+        	$this->rq->setCookieJar($jar);
     	}
     	else
     	{
-    		static::$rq->setCookieJar(true);
-	        static::$rq->setHeader(
+    		$this->rq->setCookieJar(true);
+	        $this->rq->setHeader(
 	            'User-Agent',
 	            'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)'
 	        );
-	        static::$rq->setHeader('Keep-Alive', 115);
-	        static::$rq->setHeader('Connection', 'keep-alive');
-	        static::login();
+	        $this->rq->setHeader('Keep-Alive', 115);
+	        $this->rq->setHeader('Connection', 'keep-alive');
+	        $this->login();
     	}
     }
 
@@ -81,16 +83,14 @@ class Browser
     * login to yahoo 
     *
     */
-    public static function login()
+    public function login()
     {
-    	static::$login = true;
-
-    	// $select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute();
+    	$this->login = true;
 
         $login_url = 'https://login.yahoo.co.jp/config/login?';
         $login_params = '.lg=jp&.intl=jp&.src=auc&.done=http://auctions.yahoo.co.jp/';
-        static::getBody('http://auctions.yahoo.co.jp/', null);
-        static::$body = static::getBody(
+        $this->getBody('http://auctions.yahoo.co.jp/', null);
+        $this->body = $this->getBody(
             $login_url . $login_params,
             'http://auctions.yahoo.co.jp/'
         );
@@ -98,7 +98,7 @@ class Browser
         // get post params
         preg_match_all(
             '/document\.getElementsByName\("\.albatross"\)\[0\]\.value = "(.*?)";/',
-            static::$body,
+            $this->body,
             $albatross,
             PREG_SET_ORDER
         );
@@ -108,31 +108,33 @@ class Browser
         }
         preg_match_all(
             '/<input type="hidden" name="(.*?)" value="(.*?)" ?>/',
-            static::$body,
+            $this->body,
             $matches,
             PREG_SET_ORDER
         );
 
-        static::$rq->setMethod(HTTP_Request2::METHOD_POST);
-        foreach ($matches as $entry) {
+        $this->rq->setMethod(HTTP_Request2::METHOD_POST);
+
+        foreach ($matches as $entry)
+        {
         	if ($entry[1] === '.nojs')
         		continue;
-            static::$rq->addPostParameter($entry[1], $entry[2]);
+            $this->rq->addPostParameter($entry[1], $entry[2]);
         }
-        static::$rq->addPostParameter('.albatross', $albatross[0][1]);
-        static::$rq->addPostParameter('login', static::$select[0]['userid']);
-        static::$rq->addPostParameter('.persistent', 'y');
-        static::$rq->addPostParameter('passwd', static::$select[0]['password']);
+        $this->rq->addPostParameter('.albatross', $albatross[0][1]);
+        $this->rq->addPostParameter('login', $this->select[0]['userid']);
+        $this->rq->addPostParameter('.persistent', 'y');
+        $this->rq->addPostParameter('passwd', $this->select[0]['password']);
 
         // need more than 3 sec before submit
         sleep(3);
 
-        static::getBody(
+        $this->getBody(
             $login_url . $login_params,
             'https://login.yahoo.co.jp/config/login?'
         );
 
-        static::$login = false;
+        $this->login = false;
     }
 
     /**
@@ -143,39 +145,36 @@ class Browser
     *
     * @return string    response body
     */
-    public static function getBody($url, $referer = '')
+    public function getBody($url, $referer = '')
     {
         if (empty($url))
         {
             throw new BrowserException('url can not be null');
         }
-        static::$rq->setUrl($url);
-        static::$rq->setHeader('Referer', $referer);
+        $this->rq->setUrl($url);
+        $this->rq->setHeader('Referer', $referer);
 
-        // $s_cookies = static::$rq->getCookieJar()->serialize();
-
-        if (!static::$login)
+        if (!$this->login)
         {
 			DB::update('yahoo')->set([
-				'cookies'  => static::$rq->getCookieJar()->serialize(),
+				'cookies'  => $this->rq->getCookieJar()->serialize(),
 				'updated_at' => time()
 			])->where('userid', Config::get('my.yahoo_user'))->execute();
         }
-        // Log::debug(static::$rq->send()->getBody());
-        return static::$rq->send()->getBody();
+        return $this->rq->send()->getBody();
     }
 
     // Get XML body of auction
-    public static function getXmlObject($auc_id = null)
+    public function getXmlObject()
     {
-        if (empty($auc_id))
+        if (empty($this->auc_id))
         {
             throw new BrowserException('auc_id can not be null');
         }
 
-        $url = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem?appid='.static::$select[0]['appid'].'&auctionID='.$auc_id;
+        $url = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem?appid='.$this->select[0]['appid'].'&auctionID='.$this->auc_id;
 
-        $auc_xml = simplexml_load_string(static::getBody($url));
+        $auc_xml = simplexml_load_string($this->getBody($url));
 
         if ($auc_xml->Code)
         {
@@ -189,17 +188,32 @@ class Browser
             }
         }
 
-        return simplexml_load_string(static::getBody($url));
+        return simplexml_load_string($this->getBody($url));
+    }
+
+    public function setFormValues($page_values = null, $price = null)
+    {
+        $this->rq->setMethod(HTTP_Request2::METHOD_POST);
+
+        foreach ($page_values as $value)
+        {
+            if ($value['name'] == 'setPrice' && $price)
+            {
+                $value['value'] = $price;
+            }
+            $this->rq->addPostParameter($value['name'], $value['value']);
+        }
+
     }
 
     // Test function for page of biding saved in local
-    public static function getBodyBidding()
+    public function getBodyBidding()
     {
         return File::read(APPPATH.'/tmp/yahoo/bidding3p.txt', true);
     }
 
     // Test function for page of won saved in local
-    public static function getBodyWon()
+    public function getBodyWon()
     {
         return File::read(APPPATH.'/tmp/yahoo/won1p.txt', true);
     }

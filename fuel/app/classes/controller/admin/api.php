@@ -36,7 +36,8 @@ class Controller_Admin_Api extends Controller_Rest
 
 				try
 				{
-					$auc_xml = Browser::getXmlObject($auc_id);
+					$browser = new Browser($auc_id);
+					$auc_xml = $browser->getXmlObject();
 
 					$auc_values = [];
 					$auc_values['auc_id'] = (string) $auc_xml->Result->AuctionID;
@@ -100,13 +101,35 @@ class Controller_Admin_Api extends Controller_Rest
 		{
 			try
 			{
-				$auc_xml = Browser::getXmlObject($val->validated('auc_id'));
+				$browser = new Browser($val->validated('auc_id'));
+				$auc_xml = $browser->getXmlObject();
 
-				$result = 'Bid on '. $val->validated('auc_id'). ' successful';
+				if ((string) $auc_xml->Result->Status == 'open')
+				{
+					$auction_page = $browser->getBody((string) $auc_xml->Result->AuctionItemUrl);
+
+					$page_values = Parser::getAuctionPageValues($auction_page);
+
+					$browser->setFormValues($page_values, $val->validated('price'));
+					$preview_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/show/bid_preview');
+
+					Log::debug($preview_page);
+
+					$result = 'Bid on '. $val->validated('auc_id'). ' successful';
+			
+				}
+				else
+				{
+					$val_error[] = 'Auction '. $val->validated('auc_id'). ' have ended';
+				}
 			}
 			catch (BrowserException $e)
 			{
 				$val_error[] = "ID: ".$val->validated('auc_id')." Error: ".$e->getMessage();
+			}
+			catch (ParserException $e)
+			{
+				$val_error[] = $e->getMessage();
 			}
 		}
 		else

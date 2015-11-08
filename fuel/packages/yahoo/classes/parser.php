@@ -14,6 +14,8 @@
  * @link     https://github.com/notfoundsam/yahooauc
  */
 
+class ParserException extends Exception {}
+
 /**
  * Class get items in bidding
  *
@@ -40,8 +42,9 @@ class Parser
 		$table = [];
 		$paging = 4;
 		$html = new Simple_Html_Dom;
-		$html = str_get_html(Browser::getBody($r_biding_url));
-		// $html = str_get_html(Browser::getBodyBidding());
+		$browser = new Browser();
+		$html = str_get_html($browser->getBody($r_biding_url));
+		// $html = str_get_html($browser->getBodyBidding());
 		$a_pages = [];
 
 		if ($p_t1 = $html->find('table', 3))
@@ -116,8 +119,9 @@ class Parser
 		$table = [];
 
 		$html = new Simple_Html_Dom;
-		$html = str_get_html(Browser::getBody($r_won_url));
-		// $html = str_get_html(Browser::getBodyWon());
+		$browser = new Browser();
+		$html = str_get_html($browser->getBody($r_won_url));
+		// $html = str_get_html($browser->getBodyWon());
 		
 		$auc_id = [];
 
@@ -146,5 +150,28 @@ class Parser
 		}
 
 		return $auc_id;
+	}
+
+	public static function getAuctionPageValues($auction_page)
+	{
+		$page_values = [];
+		$html = new Simple_Html_Dom;
+		$html = str_get_html($auction_page);
+
+		if ($form = $html->find('form[method=post]', 0))
+		{
+			$inputs = $form->find('input[type=hidden]');
+
+			foreach ($inputs as $input)
+			{
+				$page_values[] = ['name' => $input->name, 'value' => $input->value];
+			}
+		}
+		else
+		{
+			throw new ParserException('Page POST form not found');
+		}
+
+		return $page_values;
 	}
 }
