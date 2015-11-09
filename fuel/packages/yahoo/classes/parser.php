@@ -165,6 +165,7 @@ class Parser
 			foreach ($inputs as $input)
 			{
 				$page_values[] = ['name' => $input->name, 'value' => $input->value];
+				// Log::debug($input->name. ' - ' .$input->value);
 			}
 		}
 		else

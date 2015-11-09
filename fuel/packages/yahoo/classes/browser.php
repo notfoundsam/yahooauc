@@ -197,13 +197,18 @@ class Browser
 
         foreach ($page_values as $value)
         {
-            if ($value['name'] == 'setPrice' && $price)
-            {
-                $value['value'] = $price;
-            }
+            // if ($value['name'] == 'Bid' && $price)
+            // {
+            //     // Log::debug('setting price');
+            //     $value['value'] = $price;
+            // }
+            Log::debug($value['name']. ' - ' .$value['value']);
             $this->rq->addPostParameter($value['name'], $value['value']);
-        }
 
+        }
+        $this->rq->addPostParameter('Bid', $price);
+
+        // return $this->getBody('http://auctions.yahoo.co.jp/jp/show/bid_preview');
     }
 
     // Test function for page of biding saved in local
