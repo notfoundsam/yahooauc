@@ -35,6 +35,7 @@ class Parser
 	private static $_jp = array("円", "分", "時間", "日");
 	private static $_en   = array("yen", "min", "hour", "day");
 	private static $_bid_success = '入札を受け付けました。あなたが現在の最高額入札者です。';
+	private static $_price_up = '入札できませんでした。有効な入札金額を入力してください。';
 
 	public static function getBidding($page = null)
 	{
@@ -184,9 +185,9 @@ class Parser
 		$html = new Simple_Html_Dom;
 		$html = str_get_html($auction_page);
 
-		if ($p_result = $html->find('div[id=modAlertBox]', 0)->find('strong'), 0)
+		if ($p_result = $html->find('div[id=modAlertBox]', 0))
 		{
-			if ($_bid_success == $p_result->innertext)
+			if (static::$_bid_success == $p_result->find('strong', 0)->innertext)
 			{
 				return true;
 			}
@@ -195,9 +196,16 @@ class Parser
 				throw new ParserException('Page says: '.$p_result->innertext);
 			}
 		}
-		else
+		else if ($p_result = $html->find('div[id=decErrorBox]', 0))
 		{
-			// Price goes up
+			if (static::$_price_up == $p_result->find('strong', 0)->innertext)
+			{
+				throw new ParserException('Price goes up', 10);
+			}
+			else
+			{
+				throw new ParserException('Parser could not find result');
+			}
 		}
 		return false;
 	}
