@@ -191,24 +191,41 @@ class Browser
         return simplexml_load_string($this->getBody($url));
     }
 
-    public function setFormValues($page_values = null, $price = null)
+    public function setFormValues($page_values = null, $price = 0)
     {
         $this->rq->setMethod(HTTP_Request2::METHOD_POST);
+        $price_setted = false;
 
+        Log::debug('--------------------BROWSER----------------------');
         foreach ($page_values as $value)
         {
-            // if ($value['name'] == 'Bid' && $price)
-            // {
-            //     // Log::debug('setting price');
-            //     $value['value'] = $price;
-            // }
+            if ($value['name'] == 'setPrice')
+            {
+                if ($price < $value['value'])
+                {
+                    throw new BrowserException('Price must be upper or equal '.$value['value']);
+                }
+            }
+
+            if ($value['name'] == 'mnewsoptin')
+            {
+                $value['value'] = 0;
+            }
+
+            if ($value['name'] == 'Bid')
+            {
+                $value['value'] = $price;
+                $price_setted = true;
+            }
             Log::debug($value['name']. ' - ' .$value['value']);
             $this->rq->addPostParameter($value['name'], $value['value']);
 
         }
-        $this->rq->addPostParameter('Bid', $price);
-
-        // return $this->getBody('http://auctions.yahoo.co.jp/jp/show/bid_preview');
+        if (!$price_setted)
+        {
+            $this->rq->addPostParameter('Bid', $price);
+        }
+        Log::debug('--------------------BROWSER----------------------');
     }
 
     // Test function for page of biding saved in local
