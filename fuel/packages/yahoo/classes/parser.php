@@ -34,6 +34,7 @@ class Parser
 	private static $_bidding_url = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus?select=bidding';
 	private static $_jp = array("円", "分", "時間", "日");
 	private static $_en   = array("yen", "min", "hour", "day");
+	private static $_bid_success = '入札を受け付けました。あなたが現在の最高額入札者です。';
 
 	public static function getBidding($page = null)
 	{
@@ -162,10 +163,13 @@ class Parser
 		{
 			$inputs = $form->find('input[type=hidden]');
 
+			Log::debug('--------------------PARSER----------------------');
 			foreach ($inputs as $input)
 			{
 				$page_values[] = ['name' => $input->name, 'value' => $input->value];
+				Log::debug($input->name. ' - ' .$input->value);
 			}
+			Log::debug('--------------------PARSER----------------------');
 		}
 		else
 		{
@@ -173,5 +177,28 @@ class Parser
 		}
 
 		return $page_values;
+	}
+
+	public static function getResult($auction_page)
+	{
+		$html = new Simple_Html_Dom;
+		$html = str_get_html($auction_page);
+
+		if ($p_result = $html->find('div[id=modAlertBox]', 0)->find('strong'), 0)
+		{
+			if ($_bid_success == $p_result->innertext)
+			{
+				return true;
+			}
+			else
+			{
+				throw new ParserException('Page says: '.$p_result->innertext);
+			}
+		}
+		else
+		{
+			// Price goes up
+		}
+		return false;
 	}
 }

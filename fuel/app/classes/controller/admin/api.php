@@ -113,10 +113,24 @@ class Controller_Admin_Api extends Controller_Rest
 					$browser->setFormValues($page_values, $val->validated('price'));
 					$preview_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/show/bid_preview');
 
+					Log::debug('----------------------------FIRST---------------------------');
 					Log::debug($preview_page);
 
-					$result = 'Bid on '. $val->validated('auc_id'). ' successful';
-			
+					$page_values = Parser::getAuctionPageValues($preview_page);
+					$browser->setFormValues($page_values, $val->validated('price'));
+					$result_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/config/placebid');
+
+					Log::debug('----------------------------SECOND---------------------------');
+					Log::debug($result_page);
+
+					if (Parser::getResult($result_page))
+					{
+						$result = 'Bid on '. $val->validated('auc_id'). ' successful';
+					}
+					else
+					{
+						$val_error[] = 'Needs to clean won pages or unknown result';
+					}
 				}
 				else
 				{
