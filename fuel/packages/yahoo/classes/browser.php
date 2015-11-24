@@ -239,4 +239,16 @@ class Browser
     {
         return File::read(APPPATH.'/tmp/yahoo/won1p.txt', true);
     }
+
+    // Test function for success page of bid saved in local
+    public function getSuccesPage()
+    {
+        return File::read(APPPATH.'/tmp/yahoo/success.txt', true);
+    }
+
+    // Test function for price go upper page of bid saved in local
+    public function getPriceUpPage()
+    {
+        return File::read(APPPATH.'/tmp/yahoo/price_up.txt', true);
+    }
 }
