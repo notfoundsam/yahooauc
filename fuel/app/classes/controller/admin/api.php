@@ -108,19 +108,19 @@ class Controller_Admin_Api extends Controller_Rest
 				{
 					$auction_page = $browser->getBody((string) $auc_xml->Result->AuctionItemUrl);
 
-					// $page_values = Parser::getAuctionPageValues($auction_page);
+					$page_values = Parser::getAuctionPageValues($auction_page);
 
-					// $browser->setFormValues($page_values, $val->validated('price'));
-					// $preview_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/show/bid_preview');
+					$browser->setFormValues($page_values, $val->validated('price'));
+					$preview_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/show/bid_preview');
 
 					// Log::debug('----------------------------FIRST---------------------------');
 					// Log::debug($preview_page);
 
-					// $page_values = Parser::getAuctionPageValues($preview_page);
-					// $browser->setFormValues($page_values, $val->validated('price'));
-					// $result_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/config/placebid');
+					$page_values = Parser::getAuctionPageValues($preview_page);
+					$browser->setFormValues($page_values, $val->validated('price'));
+					$result_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/config/placebid');
 					// $result_page = $browser->getSuccesPage();
-					$result_page = $browser->getPriceUpPage();
+					// $result_page = $browser->getPriceUpPage();
 
 					// Log::debug('----------------------------SECOND---------------------------');
 					// Log::debug($result_page);
