@@ -42,6 +42,7 @@ class Browser
     private $auc_id;
     protected $rq;
     protected $body;
+    protected $jar;
 
     /**
      * init function
@@ -52,7 +53,14 @@ class Browser
     {
         $this->auc_id = $auc_id;
     	$this->rq = new HTTP_Request2();
+        $this->jar = new HTTP_Request2_CookieJar();
         $this->rq->setAdapter('curl');
+        $this->rq->setHeader(
+            'User-Agent',
+            'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)'
+        );
+        $this->rq->setHeader('Keep-Alive', 115);
+        $this->rq->setHeader('Connection', 'keep-alive');
 
     	$this->select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
 
@@ -60,21 +68,16 @@ class Browser
     	{
     		throw new BrowserException('user in config/my.yahoo_user not found in DB');
     	}
-    	if ($this->select[0]['cookies'] && ($this->select[0]['updated_at'] > strtotime('-1 months')))
+
+    	if ($this->select[0]['cookies'] && ($this->select[0]['updated_at'] > strtotime('-1 week')))
     	{
-    		$jar = new HTTP_Request2_CookieJar();
-        	$jar->unserialize($this->select[0]['cookies']);
-        	$this->rq->setCookieJar($jar);
+            Log::debug('Use old cookie');
+        	$this->jar->unserialize($this->select[0]['cookies']);
+        	$this->rq->setCookieJar($this->jar);
     	}
     	else
     	{
-    		$this->rq->setCookieJar(true);
-	        $this->rq->setHeader(
-	            'User-Agent',
-	            'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)'
-	        );
-	        $this->rq->setHeader('Keep-Alive', 115);
-	        $this->rq->setHeader('Connection', 'keep-alive');
+            Log::debug('Create new cookie');
 	        $this->login();
     	}
     }
@@ -86,6 +89,7 @@ class Browser
     public function login()
     {
     	$this->login = true;
+        $this->rq->setCookieJar(true);
 
         $login_url = 'https://login.yahoo.co.jp/config/login?';
         $login_params = '.lg=jp&.intl=jp&.src=auc&.done=http://auctions.yahoo.co.jp/';
@@ -153,15 +157,18 @@ class Browser
         }
         $this->rq->setUrl($url);
         $this->rq->setHeader('Referer', $referer);
-
+        $response = $this->rq->send();
+        // Profiler::console($response->getCookies());
+        $this->jar->addCookiesFromResponse($response);
+        // Profiler::console($this->jar->getAll());
         if (!$this->login)
         {
 			DB::update('yahoo')->set([
-				'cookies'  => $this->rq->getCookieJar()->serialize(),
+				'cookies'  => $this->jar->serialize(),
 				'updated_at' => time()
 			])->where('userid', Config::get('my.yahoo_user'))->execute();
         }
-        return $this->rq->send()->getBody();
+        return $response->getBody();
     }
 
     // Get XML body of auction
