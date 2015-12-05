@@ -26,7 +26,6 @@
         "fuelphp/upload": "2.0.2",
         "monolog/monolog": "1.5.*",
         "michelf/php-markdown": "1.4.0",
-        "google/apiclient": "1.0.*@beta"
     },
     "suggest": {
         "dwoo/dwoo" : "Allow Dwoo templating with the Parser package",
