@@ -47,6 +47,7 @@ class Parser
 		$html = new Simple_Html_Dom;
 		$browser = new Browser();
 		$html = str_get_html($browser->getBody($r_biding_url));
+		Log::debug($html);
 		// $html = str_get_html($browser->getBodyBidding());
 		$a_pages = [];
 
