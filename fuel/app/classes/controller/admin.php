@@ -97,6 +97,12 @@ class Controller_Admin extends Controller_Base
     	
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
+		$connect = new Quickstart;
+		$client = $connect->getClient();
+		$service = new Google_Service_Drive($client);
+		// $file = new Google_DriveFile();
+		// $files = retrieveAllFiles($service);
+		Profiler::console($service->files->listFiles());
 	}
 
 }
