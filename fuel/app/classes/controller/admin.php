@@ -1,4 +1,6 @@
 <?php
+// use GuzzleHttp\Client;
+// use GuzzleHttp\Cookie\CookieJar;
 
 class Controller_Admin extends Controller_Base
 {
@@ -94,18 +96,7 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{	
-    	
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
-
-
-		
-		// $connect = new Quickstart;
-		// $client = $connect->getClient();
-		// $service = new Google_Service_Drive($client);
-		// $file = new Google_DriveFile();
-		// $files = retrieveAllFiles($service);
-		// Profiler::console($service->files->listFiles());
 	}
-
 }

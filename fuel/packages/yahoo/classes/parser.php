@@ -14,6 +14,8 @@
  * @link     https://github.com/notfoundsam/yahooauc
  */
 
+use Sunra\PhpSimple\HtmlDomParser;
+
 class ParserException extends Exception {}
 
 /**
@@ -30,13 +32,29 @@ class Parser
 	/*
      * Parser Class Object
      */
-	private static $_won_url = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus?select=won';
-	private static $_bidding_url = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus?select=bidding';
+	// private static $_won_url = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus?select=won';
+	// private static $_bidding_url = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus?select=bidding';
 	private static $_jp = array("円", "分", "時間", "日");
 	private static $_en   = array("yen", "min", "hour", "day");
 	private static $_bid_success = '入札を受け付けました。あなたが現在の最高額入札者です。';
 	private static $_price_up = '申し訳ありません。開始価格よりも高い値段で入札してください。';
 	private static $_auc_won = 'おめでとうございます!!　あなたが落札しました。';
+
+
+	public static function checkLogin($auction_page)
+	{
+		$html = new HtmlDomParser;
+		$html = str_get_html($auction_page);
+
+		if ($p_result = $html->find('div[class=yjmthloginarea]', 0))
+		{
+			if (Config::get('my.yahoo_user') == trim($p_result->find('strong', 0)->innertext))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static function getBidding($page = null)
 	{
@@ -44,7 +62,7 @@ class Parser
 
 		$table = [];
 		$paging = 4;
-		$html = new Simple_Html_Dom;
+		$html = new HtmlDomParser;
 		$browser = new Browser();
 		$html = str_get_html($browser->getBody($r_biding_url));
 		// $html = str_get_html($browser->getBodyBidding());
@@ -115,18 +133,16 @@ class Parser
 	}
 
 	// return auc_id array
-	public static function getWon($page = null)
+	public static function parseWonPage($body = null)
 	{
-		$r_won_url = ($page) ? static::$_won_url.'picsnum=50&apg='.$page : static::$_won_url;
+		if (!$body)
+		{
+			throw new ParserException('Body of HTML Document is empty');
+		}
 
-		$table = [];
-
-		$html = new Simple_Html_Dom;
-		$browser = new Browser();
-		$html = str_get_html($browser->getBody($r_won_url));
-		// $html = str_get_html($browser->getBodyWon());
-		
-		$auc_id = [];
+		$ids = [];
+		$html = new HtmlDomParser;
+		$html = str_get_html($body);
 
 		if ($a_t1 = $html->find('table', 3))
 		{
@@ -147,31 +163,28 @@ class Parser
 					
 					$a_td = $tr->children();
 
-					$auc_id[] = strip_tags($a_td[1]->innertext);
+					$ids[] = strip_tags($a_td[1]->innertext);
 				}
 			}	
 		}
 
-		return $auc_id;
+		return $ids;
 	}
 
 	public static function getAuctionPageValues($auction_page)
 	{
 		$page_values = [];
-		$html = new Simple_Html_Dom;
+		$html = new HtmlDomParser;
 		$html = str_get_html($auction_page);
 
 		if ($form = $html->find('form[method=post]', 0))
 		{
 			$inputs = $form->find('input[type=hidden]');
 
-			Log::debug('--------------------PARSER----------------------');
 			foreach ($inputs as $input)
 			{
 				$page_values[] = ['name' => $input->name, 'value' => $input->value];
-				Log::debug($input->name. ' - ' .$input->value);
 			}
-			Log::debug('--------------------PARSER----------------------');
 		}
 		else
 		{
@@ -183,7 +196,7 @@ class Parser
 
 	public static function getResult($auction_page)
 	{
-		$html = new Simple_Html_Dom;
+		$html = new HtmlDomParser;
 		$html = str_get_html($auction_page);
 
 		if ($p_result = $html->find('div[id=modAlertBox]', 0))
