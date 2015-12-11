@@ -26,7 +26,7 @@ desktop.ini
 /fuel/packages/oil/
 /fuel/packages/orm/
 /fuel/packages/parser/
-/fuel/app/tmp/
+
 
 # dynamically generated files
 /fuel/app/logs/*/*/*
