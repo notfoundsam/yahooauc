@@ -17,6 +17,6 @@ return array(
 	'second_bidder' => 'sosetcadmin',
 
 	// Limit of auction getting from DB
-	'limit' => 250;
+	'limit' => 250,
 );
 
