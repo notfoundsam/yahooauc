@@ -15,5 +15,8 @@ return array(
 	'main_bidder' => 'vyacheslav',
 	// 'main_bidder' => 'sosetcadmin',
 	'second_bidder' => 'sosetcadmin',
+
+	// Limit of auction getting from DB
+	'limit' => 250;
 );
 

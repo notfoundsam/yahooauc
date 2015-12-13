@@ -13,15 +13,14 @@ class Controller_Admin_Api extends Controller_Rest
 			throw new HttpNotFoundException;
 		}
 	}
-	
+
 	public function post_refresh()
 	{
 		$result = 0;
 		$val_error = [];
 		$auc_ids = [];
 		$page = (int)\Input::post('pages');
-		$auc_ids = [];
-		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(250)->execute()->as_array();
+		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(Config::get('my.limit'))->execute()->as_array();
 		$user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
 
 		foreach ($select as $value) {
