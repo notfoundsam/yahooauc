@@ -18,9 +18,6 @@
  * Class representing a HTTP request message
  * PEAR package should be installed
  */
-use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJarInterface;
-
 require 'HTTP/Request2.php';
 require 'HTTP/Request2/CookieJar.php';
 
@@ -38,15 +35,18 @@ class BrowserLoginException extends Exception {}
  */
 class Browser
 {
-    protected $select;
-    protected $rq;
-    protected $loggedin = true;
-    protected $jar;
-    protected $auction_url = 'http://auctions.yahoo.co.jp/';
-    protected $login_url = 'https://login.yahoo.co.jp/config/login';
-    protected $won_url = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus';
-    protected $_bidding_url = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus?select=bidding';
-    protected $api_url = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem';
+    protected static $AUCTION_URL  = 'http://auctions.yahoo.co.jp/';
+    protected static $LOGIN_URL    = 'https://login.yahoo.co.jp/config/login';
+    protected static $CLOSED_USER  = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus';
+    protected static $OPEN_USER    = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus';
+    protected static $BID_PREVIEW  = 'http://auctions.yahoo.co.jp/jp/show/bid_preview';
+    protected static $PLACE_BID    = 'http://auctions.yahoo.co.jp/jp/config/placebid';
+    protected static $API_URL      = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem';
+
+    protected $loggedin            = true;
+    protected $select              = null;
+    protected $rq                  = null;
+    protected $jar                 = null;
 
     /**
      * init function
@@ -96,12 +96,12 @@ class Browser
             '.lg' => 'jp',
             '.intl' => 'jp',
             '.src' => 'auc',
-            '.done' => $this->auction_url,
+            '.done' => static::$AUCTION_URL,
         ];
 
-        $this->getBody($this->auction_url);
+        $this->getBody(static::$AUCTION_URL);
 
-        $body = $this->getBody($this->login_url, http_build_query($query));
+        $body = $this->getBody(static::$LOGIN_URL, http_build_query($query));
 
         $values = Parser::getAuctionPageValues($body);
 
@@ -132,7 +132,6 @@ class Browser
             }
 
             $this->rq->addPostParameter($value['name'], $value['value']);
-
         }
 
         $this->rq->addPostParameter('login', $this->select[0]['userid']);
@@ -141,10 +140,10 @@ class Browser
 
         // Pause before submit
         sleep(3);
-        $this->getBody($this->login_url, http_build_query($query));
+        $this->getBody(static::$LOGIN_URL, http_build_query($query));
         
-        // Check for login
-        $body = $this->getBody($this->auction_url);
+        // Check by login
+        $body = $this->getBody(static::$AUCTION_URL);
 
         if (Parser::checkLogin($body))
         {
@@ -191,7 +190,7 @@ class Browser
             'auctionID' => $auc_id,
         ];
 
-        $body = $this->getBody($this->api_url, http_build_query($query));
+        $body = $this->getBody(static::$API_URL, http_build_query($query));
         $auc_xml = simplexml_load_string($body);
 
         if ($auc_xml->Code)
@@ -209,7 +208,7 @@ class Browser
         return $auc_xml;
     }
 
-    public function setFormValues($page_values = null, $price = 0)
+    protected function setFormValues($page_values = null, $price = 0)
     {
         $this->rq->setMethod(HTTP_Request2::METHOD_POST);
         $price_setted = false;
@@ -234,17 +233,16 @@ class Browser
                 $value['value'] = $price;
                 $price_setted = true;
             }
-            // Log::debug($value['name']. ' - ' .$value['value']);
             $this->rq->addPostParameter($value['name'], $value['value']);
-
         }
+
         if (!$price_setted)
         {
             $this->rq->addPostParameter('Bid', $price);
         }
     }
 
-    public function getWon($page = null)
+    public function won($page = null)
     {
         $query = [
             'select' => 'won',
@@ -252,10 +250,43 @@ class Browser
             'apg' => $page ? $page : 1
         ];
 
-        $body = $this->getBody($this->won_url, http_build_query($query));
+        $body = $this->getBody(static::$CLOSED_USER, http_build_query($query));
         $ids = Parser::parseWonPage($body);
 
         return $ids;
+    }
+
+    public function bidding($page = null)
+    {
+         $query = [
+            'select' => 'bidding',
+            'picsnum' => '50',
+            'apg' => $page ? $page : 1
+        ];
+
+        $body = $this->getBody(static::$OPEN_USER, http_build_query($query));
+        // $body = $this->getBodyBidding()
+        $table = Parser::parseBiddingPage($body);
+        return $table; 
+    }
+
+    public function bid($auc_id = null, $price = null, $auc_url = null)
+    {
+        $body = $this->getBody($auc_url);
+        $values = Parser::getAuctionPageValues($body);
+
+        $this->setFormValues($values, $price);
+        $body = $this->getBody(static::$BID_PREVIEW);
+
+        $values = Parser::getAuctionPageValues($body);
+
+        $this->setFormValues($values, $price);
+        $body = $this->getBody(static::$PLACE_BID);
+        // $body = $this->getSuccesPage();
+        // $body = $this->getPriceUpPage();
+        $result = Parser::getResult($body);
+
+        return $result;
     }
 
     // Test function for page of biding saved in local
