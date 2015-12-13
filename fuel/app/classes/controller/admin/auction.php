@@ -1,4 +1,5 @@
 <?php
+
 class Controller_Admin_Auction extends Controller_Admin
 {
 	public function action_edit($id = null, $one = null, $two = null)
@@ -19,13 +20,11 @@ class Controller_Admin_Auction extends Controller_Admin
 
 				Response::redirect('admin/'.$redirect);
 			}
-
 			else
 			{
 				Session::set_flash('error', e('Could not update auction #' . $auction->auc_id));
 			}
 		}
-
 		else
 		{
 			if (Input::method() == 'POST')
@@ -58,7 +57,6 @@ class Controller_Admin_Auction extends Controller_Admin
 
 			Session::set_flash('success', e('Deleted auction #'.$auction->auc_id));
 		}
-
 		else
 		{
 			Session::set_flash('error', e('Could not delete auction #'.$auction->auc_id));

@@ -12,16 +12,15 @@ class Controller_Admin_Api extends Controller_Rest
 		{
 			throw new HttpNotFoundException;
 		}
-
 	}
+
 	public function post_refresh()
 	{
 		$result = 0;
 		$val_error = [];
 		$auc_ids = [];
 		$page = (int)\Input::post('pages');
-		$auc_ids = [];
-		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(250)->execute()->as_array();
+		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(Config::get('my.limit'))->execute()->as_array();
 		$user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
 
 		foreach ($select as $value) {
@@ -34,7 +33,7 @@ class Controller_Admin_Api extends Controller_Rest
 		{
 			$browser = new Browser();
 
-			foreach ($browser->getWon($page) as $auc_id) {
+			foreach ($browser->won($page) as $auc_id) {
 				
 				if ( !in_array($auc_id, $auc_ids) ){
 
@@ -89,6 +88,10 @@ class Controller_Admin_Api extends Controller_Rest
 		{
 			$val_error[] = "Login error: ".$e->getMessage();
 		}
+		catch (ParserException $e)
+		{
+			$val_error[] = "Parser error: ".$e->getMessage();
+		}
 
 		$this->response(['result' => $result, 'error' => $val_error]);
 	}
@@ -109,31 +112,17 @@ class Controller_Admin_Api extends Controller_Rest
 		{
 			try
 			{
-				$browser = new Browser($val->validated('auc_id'));
-				$auc_xml = $browser->getXmlObject();
+				$browser = new Browser();
+				
+				$auc_xml = $browser->getXmlObject($val->validated('auc_id'));
 
 				if ((string) $auc_xml->Result->Status == 'open')
 				{
-					$auction_page = $browser->getBody((string) $auc_xml->Result->AuctionItemUrl);
+					$auc_id = $val->validated('auc_id');
+					$price = $val->validated('price');
+					$auc_url = (string) $auc_xml->Result->AuctionItemUrl;
 
-					$page_values = Parser::getAuctionPageValues($auction_page);
-
-					$browser->setFormValues($page_values, $val->validated('price'));
-					$preview_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/show/bid_preview');
-
-					// Log::debug('----------------------------FIRST---------------------------');
-					// Log::debug($preview_page);
-
-					$page_values = Parser::getAuctionPageValues($preview_page);
-					$browser->setFormValues($page_values, $val->validated('price'));
-					$result_page = $browser->getBody('http://auctions.yahoo.co.jp/jp/config/placebid');
-					// $result_page = $browser->getSuccesPage();
-					// $result_page = $browser->getPriceUpPage();
-
-					// Log::debug('----------------------------SECOND---------------------------');
-					// Log::debug($result_page);
-
-					if (Parser::getResult($result_page))
+					if ($browser->bid($auc_id, $price, $auc_url))
 					{
 						$result = 'Bid on '. $val->validated('auc_id'). ' successful';
 					}

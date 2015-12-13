@@ -34,17 +34,17 @@ class Parser
      */
 	// private static $_won_url = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus?select=won';
 	// private static $_bidding_url = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus?select=bidding';
-	private static $_jp = array("円", "分", "時間", "日");
-	private static $_en   = array("yen", "min", "hour", "day");
-	private static $_bid_success = '入札を受け付けました。あなたが現在の最高額入札者です。';
-	private static $_price_up = '申し訳ありません。開始価格よりも高い値段で入札してください。';
-	private static $_auc_won = 'おめでとうございます!!　あなたが落札しました。';
+	protected static $JP          = array("円", "分", "時間", "日");
+	protected static $EN          = array("yen", "min", "hour", "day");
+	protected static $BID_SUCCESS = '入札を受け付けました。あなたが現在の最高額入札者です。';
+	protected static $PRICE_UP    = '申し訳ありません。開始価格よりも高い値段で入札してください。';
+	protected static $AUCTION_WON = 'おめでとうございます!!　あなたが落札しました。';
 
 
-	public static function checkLogin($auction_page)
+	public static function checkLogin($body)
 	{
 		$html = new HtmlDomParser;
-		$html = str_get_html($auction_page);
+		$html = str_get_html($body);
 
 		if ($p_result = $html->find('div[class=yjmthloginarea]', 0))
 		{
@@ -56,18 +56,19 @@ class Parser
 		return false;
 	}
 
-	public static function getBidding($page = null)
+	public static function parseBiddingPage($body = null)
 	{
-		$r_biding_url = ($page) ? static::$_bidding_url.'picsnum=50&apg='.$page : static::$_bidding_url;
+		if (!$body)
+		{
+			throw new ParserException('Body of HTML Document is empty');
+		}
 
 		$table = [];
-		$paging = 4;
-		$html = new HtmlDomParser;
-		$browser = new Browser();
-		$html = str_get_html($browser->getBody($r_biding_url));
-		// $html = str_get_html($browser->getBodyBidding());
 		$a_pages = [];
+		$paging = 4;
 
+		$html = new HtmlDomParser;
+		$html = str_get_html($body);
 		if ($p_t1 = $html->find('table', 3))
 		{
 			if ($p_t2 = $p_t1->find('table', 3))
@@ -106,11 +107,11 @@ class Parser
 						{
 							if ($i == 0)
 							{
-								$a_tr[] = end((explode('/', $item->find('td', $i)->children(0)->href)));
+								$a_tr[] = end((explode('/', $item->find('td', $i)->find('a', 0)->href)));
 							}
 							if ($i == 1 || $i == 5)
 							{
-								$a_tr[] = str_replace(static::$_jp, static::$_en, strip_tags($item->find('td', $i)->innertext));
+								$a_tr[] = str_replace(static::$JP, static::$EN, strip_tags($item->find('td', $i)->innertext));
 							}
 							else
 							{
@@ -119,10 +120,6 @@ class Parser
 						}
 						$a_auctions[] = $a_tr;
 					}
-				}
-				else
-				{
-					
 				}
 			}	
 		}
@@ -171,11 +168,11 @@ class Parser
 		return $ids;
 	}
 
-	public static function getAuctionPageValues($auction_page)
+	public static function getAuctionPageValues($body)
 	{
 		$page_values = [];
 		$html = new HtmlDomParser;
-		$html = str_get_html($auction_page);
+		$html = str_get_html($body);
 
 		if ($form = $html->find('form[method=post]', 0))
 		{
@@ -194,18 +191,18 @@ class Parser
 		return $page_values;
 	}
 
-	public static function getResult($auction_page)
+	public static function getResult($body)
 	{
 		$html = new HtmlDomParser;
-		$html = str_get_html($auction_page);
+		$html = str_get_html($body);
 
 		if ($p_result = $html->find('div[id=modAlertBox]', 0))
 		{
-			if (static::$_bid_success == trim($p_result->find('strong', 0)->innertext))
+			if (static::$BID_SUCCESS == trim($p_result->find('strong', 0)->innertext))
 			{
 				return true;
 			}
-			else if (static::$_auc_won == trim($p_result->find('strong', 0)->innertext))
+			else if (static::$AUCTION_WON == trim($p_result->find('strong', 0)->innertext))
 			{
 				return true;
 			}
@@ -216,7 +213,7 @@ class Parser
 		}
 		else if ($p_result = $html->find('div[id=modInfoBox]', 0))
 		{
-			if (static::$_price_up == str_replace(' ', '', $p_result->find('strong', 0)->innertext))
+			if (static::$PRICE_UP == str_replace(' ', '', $p_result->find('strong', 0)->innertext))
 			{
 
 				throw new ParserException('Price goes up', 10);
