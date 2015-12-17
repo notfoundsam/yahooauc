@@ -158,6 +158,7 @@ class Db_convert
 		// Add index to auctions and parts
 		\DBUtil::create_index('auctions', 'part_id', 'part_id');
 		\DBUtil::create_index('parts', 'status', 'status');
+		\DBUtil::create_index('vendors', 'name', 'name');
 
 		// delete auc_id g143869725 !!!!
 	}
