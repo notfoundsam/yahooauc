@@ -4,7 +4,22 @@ class Controller_Admin_Finance extends Controller_Admin
 
 	public function action_index()
 	{
-		$finance = Model_Finance::find('all');
+		$pagination = \Pagination::forge('default', [
+			'name' => 'bootstrap3',
+			'total_items' => \Model_Finance::count(),
+			'per_page' => 50,
+			'uri_segment' => 'p',
+			'num_links' => 20,
+		]);
+		$conditions = array(
+			// 'order_by' => ['id' => 'desc'],
+			'rows_limit' => $pagination->per_page,
+			'rows_offset' => $pagination->offset,
+		);
+		
+		// $pagination = Pagination::forge('default', $config);
+		$finance = Model_Finance::find('all', $conditions);
+
 		$usd = \DB::select(\DB::expr('SUM(Case When usd < 0 then usd else 0 end) AS usd'))->from('balances')->execute()->as_array();
 		$usd_balance = \DB::select(\DB::expr('SUM(usd) AS usd_balance'))->from('balances')->execute()->as_array();
 		$jpy = \DB::select(\DB::expr('SUM(jpy) AS jpy'))->from('balances')->execute()->as_array();

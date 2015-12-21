@@ -1,5 +1,7 @@
-<h2>Listing Vendors</h2>
-<br>
+<?= \Pagination::instance('default')->render() ?>
+<p>
+	<?php echo Html::anchor('admin/vendor/create', 'Add new Vendor', array('class' => 'btn btn-success')); ?>
+</p>
 <?php if ($vendors): ?>
 <table class="table table-striped vendor">
 	<thead>
@@ -30,7 +32,4 @@
 <?php else: ?>
 <p>No Vendors.</p>
 
-<?php endif; ?><p>
-	<?php echo Html::anchor('admin/vendor/create', 'Add new Vendor', array('class' => 'btn btn-success')); ?>
-
-</p>
+<?php endif; ?>
