@@ -18,8 +18,8 @@
  * Class representing a HTTP request message
  * PEAR package should be installed
  */
-require 'HTTP/Request2.php';
-require 'HTTP/Request2/CookieJar.php';
+require_once 'HTTP/Request2.php';
+require_once 'HTTP/Request2/CookieJar.php';
 
 class BrowserException extends Exception {}
 class BrowserLoginException extends Exception {}

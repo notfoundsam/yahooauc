@@ -10,9 +10,9 @@
 	<tbody>
 		<tr>
 			<td><?php echo number_format($usd_balance, 2, '.', ','); ?></td>
-			<td><?php echo number_format($usd); ?></td>
+			<td><?php echo number_format($usd, 2, '.', ','); ?></td>
 			<td><?php echo number_format($jpy); ?></td>
-			<td><?php echo 0; ?></td>
+			<td><?php echo number_format($balance); ?></td>
 		</tr>
 	</tbody>
 </table>
@@ -20,7 +20,7 @@
 <p>
 	<?php echo Html::anchor('admin/finance/create', 'Add new record', array('class' => 'btn btn-success')); ?>
 </p>
-<?php if ($finance): ?>
+<?php if ($finances): ?>
 <table class="table table-striped vendor">
 	<thead>
 		<tr>
@@ -32,7 +32,7 @@
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($finance as $item): ?>
+	<?php foreach ($finances as $item): ?>
 		<tr>
 
 			<td><?php echo $item->operationData; ?></td>
