@@ -4,17 +4,39 @@ class Controller_Admin_Finance extends Controller_Admin
 
 	public function action_index()
 	{
-		$finance = Model_Finance::find('all');
-		$usd = \DB::select(\DB::expr('SUM(Case When usd < 0 then usd else 0 end) AS usd'))->from('balances')->execute()->as_array();
-		$usd_balance = \DB::select(\DB::expr('SUM(usd) AS usd_balance'))->from('balances')->execute()->as_array();
-		$jpy = \DB::select(\DB::expr('SUM(jpy) AS jpy'))->from('balances')->execute()->as_array();
-		Profiler::console($usd);
-		$this->template->title = "Finances";
+		$pagination = \Pagination::forge('default', [
+			'name'        => 'bootstrap3',
+			'total_items' => \Model_Finance::count(),
+			'per_page'    => 50,
+			'uri_segment' => 'p',
+			'num_links'   => 20,
+		]);
+		$conditions = array(
+			'rows_limit'  => $pagination->per_page,
+			'rows_offset' => $pagination->offset,
+		);
+		
+		$finances = Model_Finance::find('all', $conditions);
+
+		$auctions_sum = \DB::select(\DB::expr('SUM(price) AS auctions_sum'))->from('auctions')->join('users','LEFT')->on('users.id', '=', 'auctions.user_id')->where('username', Config::get('my.main_bidder'))->execute();
+		$items_count  = \DB::select(\DB::expr('SUM(item_count) AS items_count'))->from('auctions')->join('users','LEFT')->on('users.id', '=', 'auctions.user_id')->where('username', Config::get('my.main_bidder'))->execute();
+		$parts_sum    = \DB::select(\DB::expr('SUM(price) AS parts_sum'))->from('parts')->execute();
+		$usd          = \DB::select(\DB::expr('SUM(Case When usd < 0 then usd else 0 end) AS usd'))->from('balances')->execute();
+		$usd_balance  = \DB::select(\DB::expr('SUM(usd) AS usd_balance'))->from('balances')->execute();
+		$jpy          = \DB::select(\DB::expr('SUM(jpy) AS jpy'))->from('balances')->execute();
+
+		$balance  = $jpy[0]['jpy'];
+		$balance -= $auctions_sum[0]['auctions_sum'];
+		$balance -= $parts_sum[0]['parts_sum'];
+		$balance -= $items_count[0]['items_count'] * Config::get('my.commission');
+
+		$this->template->title   = "Finances";
 		$this->template->content = View::forge('admin/finance/index', [
-			'finance' => $finance,
-			'usd' => $usd[0]['usd'],
+			'finances'    => $finances,
+			'usd'         => $usd[0]['usd'],
 			'usd_balance' => $usd_balance[0]['usd_balance'],
-			'jpy' => $jpy[0]['jpy']
+			'jpy'         => $jpy[0]['jpy'],
+			'balance'     => $balance,
 		]);
 
 	}

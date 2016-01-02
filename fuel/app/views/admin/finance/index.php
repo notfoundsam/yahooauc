@@ -2,25 +2,25 @@
 	<thead>
 		<tr>
 			<th>Balance USD</th>
-			<th>USD withdrawaled</th>
-			<th>JPY Received</th>
+			<th>USD Withdrawal</th>
+			<th>JPY Receive</th>
 			<th>Balance JPY</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-			<td><?php echo $usd_balance; ?></td>
-			<td><?php echo $usd; ?></td>
-			<td><?php echo $jpy; ?></td>
-			<td><?php echo 0; ?></td>
+			<td><?php echo number_format($usd_balance, 2, '.', ','); ?></td>
+			<td><?php echo number_format($usd, 2, '.', ','); ?></td>
+			<td><?php echo number_format($jpy); ?></td>
+			<td><?php echo number_format($balance); ?></td>
 		</tr>
 	</tbody>
 </table>
-
+<?= \Pagination::instance('default')->render() ?>
 <p>
 	<?php echo Html::anchor('admin/finance/create', 'Add new record', array('class' => 'btn btn-success')); ?>
 </p>
-<?php if ($finance): ?>
+<?php if ($finances): ?>
 <table class="table table-striped vendor">
 	<thead>
 		<tr>
@@ -32,13 +32,13 @@
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($finance as $item): ?>
+	<?php foreach ($finances as $item): ?>
 		<tr>
 
 			<td><?php echo $item->operationData; ?></td>
 			<td><?php echo $item->memo; ?></td>
-			<td><?php echo $item->usd; ?></td>
-			<td><?php echo $item->jpy; ?></td>
+			<td><?php echo number_format($item->usd, 2, '.', ','); ?></td>
+			<td><?php echo number_format($item->jpy); ?></td>
 			<td style="text-align:right;">
 				<?php echo Html::anchor('admin/balance/edit/'.$item->id, 'Edit'); ?>
 			</td>

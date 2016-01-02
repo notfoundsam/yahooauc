@@ -1,13 +1,13 @@
 <?php
 
-return array(
-	'status' => array(
-		'pay' => 0,
-		'paid' => 1,
+return [
+	'status' => [
+		'pay'      => 0,
+		'paid'     => 1,
 		'received' => 2,
-		'ship' => 3,
-		'sell' => 10,
-	),
+		'ship'     => 3,
+		'sell'     => 10,
+	],
 
 	// 'yahoo_user' => 'pekopeko_haraheringu',
 	'yahoo_user' => 'notfoundsam',
@@ -18,5 +18,8 @@ return array(
 
 	// Limit of auctions getting from DB
 	'limit' => 250,
-);
+
+	// Commission per item
+	'commission' => 300,
+];
 

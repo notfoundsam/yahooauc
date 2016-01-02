@@ -4,7 +4,19 @@ class Controller_Admin_Vendor extends Controller_Admin
 
 	public function action_index()
 	{
-		$data['vendors'] = Model_Vendor::find('all');
+		$pagination = \Pagination::forge('default', [
+			'name' => 'bootstrap3',
+			'total_items' => \Model_Vendor::count(),
+			'per_page' => 50,
+			'uri_segment' => 'p',
+			'num_links' => 20,
+		]);
+		$conditions = array(
+			'rows_limit' => $pagination->per_page,
+			'rows_offset' => $pagination->offset,
+		);
+
+		$data['vendors'] = \Model_Vendor::find('all', $conditions);
 		$this->template->title = "Vendors";
 		$this->template->content = View::forge('admin/vendor/index', $data);
 
