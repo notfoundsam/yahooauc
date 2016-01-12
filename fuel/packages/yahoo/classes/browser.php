@@ -318,9 +318,12 @@ class Browser
         // Save cookies into DB
         if ($this->loggedin)
         {
+            $jar = $this->rq->getCookieJar();
+            $jar->serializeSessionCookies(true);
+            // Log::debug($jar->serialize());
             DB::update('yahoo')
             ->set([
-                'cookies'  => $this->rq->getCookieJar()->serialize(),
+                'cookies'  => $jar->serialize(),
                 'updated_at' => time()
             ])
             ->where('userid', Config::get('my.yahoo_user'))
