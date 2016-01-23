@@ -168,6 +168,113 @@ class Parser
 		return $ids;
 	}
 
+	// return auc_id array
+	public static function parseWonPageNew($body = null)
+	{
+		if (!$body)
+		{
+			throw new ParserException('Body of HTML Document is empty');
+		}
+
+		$ids = [];
+		$html = new HtmlDomParser;
+		$html = str_get_html($body);
+		$won_table = self::findTable ($html, Config::get('my.table.won'));
+		$first_tr = true;
+
+		foreach ($won_table->children as $key => $tr)
+		{
+			$a_tr = [];
+			if (!$tr->children())
+				continue;
+
+			if ($first_tr){
+				$first_tr = false;
+				continue;
+			}
+			$a_td = $tr->children();
+			$ids[] = strip_tags($a_td[1]->innertext);
+		}
+
+		return $ids;
+	}
+
+	public static function parseBiddingPageNew($body = null)
+	{
+		if (!$body)
+		{
+			throw new ParserException('Body of HTML Document is empty');
+		}
+
+		$table = [];
+		$a_pages = [];
+		$paging = 4;
+
+		$html = new HtmlDomParser;
+		$html = str_get_html($body);
+		$bidding_table = self::findTable ($html, Config::get('my.table.bidding'));
+
+		if ($p_t1 = $html->find('table', 3))
+		{
+			if ($p_t2 = $p_t1->find('table', 3))
+			{
+				if ($p_td = $p_t2->find('td', 0))
+				{
+					$pages = $p_td->find('a');
+					foreach($pages as $page)
+					{
+						if ( !(int)$page->innertext ){
+							// $paging = 3;
+							break;
+						}
+			   			$a_pages[] = $page->innertext;
+					}
+				}
+			}	
+		}
+
+		$table['pages'] = $a_pages;
+
+		$a_auctions = [];
+		$first_tr = true;
+
+		foreach ($bidding_table->children as $key => $tr)
+		{
+			$a_tr = [];
+			if (!$tr->children())
+				continue;
+
+			if ($first_tr){
+				$first_tr = false;
+				continue;
+			}
+
+			foreach ($tr->children() as $i => $td)
+			{
+				if ($i > 5)
+					break;
+				if ($i == 0)
+				{
+					$a_tr[] = end((explode('/', $td->find('a', 0)->href)));
+				}
+				if ($i == 1 || $i == 5)
+				{
+					$a_tr[] = str_replace(static::$JP, static::$EN, strip_tags($td->innertext));
+				}
+				else
+				{
+					$a_tr[] = strip_tags($td->innertext);
+				}
+			}
+			
+			$a_auctions[] = $a_tr;
+		}
+
+		$table['auctions'] = $a_auctions;
+		
+		return $table;
+	}
+
 	public static function getAuctionPageValues($body)
 	{
 		$page_values = [];
@@ -224,5 +331,31 @@ class Parser
 			}
 		}
 		return false;
+	}
+
+	private static function findTable ($html = null, $col = null)
+	{
+		if ($tables = $html->find('table'))
+		{
+			foreach ($tables as $table)
+			{
+				if ( $t_children = $table->children() )
+				{
+					foreach ($t_children as $t_child)
+					{
+						if ( $t_child->tag = 'tbody')
+						{
+							if ( $t_body_children = $t_child->children() )
+							{
+								if ( count($t_body_children) == $col )
+								{
+									return $table;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
