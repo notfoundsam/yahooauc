@@ -251,7 +251,7 @@ class Browser
         ];
 
         $body = $this->getBody(static::$CLOSED_USER, http_build_query($query));
-        $ids = Parser::parseWonPage($body);
+        $ids = Parser::parseWonPageNew($body);
 
         return $ids;
     }
@@ -266,7 +266,7 @@ class Browser
 
         $body = $this->getBody(static::$OPEN_USER, http_build_query($query));
         // $body = $this->getBodyBidding()
-        $table = Parser::parseBiddingPage($body);
+        $table = Parser::parseBiddingPageNew($body);
         return $table; 
     }
 
