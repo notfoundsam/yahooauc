@@ -223,8 +223,7 @@ class Parser
 					$pages = $p_td->find('a');
 					foreach($pages as $page)
 					{
-						if ( !(int)$page->innertext ){
-							// $paging = 3;
+						if ( !(int)$page->innertext ) {
 							break;
 						}
 			   			$a_pages[] = $page->innertext;

@@ -9,10 +9,10 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td><?php echo number_format($usd_balance, 2, '.', ','); ?></td>
-			<td><?php echo number_format($usd, 2, '.', ','); ?></td>
-			<td><?php echo number_format($jpy); ?></td>
-			<td><?php echo number_format($balance); ?></td>
+			<td><?= number_format($usd_balance, 2, '.', ','); ?></td>
+			<td><?= number_format($usd, 2, '.', ','); ?></td>
+			<td><?= number_format($jpy); ?></td>
+			<td><?= number_format($balance); ?></td>
 		</tr>
 	</tbody>
 </table>
