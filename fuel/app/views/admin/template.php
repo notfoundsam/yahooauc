@@ -69,6 +69,9 @@
 					<li class="<?php echo Uri::segment(2) == 'finance' ? 'active' : '' ?>">
 						<a href="<?= \Uri::create('admin/finance') ?>">Finances</a>
 					</li>
+					<li class="<?php echo Uri::segment(2) == 'statistic' ? 'active' : '' ?>">
+						<a href="<?= \Uri::create('admin/statistic') ?>">Statistic</a>
+					</li>
 				</ul>
 				<ul class="nav navbar-nav pull-right">
 					<li class="dropdown">
