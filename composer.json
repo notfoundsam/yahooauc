@@ -27,7 +27,7 @@
         "monolog/monolog": "1.5.*",
         "michelf/php-markdown": "1.4.0",
         "sunra/php-simple-html-dom-parser": "v1.5.0",
-        "pear/http_request2": "~2.2.1"
+        "rmccue/requests": ">=1.0"
     },
     "suggest": {
         "dwoo/dwoo" : "Allow Dwoo templating with the Parser package",
