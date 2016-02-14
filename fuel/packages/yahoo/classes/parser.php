@@ -180,6 +180,12 @@ class Parser
 		$html = new HtmlDomParser;
 		$html = str_get_html($body);
 		$won_table = self::findTable ($html, Config::get('my.table.won'));
+
+		if (!$won_table)
+		{
+			return null;
+		}
+		
 		$first_tr = true;
 
 		foreach ($won_table->children as $key => $tr)
@@ -213,6 +219,11 @@ class Parser
 		$html = new HtmlDomParser;
 		$html = str_get_html($body);
 		$bidding_table = self::findTable ($html, Config::get('my.table.bidding'));
+
+		if (!$bidding_table)
+		{
+			return null;
+		}
 
 		if ($p_t1 = $html->find('table', 3))
 		{
@@ -356,5 +367,6 @@ class Parser
 				}
 			}
 		}
+		return null;
 	}
 }

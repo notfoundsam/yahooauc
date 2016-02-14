@@ -1,4 +1,5 @@
 <?php
+// use Fuel\Log;
 /**
  * Class login and grub HTML your yahoo.co.jp pages
  *
@@ -18,8 +19,8 @@
  * Class representing a HTTP request message
  * PEAR package should be installed
  */
-require_once 'HTTP/Request2.php';
-require_once 'HTTP/Request2/CookieJar.php';
+// require_once 'HTTP/Request2.php';
+// require_once 'HTTP/Request2/CookieJar.php';
 
 class BrowserException extends Exception {}
 class BrowserLoginException extends Exception {}
@@ -45,7 +46,7 @@ class Browser
 
     protected $loggedin            = true;
     protected $select              = null;
-    protected $rq                  = null;
+    protected $session             = null;
     protected $jar                 = null;
 
     /**
@@ -55,15 +56,11 @@ class Browser
      */
     public function __construct()
     {
-    	$this->rq = new HTTP_Request2();
-        $this->jar = new HTTP_Request2_CookieJar();
-        $this->rq->setAdapter('curl');
-        $this->rq->setHeader(
-            'User-Agent',
-            'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)'
-        );
-        $this->rq->setHeader('Keep-Alive', 115);
-        $this->rq->setHeader('Connection', 'keep-alive');
+        $headers = [
+            'User-Agent' => 'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)',
+            'Keep-Alive' => 115,
+            'Connection' => 'keep-alive'
+        ];
 
     	$this->select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
 
@@ -74,11 +71,14 @@ class Browser
 
     	if ($this->select[0]['cookies'] && ($this->select[0]['updated_at'] > strtotime('-1 week')))
     	{
-        	$this->jar->unserialize($this->select[0]['cookies']);
-        	$this->rq->setCookieJar($this->jar);
+            $cookies = unserialize($this->select[0]['cookies']);
+            $this->session = new Requests_Session(self::$AUCTION_URL, $headers, [], ['cookies' => $cookies]);
+        	// $this->jar->unserialize($this->select[0]['cookies']);
+        	// $this->rq->setCookieJar($this->jar);
     	}
     	else
     	{
+            $this->session = new Requests_Session(self::$AUCTION_URL, $headers);
             $this->loggedin = false;
 	        $this->login();
     	}
@@ -90,7 +90,7 @@ class Browser
     */
     protected function login()
     {
-        $this->rq->setCookieJar(true);
+        // $this->rq->setCookieJar(true);
         
         $query = [
             '.lg' => 'jp',
@@ -98,10 +98,8 @@ class Browser
             '.src' => 'auc',
             '.done' => static::$AUCTION_URL,
         ];
-
         $this->getBody(static::$AUCTION_URL);
-
-        $body = $this->getBody(static::$LOGIN_URL, http_build_query($query));
+        $body = $this->getBody(static::$LOGIN_URL, $query);
 
         $values = Parser::getAuctionPageValues($body);
 
@@ -117,8 +115,8 @@ class Browser
             throw new BrowserLoginException('Albatross key not found');
         }
         
-        $this->rq->setMethod(HTTP_Request2::METHOD_POST);
-
+        // $this->rq->setMethod(HTTP_Request2::METHOD_POST);
+        $options = [];
         foreach ($values as $value)
         {
             if ($value['name'] == '.nojs')
@@ -131,16 +129,18 @@ class Browser
                 $value['value'] = $albatross[0][1];
             }
 
-            $this->rq->addPostParameter($value['name'], $value['value']);
+            $options[$value['name']] = $value['value'];
         }
 
-        $this->rq->addPostParameter('login', $this->select[0]['userid']);
-        $this->rq->addPostParameter('.persistent', 'y');
-        $this->rq->addPostParameter('passwd', $this->select[0]['password']);
+        $options['login'] = $this->select[0]['userid'];
+        $options['passwd'] = $this->select[0]['password'];
+        // $this->rq->addPostParameter('.persistent', 'y');
+        // $this->rq->addPostParameter('passwd', $this->select[0]['password']);
+        $options['.persistent'] = 'y';
 
         // Pause before submit
         sleep(3);
-        $this->getBody(static::$LOGIN_URL, http_build_query($query));
+        $this->getBody(static::$LOGIN_URL, $query, $options, Requests::POST);
         
         // Check by login
         $body = $this->getBody(static::$AUCTION_URL);
@@ -163,18 +163,18 @@ class Browser
     *
     * @return string         response body
     */
-    protected function getBody($url = null, $query = null)
+    protected function getBody($url = null, $query = null, $options = [], $method = Requests::GET)
     {
         if (empty($url))
         {
             throw new BrowserException('url can not be null');
         }
         
-        $request_uri = $url . '?' . $query;
-        $this->rq->setUrl($request_uri);
-        $response = $this->rq->send();
+        $request_uri = $query ? $url . '?' . http_build_query($query) : $url;
+        $response = $this->session->request($request_uri, [], $options, $method);
+        // Debug::dump($response);
 
-        return $response->getBody();
+        return $response->body;
     }
 
     // Get XML odject by auction id
@@ -190,7 +190,7 @@ class Browser
             'auctionID' => $auc_id,
         ];
 
-        $body = $this->getBody(static::$API_URL, http_build_query($query));
+        $body = $this->getBody(static::$API_URL, $query);
         $auc_xml = simplexml_load_string($body);
 
         if ($auc_xml->Code)
@@ -208,9 +208,10 @@ class Browser
         return $auc_xml;
     }
 
-    protected function setFormValues($page_values = null, $price = 0)
+    protected function createFormValues($page_values = null, $price = 0)
     {
-        $this->rq->setMethod(HTTP_Request2::METHOD_POST);
+        $options = [];
+        // $this->rq->setMethod(HTTP_Request2::METHOD_POST);
         $price_setted = false;
 
         foreach ($page_values as $value)
@@ -233,13 +234,14 @@ class Browser
                 $value['value'] = $price;
                 $price_setted = true;
             }
-            $this->rq->addPostParameter($value['name'], $value['value']);
+            $options[$value['name']] = $value['value'];
         }
 
         if (!$price_setted)
         {
-            $this->rq->addPostParameter('Bid', $price);
+            $options['Bid'] = $price;
         }
+        return $options;
     }
 
     public function won($page = null)
@@ -250,7 +252,7 @@ class Browser
             'apg' => $page ? $page : 1
         ];
 
-        $body = $this->getBody(static::$CLOSED_USER, http_build_query($query));
+        $body = $this->getBody(static::$CLOSED_USER, $query);
         $ids = Parser::parseWonPageNew($body);
 
         return $ids;
@@ -264,7 +266,7 @@ class Browser
             'apg' => $page ? $page : 1
         ];
 
-        $body = $this->getBody(static::$OPEN_USER, http_build_query($query));
+        $body = $this->getBody(static::$OPEN_USER, $query);
         // $body = $this->getBodyBidding()
         $table = Parser::parseBiddingPageNew($body);
         return $table; 
@@ -275,13 +277,13 @@ class Browser
         $body = $this->getBody($auc_url);
         $values = Parser::getAuctionPageValues($body);
 
-        $this->setFormValues($values, $price);
-        $body = $this->getBody(static::$BID_PREVIEW);
+        $options = $this->createFormValues($values, $price);
+        $body = $this->getBody(static::$BID_PREVIEW, null, $options, Requests::POST);
 
         $values = Parser::getAuctionPageValues($body);
 
-        $this->setFormValues($values, $price);
-        $body = $this->getBody(static::$PLACE_BID);
+        $this->createFormValues($values, $price);
+        // $body = $this->getBody(static::$PLACE_BID, null, $values, Requests::POST);
         // $body = $this->getSuccesPage();
         // $body = $this->getPriceUpPage();
         $result = Parser::getResult($body);
@@ -318,12 +320,11 @@ class Browser
         // Save cookies into DB
         if ($this->loggedin)
         {
-            $jar = $this->rq->getCookieJar();
-            $jar->serializeSessionCookies(true);
-            // Log::debug($jar->serialize());
+            // Debug::dump($this->session);
+            $cookies = $this->session->options['cookies'];
             DB::update('yahoo')
             ->set([
-                'cookies'  => $jar->serialize(),
+                'cookies'  => serialize($cookies),
                 'updated_at' => time()
             ])
             ->where('userid', Config::get('my.yahoo_user'))
