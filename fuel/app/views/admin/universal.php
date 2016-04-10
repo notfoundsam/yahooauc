@@ -11,10 +11,8 @@ $vendors = [];
 $post_index = '';
 $address = '';
 ?>
-<table class="table-out">
-	<tr>
-		<td>
-			<table class="table table-striped auction">
+
+			<table class="table table-bordered">
 				<thead>
 					<tr>
 						<th>Count</th>
@@ -59,10 +57,7 @@ $address = '';
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-		</td>
-	</tr>
-	<tr>
-		<td>
+
 			<table class="table part" >
 				<thead>
 					<tr>
@@ -84,11 +79,8 @@ $address = '';
 					</tr>
 				</tbody>
 			</table>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<table class="table part" >
+		
+			<table class="table" >
 				<tr>
 					<td>
 						<b>Vendor's ID: 
@@ -103,9 +95,7 @@ $address = '';
 					</td>
 				</tr>
 			</table>
-		</td>
-	</tr>
-</table>
+		
 <?php endforeach; ?>
 
 <?php else: ?>

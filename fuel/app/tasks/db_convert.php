@@ -129,6 +129,7 @@ class Db_convert
 		} catch (Exception $e)
 		{
 			\DB::rollback_transaction();
+			print "Replace vendor name to vendor id in auctions and add vendor if not exists was filed\n";
 		}
 
 		// Replace won_user to user_id in auctions
@@ -153,6 +154,7 @@ class Db_convert
 		catch (Exception $e)
 		{
 			\DB::rollback_transaction();
+			print "Replace won_user to user_id in auctions was filed\n";
 		}
 
 		// Add index to auctions and parts
@@ -161,5 +163,6 @@ class Db_convert
 		\DBUtil::create_index('vendors', 'name', 'name');
 
 		// delete auc_id g143869725 !!!!
+		print "Data base successfully converted\n";
 	}
 }
