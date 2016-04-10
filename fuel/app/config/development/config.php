@@ -2,6 +2,6 @@
 
 return array(
 
-	'profiling'  => true,
-	'log_threshold'    => Fuel::L_ALL,
+	'profiling' => true,
+	'log_threshold' => Fuel::L_ALL,
 );

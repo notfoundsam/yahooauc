@@ -29,11 +29,9 @@ class ParserException extends Exception {}
  */
 class Parser
 {
-	/*
+	/**
      * Parser Class Object
      */
-	// private static $_won_url = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus?select=won';
-	// private static $_bidding_url = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus?select=bidding';
 	protected static $JP          = array("円", "分", "時間", "日");
 	protected static $EN          = array("yen", "min", "hour", "day");
 	protected static $BID_SUCCESS = '入札を受け付けました。あなたが現在の最高額入札者です。';
@@ -56,119 +54,11 @@ class Parser
 		return false;
 	}
 
-	public static function parseBiddingPage($body = null)
-	{
-		if (!$body)
-		{
-			throw new ParserException('Body of HTML Document is empty');
-		}
-
-		$table = [];
-		$a_pages = [];
-		$paging = 4;
-
-		$html = new HtmlDomParser;
-		$html = str_get_html($body);
-		if ($p_t1 = $html->find('table', 3))
-		{
-			if ($p_t2 = $p_t1->find('table', 3))
-			{
-				if ($p_td = $p_t2->find('td', 0))
-				{
-					$pages = $p_td->find('a');
-					foreach($pages as $page)
-					{
-						if ( !(int)$page->innertext ){
-							$paging = 3;
-							break;
-						}
-			   			$a_pages[] = $page->innertext;
-					}
-				}
-			}	
-		}
-
-		$table['pages'] = $a_pages;
-
-		$a_auctions = [];
-
-		if ($a_t1 = $html->find('table', 3))
-		{
-			if ($a_t2 = $a_t1->find('table', $paging))
-			{
-				if ($auctions = $a_t2->find('tr'))
-				{
-					foreach($auctions as $key => $item)
-					{
-						$a_tr = [];
-						if ($key == 0)
-							continue;
-						for ($i=0; $i < 6; $i++)
-						{
-							if ($i == 0)
-							{
-								$a_tr[] = end((explode('/', $item->find('td', $i)->find('a', 0)->href)));
-							}
-							if ($i == 1 || $i == 5)
-							{
-								$a_tr[] = str_replace(static::$JP, static::$EN, strip_tags($item->find('td', $i)->innertext));
-							}
-							else
-							{
-								$a_tr[] = strip_tags($item->find('td', $i)->innertext);
-							}
-						}
-						$a_auctions[] = $a_tr;
-					}
-				}
-			}	
-		}
-
-		$table['auctions'] = $a_auctions;
-		
-		return $table;
-	}
-
-	// return auc_id array
-	public static function parseWonPage($body = null)
-	{
-		if (!$body)
-		{
-			throw new ParserException('Body of HTML Document is empty');
-		}
-
-		$ids = [];
-		$html = new HtmlDomParser;
-		$html = str_get_html($body);
-
-		if ($a_t1 = $html->find('table', 3))
-		{
-			if ($auctions = $a_t1->find('table', 5)->children())
-			{
-				$first_tr = true;
-
-				foreach($auctions as $key => $tr) {
-
-					$a_tr = [];
-					if (!$tr->children())
-						continue;
-
-					if ($first_tr){
-						$first_tr = false;
-						continue;
-					}
-					
-					$a_td = $tr->children();
-
-					$ids[] = strip_tags($a_td[1]->innertext);
-				}
-			}	
-		}
-
-		return $ids;
-	}
-
-	// return auc_id array
+	/**
+	 * Parse body for auction id
+	 * @param  string $body Html with won auctions
+	 * @return array        Array of auction ids
+	 */
 	public static function parseWonPageNew($body = null)
 	{
 		if (!$body)
@@ -205,6 +95,11 @@ class Parser
 		return $ids;
 	}
 
+	/**
+	 * [parseBiddingPageNew description]
+	 * @param  string $body Html with bidding auctions
+	 * @return array        Array of auction ids
+	 */
 	public static function parseBiddingPageNew($body = null)
 	{
 		if (!$body)
@@ -285,6 +180,11 @@ class Parser
 		return $table;
 	}
 
+	/**
+	 * Parse HTML page for hidden fields in form
+	 * @param  string $body Html with form
+	 * @return array        Return array with pair name and value
+	 */
 	public static function getAuctionPageValues($body)
 	{
 		$page_values = [];
@@ -304,10 +204,19 @@ class Parser
 		{
 			throw new ParserException('Page POST form not found');
 		}
+		Log::debug('------ Parser start ------');
+		Arrlog::arr_to_log($page_values);
+		Log::debug('------- Parser end -------');
 
 		return $page_values;
 	}
 
+	/**
+	 * Check result of bid.
+	 * @param  string $body    Html with auction result
+	 * @return bool            Return true if bid was success
+	 * @throws ParserException Throw exception if bid was not success
+	 */
 	public static function getResult($body)
 	{
 		$html = new HtmlDomParser;
@@ -343,6 +252,12 @@ class Parser
 		return false;
 	}
 
+	/**
+	 * Find table with auctions.
+	 * @param  string $html Html with table of auctions
+	 * @param  string $col  Find table with $col count
+	 * @return object       Return HtmlDomParser element with table of auctions or null
+	 */
 	private static function findTable ($html = null, $col = null)
 	{
 		if ($tables = $html->find('table'))

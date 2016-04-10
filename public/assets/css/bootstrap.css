@@ -1404,38 +1404,8 @@ th {
 
 .table {
   width: 100%;
-  border: 1px solid #dddddd;
+  /*border: 1px solid #dddddd;*/
 } 
-
-.part thead > tr {
-  background-color: #9ACD32;
-}
-
-.auction thead > tr {
-  background-color: #B0C4DE;
-}
-
-.vendor thead > tr {
-  background-color: #66CDAA;
-}
-
-.table-out td {
-  padding: 0px;
-  margin:0px;
-}
-
-.table-out {
-  width: 100%;
-  border: 1px solid #dddddd;
-  margin-bottom: 20px;
-}
-
-.bidding thead > tr {
-  background-color: #FFCCCC;
-}
-.bidup {
-  color: #FF6633;
-}
 
 .table thead > tr > th,
 .table tbody > tr > th,

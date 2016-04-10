@@ -1,4 +1,5 @@
 <?php
+
 class Controller_Admin_Finance extends Controller_Admin
 {
 

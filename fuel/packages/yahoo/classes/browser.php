@@ -47,7 +47,6 @@ class Browser
     protected $loggedin            = true;
     protected $select              = null;
     protected $session             = null;
-    protected $jar                 = null;
 
     /**
      * init function
@@ -61,7 +60,7 @@ class Browser
             'Keep-Alive' => 115,
             'Connection' => 'keep-alive'
         ];
-
+        // Need to optimize select, separete pass, user, cookies e.g.
     	$this->select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
 
     	if (empty($this->select))
@@ -73,8 +72,6 @@ class Browser
     	{
             $cookies = unserialize($this->select[0]['cookies']);
             $this->session = new Requests_Session(self::$AUCTION_URL, $headers, [], ['cookies' => $cookies]);
-        	// $this->jar->unserialize($this->select[0]['cookies']);
-        	// $this->rq->setCookieJar($this->jar);
     	}
     	else
     	{
@@ -90,8 +87,6 @@ class Browser
     */
     protected function login()
     {
-        // $this->rq->setCookieJar(true);
-        
         $query = [
             '.lg' => 'jp',
             '.intl' => 'jp',
@@ -115,7 +110,6 @@ class Browser
             throw new BrowserLoginException('Albatross key not found');
         }
         
-        // $this->rq->setMethod(HTTP_Request2::METHOD_POST);
         $options = [];
         foreach ($values as $value)
         {
@@ -134,8 +128,6 @@ class Browser
 
         $options['login'] = $this->select[0]['userid'];
         $options['passwd'] = $this->select[0]['password'];
-        // $this->rq->addPostParameter('.persistent', 'y');
-        // $this->rq->addPostParameter('passwd', $this->select[0]['password']);
         $options['.persistent'] = 'y';
 
         // Pause before submit
@@ -171,8 +163,8 @@ class Browser
         }
         
         $request_uri = $query ? $url . '?' . http_build_query($query) : $url;
+        Log::debug('getBody: '. $request_uri);
         $response = $this->session->request($request_uri, [], $options, $method);
-        // Debug::dump($response);
 
         return $response->body;
     }
@@ -211,11 +203,13 @@ class Browser
     protected function createFormValues($page_values = null, $price = 0)
     {
         $options = [];
-        // $this->rq->setMethod(HTTP_Request2::METHOD_POST);
         $price_setted = false;
 
         foreach ($page_values as $value)
         {
+            if(!$value['name'])
+                continue;
+
             if ($value['name'] == 'setPrice')
             {
                 if ($price < $value['value'])
@@ -241,15 +235,18 @@ class Browser
         {
             $options['Bid'] = $price;
         }
+
+        $options['Quantity'] = 1;
+
         return $options;
     }
 
     public function won($page = null)
     {
         $query = [
-            'select' => 'won',
+            'select'  => 'won',
             'picsnum' => '50',
-            'apg' => $page ? $page : 1
+            'apg'     => $page ? $page : 1
         ];
 
         $body = $this->getBody(static::$CLOSED_USER, $query);
@@ -261,13 +258,17 @@ class Browser
     public function bidding($page = null)
     {
          $query = [
-            'select' => 'bidding',
+            'select'  => 'bidding',
             'picsnum' => '50',
-            'apg' => $page ? $page : 1
+            'apg'     => $page ? $page : 1
         ];
 
         $body = $this->getBody(static::$OPEN_USER, $query);
-        // $body = $this->getBodyBidding()
+
+        /* Test bidding list
+        $body = $this->getBodyBidding();
+         */
+
         $table = Parser::parseBiddingPageNew($body);
         return $table; 
     }
@@ -278,14 +279,25 @@ class Browser
         $values = Parser::getAuctionPageValues($body);
 
         $options = $this->createFormValues($values, $price);
-        $body = $this->getBody(static::$BID_PREVIEW, null, $options, Requests::POST);
+        Log::debug('------ Browser start ------');
+        Arrlog::arr_to_log($options);
+        Log::debug('------- Browser end -------');
 
+        $body = $this->getBody(static::$BID_PREVIEW, null, $options, Requests::POST);
         $values = Parser::getAuctionPageValues($body);
 
-        $this->createFormValues($values, $price);
-        // $body = $this->getBody(static::$PLACE_BID, null, $values, Requests::POST);
-        // $body = $this->getSuccesPage();
-        // $body = $this->getPriceUpPage();
+        $options = $this->createFormValues($values, $price);
+        Log::debug('------ Browser start ------');
+        Arrlog::arr_to_log($options);
+        Log::debug('------- Browser end -------');
+
+        $body = $this->getBody(static::$PLACE_BID, null, $options, Requests::POST);
+
+        /* Test for result page.
+        $body = $this->getSuccesPage();
+        $body = $this->getPriceUpPage();
+        */
+        
         $result = Parser::getResult($body);
 
         return $result;
@@ -320,7 +332,6 @@ class Browser
         // Save cookies into DB
         if ($this->loggedin)
         {
-            // Debug::dump($this->session);
             $cookies = $this->session->options['cookies'];
             DB::update('yahoo')
             ->set([

@@ -17,4 +17,5 @@
 \Autoloader::add_classes(array(
 	'Yahoo\\Browser' => __DIR__.'/classes/browser.php',
 	'Yahoo\\Parser' => __DIR__.'/classes/parser.php',
+	'Yahoo\\Arrlog' => __DIR__.'/classes/arrlog.php',
 ));
