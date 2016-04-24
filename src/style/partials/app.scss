@@ -1,0 +1,462 @@
+$max-screen: 850px;
+$count-color: #3EC4D3;
+$count-part-color: #6A3EF1;
+$date-color: #B56FFF;
+$price-color: #FF870C;
+$aucid-color: #3C8A16;
+$default-font-size: 14px;
+
+@mixin contaner-wrapper($bg-color){
+  margin: auto;
+  max-width: $max-screen;
+  position: relative;
+  background: $bg-color;
+}
+
+@mixin item-counter($color){
+  position: absolute;
+  display: none;
+  top: 4px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: $color;
+  border-radius: 50%;
+  @media screen and (max-width: $max-screen) {
+    display: block;
+  }
+}
+@mixin count-number(){
+  width: 20px;
+  top: 0;
+  left: 2px;
+  text-align: center;
+  padding: 4px 0;
+  color: #fff;
+  font-weight: 700;
+}
+body {
+  font-size: $default-font-size;
+}
+
+.slideout-panel {
+	position:relative;
+	z-index: 1;
+	will-change: transform;
+	background-color: #ffffff;
+}
+
+.menu-header {
+    overflow: hidden;
+    border-bottom: 1px solid gray;
+
+    h1 {
+	    margin: 60px 30px 10px;
+    	display: block;
+    	@media screen and (max-width: $max-screen) {
+			margin: 0;
+			padding-top: 10px;
+			padding-right: 30px;
+			text-align: center;
+		}
+    }
+
+	.btn-hamburger {
+		display: none;
+
+		@media screen and (max-width: $max-screen) {
+			display: block;
+			float: left;
+			outline: none;
+			border: 0;
+			padding: 10px;
+			width: 49px;
+			height: 49px;
+			background-color: transparent;
+
+			.hamburger-icon {
+				height: 4px;
+				width: 100%;
+				border-radius: 1px;
+				background-color: #000;
+				position: relative;
+				display: block;
+				margin-top: 0;
+
+				&:before {
+					@extend .hamburger-icon;
+					position: absolute;
+					content: " ";
+					top: -10px;
+					left: 0;
+				}
+
+				&:after {
+					@extend .hamburger-icon;
+					position: absolute;
+					content: " ";
+					top: 10px;
+				}
+			}
+		}
+	}
+}
+
+.wrapper {
+	margin-top: 10px;
+	@media screen and (max-width: $max-screen) {
+		margin-top: 15px;
+	}
+}
+
+.navigation {
+  background-color: #333;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  display: block;
+
+  @media screen and (max-width: $max-screen) {
+  	position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 0;
+    width: 256px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: none;
+  }
+
+  .active {
+	background-color: #111;
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    font-size: 0;
+
+    @media screen and (max-width: $max-screen) {
+    	display: block;
+    }
+    
+    li {
+		display: inline-block;
+		@media screen and (max-width: $max-screen) {
+			display: block;
+		}
+      
+      a {
+        display: inline-block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: $default-font-size;
+        @media screen and (max-width: $max-screen) {
+        	display: block;
+        	text-align: left;
+        }
+      }
+
+      &:hover {
+          background-color: #111;
+        }
+      ul {
+        z-index: 10;
+        display: none;
+        position: absolute;
+        width: 150px;
+        
+        li {
+          background-color: #111;
+          display: block; 
+          
+          a {
+            display: block;
+            text-align: left;
+          }
+          &:hover {
+            background-color: #000;
+          }
+        }
+      }
+      &:hover ul {
+        display: block;
+        // background-color: #111;
+      }
+    }
+  }
+}
+.head-wrapper {
+  @include contaner-wrapper(#8198A0);
+  color: #fff;
+
+  .part-id, .vendor-id, .index, .address {
+    display: inline-block;
+    padding: 4px;
+  }
+  .part-id {
+    width: 70px;
+    text-align: center;
+  }
+  .vendor-id {
+    width: 160px;
+    color: #05087B;
+  }
+  .index {
+    width: 70px;
+  }
+  @media screen and (max-width: $max-screen) {
+    .vendor-id {
+      width: auto;
+    }
+    .index {
+      float: right;
+      width: auto;
+      padding-right: 5px;
+    }
+    .address {
+      font-size: 0.9em;
+    }
+  }
+}
+
+/* Auction Item */
+.item-wrapper {
+  @include contaner-wrapper(#f6f6f6);
+  &:nth-of-type(odd) {
+    background: #e9e9e9
+  }
+  @media screen and (max-width: $max-screen) {
+    padding-bottom: 50px;
+    // max-width: 450px;
+  }
+  .count-circle {
+    @include item-counter($count-color);
+  }
+  .count, .aucid, .title, .price, .date, .action {
+    display: inline-block;
+    padding: 4px;
+  }
+  .action {
+    float: right;
+    span {
+      margin-left: 10px;
+    }
+    @media screen and (max-width: $max-screen) {
+      position: absolute;
+      float: none;
+      bottom: 25px;
+      right: 0;
+    }
+  }
+  .count {
+      width: 25px;
+    }
+  .aucid {
+    width: 90px;
+  }
+  .title {
+    width: 430px;
+  }
+  .price {
+    width: 50px;
+  }
+  @media screen and (max-width: $max-screen) {
+    .title {
+      padding-left: 25px;
+      width: 100%;
+    }
+    .count, .aucid, .price, .date, .action {
+      position: absolute;
+    }
+    .count {
+      @include count-number();
+    }
+    .aucid {
+      bottom: 14px;
+      left: 80px;
+      color: $aucid-color;
+      font-weight: 700;
+      font-size: 1.1em;
+      border: 1px dotted $price-color;
+      width: auto;
+    }
+    .price {
+      position: absolute;
+      bottom: 14px;
+      left: 5px;
+      font-size: 1.2em;
+      color: white;
+      font-weight: 700;
+      background-color: $price-color;
+      width: 65px;
+      text-align: center;
+    }
+    .date {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      color: $date-color;
+      font-style: italic;
+    }
+  }
+}
+
+// Part Item
+.part-wrapper {
+  @include contaner-wrapper(#808080);
+  color: #fff;
+  margin-bottom: 15px;
+  
+  .count, .items-price, .ship, .total-price, .tracking, .box, .action {
+    display: inline-block;
+    padding: 4px;
+  }
+  .count-circle {
+    @include item-counter($count-part-color);
+  }
+  .count {
+    width: 25px;
+  }
+  .action {
+    float: right;
+    span {
+      margin-left: 10px;
+    }
+  }
+  .ship {
+    // padding-left: 0;
+    width: 80px;
+  }
+  .items-price {
+    width: 100px;
+  }
+  .tracking {
+    width: 200px;
+  }
+  .box {
+    width: 80px;
+  }
+  
+  @media screen and (max-width: $max-screen) {
+    padding-bottom: 80px;
+    .count, .tracking, .box, .ship, .items-price, .total-price, .action {
+      position: absolute;
+    }
+    .count {
+      @include count-number();
+    }
+    .tracking {
+      left: 28px;
+      top: 0;
+    }
+    .box {
+      right: 5px;
+      text-align: right;
+    }
+    .ship {
+      bottom: 0;
+      left: 5px;
+    }
+    .items-price {
+      bottom: 26px;
+      left: 5px;
+    }
+    .total-price {
+      bottom: 25px;
+      right: 5px;
+      text-align: right;
+    }
+    .action {
+      right: 5px;
+      bottom: 0;
+    }
+  }
+}
+
+.center-form {
+  position: relative;
+  left: 50%;
+  margin-left: -200px;
+  margin-bottom: 50px;
+  padding: 20px;
+  background-color: #eeeeee;
+  text-align: center;
+  width: 400px;
+  border-radius: 20px;
+}
+
+.loader {
+  width: 250px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-family: helvetica, arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #000;
+  letter-spacing: 0.2em;
+}
+.loader::before, .loader::after {
+  content: "";
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: #000;
+  position: absolute;
+  -webkit-animation: load .7s infinite alternate ease-in-out;
+          animation: load .7s infinite alternate ease-in-out;
+}
+.loader::before {
+  top: 0;
+}
+.loader::after {
+  bottom: 0;
+}
+
+@-webkit-keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}
+
+@keyframes load {
+  0% {
+    left: 0;
+    height: 30px;
+    width: 15px;
+  }
+  50% {
+    height: 8px;
+    width: 40px;
+  }
+  100% {
+    left: 235px;
+    height: 30px;
+    width: 15px;
+  }
+}

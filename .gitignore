@@ -32,3 +32,8 @@ desktop.ini
 /fuel/app/logs/*/*/*
 /fuel/app/cache/*/*
 /fuel/app/config/crypt.php
+
+# third party components
+/bower_components/
+/node_modules/
+
