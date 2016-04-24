@@ -1404,8 +1404,8 @@ th {
 
 .table {
   width: 100%;
-  /*border: 1px solid #dddddd;*/
-} 
+  margin-bottom: 20px;
+}
 
 .table thead > tr > th,
 .table tbody > tr > th,
@@ -1451,7 +1451,7 @@ th {
 }
 
 .table-bordered {
-  /*border: 1px solid #dddddd;*/
+  border: 1px solid #dddddd;
 }
 
 .table-bordered > thead > tr > th,
@@ -1743,7 +1743,6 @@ textarea.form-control {
 
 .form-group {
   margin-bottom: 15px;
-  width:300px;
 }
 
 .radio,

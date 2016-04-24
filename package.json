@@ -1,0 +1,34 @@
+{
+  "name": "yahooauc",
+  "version": "1.0.0",
+  "description": "auction bidder",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/notfoundsam/yahooauc.git"
+  },
+  "author": "NotFound",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/notfoundsam/yahooauc/issues"
+  },
+  "dependencies": {
+    "gulp": "^3.8.11"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rigger": "^0.5.8",
+    "gulp-sass": "^2.3.1",
+    "gulp-sourcemaps": "^2.0.0-alpha",
+    "gulp-uglify": "^1.5.3",
+    "gulp-watch": "^4.3.5"
+  }
+}

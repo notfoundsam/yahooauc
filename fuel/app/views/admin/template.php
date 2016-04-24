@@ -2,95 +2,15 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title><?php echo $title; ?></title>
-	<?php echo Asset::css(['bootstrap.css', 'admin.css', 'dist/ladda-themeless.min.css']); ?>
-	<style>
-		body { margin: 50px; }
-	</style>
-	<?php echo Asset::js([
-		'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
-		'bootstrap.js',
-	]); ?>
-	<script>
-		$(function(){ $('.topbar').dropdown(); });
-	</script>
+	<?php echo Asset::css(['bootstrap.css', 'main.css', 'dist/ladda-themeless.min.css']); ?>
 </head>
 <body>
 	<?php if ($current_user): ?>
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">My Site</a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li class="<?php echo Uri::segment(2) == '' ? 'active' : '' ?>">
-						<?php echo Html::anchor('admin', 'Dashboard') ?>
-					</li>
-					<li class="<?php echo Uri::segment(2) == 'bidding' ? 'active' : '' ?>">
-						<a href="<?= \Uri::create('admin/bidding') ?>">Bidding</a>
-					</li>
-					<li class="dropdown<?= in_array(\Uri::segment(2), ['pay', 'paid', 'received']) ? ' active' : '' ?><?= \Uri::segment(3) == 'view' ? ' active' : '' ?>">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            Won<b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="<?= \Uri::create('admin/pay') ?>">Pay</a>
-                            </li>
-                            <li>
-                                <a href="<?= \Uri::create('admin/paid') ?>">Paid</a>
-                            </li>
-                            <li>
-                                <a href="<?= \Uri::create('admin/received') ?>">Received</a>
-                            </li>
-                            <li>
-                                <a href="<?= \Uri::create('admin/ship/view') ?>">Ship</a>
-                            </li>
-                            <li>
-                                <a href="<?= \Uri::create('admin/sell') ?>">Sell</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="<?php echo Uri::segment(2) == 'sort' ? 'active' : '' ?>">
-						<a href="<?= \Uri::create('admin/sort') ?>">Sort</a>
-					</li>
-					<li class="<?php echo Uri::segment(3) == 'create' ? 'active' : '' ?>">
-						<a href="<?= \Uri::create('admin/ship/create') ?>">Create Ship</a>
-					</li>
-					<li class="<?php echo Uri::segment(2) == 'vendor' ? 'active' : '' ?>">
-						<a href="<?= \Uri::create('admin/vendor') ?>">Vendors</a>
-					</li>
-					<li class="<?php echo Uri::segment(2) == 'finance' ? 'active' : '' ?>">
-						<a href="<?= \Uri::create('admin/finance') ?>">Finances</a>
-					</li>
-					<li class="<?php echo Uri::segment(2) == 'statistic' ? 'active' : '' ?>">
-						<a href="<?= \Uri::create('admin/statistic') ?>">Statistic</a>
-					</li>
-				</ul>
-				<ul class="nav navbar-nav pull-right">
-					<li class="dropdown">
-						<a data-toggle="dropdown" class="dropdown-toggle" href="#"><?php echo $current_user->username ?> <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><?php echo Html::anchor('admin/logout', 'Logout') ?></li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+	<?= render('admin/navigation'); ?>
 	<?php endif; ?>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<h1><?php echo $title; ?></h1>
-				<hr>
 <?php if (Session::get_flash('success')): ?>
 				<div class="alert alert-success alert-dismissable">
 					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -107,20 +27,17 @@
 					</p>
 				</div>
 <?php endif; ?>
-			</div>
-			<div class="col-md-12">
-<?php echo $content; ?>
-			</div>
-		</div>
-		<hr/>
-		<footer>
-			<p class="pull-right">Page rendered in {exec_time}s using {mem_usage}mb of memory.</p>
-			<p>
-				<a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.<br>
-				<small>Version: <?php echo e(Fuel::VERSION); ?></small>
-			</p>
-		</footer>
+<main id="panel" class="slideout-panel">
+	<div class="menu-header">
+		<button class="btn-hamburger">
+			<span class="hamburger-icon"></span>
+		</button>
+		<h1><?= $title; ?></h1>
 	</div>
-<?= Asset::js(['admin.js', 'dist/spin.min.js', 'dist/ladda.min.js']); ?>
+	<div class="wrapper">
+	<?php echo $content; ?>
+	</div>
+</main>
+<?= Asset::js(['main.js', 'dist/spin.min.js', 'dist/ladda.min.js']); ?>
 </body>
 </html>
