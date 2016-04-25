@@ -6,7 +6,7 @@
 		<li class="<?php echo Uri::segment(2) == 'bidding' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/bidding') ?>">Bidding</a>
 		</li>
-		<li class="dropdown<?= in_array(\Uri::segment(2), ['pay', 'paid', 'received']) ? ' active' : '' ?><?= \Uri::segment(3) == 'view' ? ' active' : '' ?>">
+		<li class="<?= in_array(\Uri::segment(2), ['pay', 'paid', 'received']) ? 'active' : '' ?>">
 		<a href="#">Won</b>
 		</a>
 			<ul>

@@ -33,7 +33,7 @@ class Parser
      * Parser Class Object
      */
 	protected static $JP          = array("円", "分", "時間", "日");
-	protected static $EN          = array("yen", "min", "hour", "day");
+	protected static $EN          = array("", "min", "hour", "day");
 	protected static $BID_SUCCESS = '入札を受け付けました。あなたが現在の最高額入札者です。';
 	protected static $PRICE_UP    = '申し訳ありません。開始価格よりも高い値段で入札してください。';
 	protected static $AUCTION_WON = 'おめでとうございます!!　あなたが落札しました。';
