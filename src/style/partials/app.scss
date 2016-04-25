@@ -2,8 +2,8 @@ $max-screen: 850px;
 $count-color: #3EC4D3;
 $count-part-color: #6A3EF1;
 $date-color: #B56FFF;
-$price-color: #FF870C;
-$aucid-color: #3C8A16;
+$price-color: #8F8690;
+$aucid-color: #95A59D;
 $default-font-size: 14px;
 
 @mixin contaner-wrapper($bg-color){
@@ -49,6 +49,10 @@ body {
 .menu-header {
     overflow: hidden;
     border-bottom: 1px solid gray;
+
+	@media screen and (max-width: $max-screen) {
+		background-color: #F6F6F6;
+	}
 
     h1 {
 	    margin: 60px 30px 10px;
@@ -161,6 +165,7 @@ body {
         @media screen and (max-width: $max-screen) {
         	display: block;
         	text-align: left;
+        	border-bottom: 1px solid #484848;
         }
       }
 
@@ -168,18 +173,26 @@ body {
           background-color: #111;
         }
       ul {
-        z-index: 10;
+        /*z-index: 10;*/
         display: none;
         position: absolute;
         width: 150px;
+
+        @media screen and (max-width: $max-screen) {
+        	width: auto;
+        	position: relative;
+        }
         
         li {
-          background-color: #111;
-          display: block; 
-          
+			background-color: #202427;
+			display: block;
+
           a {
             display: block;
             text-align: left;
+            @media screen and (max-width: $max-screen) {
+				padding-left: 50px;
+			}
           }
           &:hover {
             background-color: #000;
@@ -188,7 +201,9 @@ body {
       }
       &:hover ul {
         display: block;
-        // background-color: #111;
+        @media screen and (max-width: $max-screen) {
+        	display: none;
+        }
       }
     }
   }
@@ -247,7 +262,11 @@ body {
   .action {
     float: right;
     span {
-      margin-left: 10px;
+    	margin-left: 10px;
+		@media screen and (max-width: $max-screen) {
+			margin-left: 20px;
+    		font-size: 1.2em;
+		}
     }
     @media screen and (max-width: $max-screen) {
       position: absolute;
@@ -280,13 +299,16 @@ body {
       @include count-number();
     }
     .aucid {
-      bottom: 14px;
-      left: 80px;
-      color: $aucid-color;
-      font-weight: 700;
-      font-size: 1.1em;
-      border: 1px dotted $price-color;
-      width: auto;
+		bottom: 14px;
+		left: 80px;
+		color: #fff;
+		font-weight: 700;
+		font-size: 1.2em;
+		/*border: 1px dotted $price-color;*/
+		background-color: $aucid-color;
+		width: auto;
+		width: 110px;
+		text-align: center;
     }
     .price {
       position: absolute;
@@ -377,6 +399,11 @@ body {
     .action {
       right: 5px;
       bottom: 0;
+
+      span {
+      	margin-left: 25px;
+    font-size: 1.2em;
+      }
     }
   }
 }

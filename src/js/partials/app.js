@@ -1,6 +1,6 @@
 $(function(){
 
-	// Slideout menu initialaze
+	// Slideout menu initialaze for device with small screen
 	if ($(window).width() < 850)
 	{
 		var slideout = new Slideout({
@@ -12,9 +12,19 @@ $(function(){
 		});
 		$('.menu-header button').on('click', function(){
 			slideout.toggle();
-		})
+		});
+
+		// Show submenu by click
+		$(".navigation ul ul").each(function(){
+			$(this).closest('li').find('a').on('click', function(){
+				var sub = $(this).closest('li').find('ul');
+				if (sub.is(':visible'))
+					sub.hide();
+				else
+					sub.show();
+			});
+		});
 	}
-	
 
 	// Refresh button on sort page
 	$('#form-refresh').click(function(){ 
