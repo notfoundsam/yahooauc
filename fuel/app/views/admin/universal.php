@@ -19,7 +19,7 @@ $summ = 0;
 	<div class="address"><?= $first->vendor->address; ?></div>
 	<?php endif; ?>
 </div>
-
+	
 <?php foreach ($item->auctions as $auction): ?>
 <?php
 $count += $auction->item_count;
