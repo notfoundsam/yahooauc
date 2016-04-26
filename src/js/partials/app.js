@@ -1,7 +1,7 @@
 $(function(){
 
 	// Slideout menu initialaze for device with small screen
-	if ($(window).width() < 850)
+	if ($(window).width() < 900)
 	{
 		var slideout = new Slideout({
 			'panel': document.getElementById('panel'),

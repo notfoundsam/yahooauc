@@ -249,7 +249,15 @@ class Browser
             'apg'     => $page ? $page : 1
         ];
 
-        $body = $this->getBody(static::$CLOSED_USER, $query);
+        if (\Config::get('my.test_mode.enabled'))
+        {
+            $body = $this->getBodyWon();
+        }
+        else
+        {
+            $body = $this->getBody(static::$CLOSED_USER, $query);
+        }
+
         $ids = Parser::parseWonPageNew($body);
 
         return $ids;
@@ -263,13 +271,17 @@ class Browser
             'apg'     => $page ? $page : 1
         ];
 
-        $body = $this->getBody(static::$OPEN_USER, $query);
-
-        /* Test bidding list
-        $body = $this->getBodyBidding();
-         */
+        if (\Config::get('my.test_mode.enabled'))
+        {
+            $body = $this->getBodyBidding();
+        }
+        else
+        {
+            $body = $this->getBody(static::$OPEN_USER, $query);
+        }
 
         $table = Parser::parseBiddingPageNew($body);
+        
         return $table; 
     }
 
@@ -291,12 +303,14 @@ class Browser
         Arrlog::arr_to_log($options);
         Log::debug('------- Browser end -------');
 
-        $body = $this->getBody(static::$PLACE_BID, null, $options, Requests::POST);
-
-        /* Test for result page.
-        $body = $this->getSuccesPage();
-        $body = $this->getPriceUpPage();
-        */
+        if (\Config::get('my.test_mode.enabled'))
+        {
+            $body = $this->getResultPage();
+        }
+        else
+        {
+            $body = $this->getBody(static::$PLACE_BID, null, $options, Requests::POST);
+        }
         
         $result = Parser::getResult($body);
 
@@ -306,25 +320,19 @@ class Browser
     // Test function for page of biding saved in local
     public function getBodyBidding()
     {
-        return File::read(APPPATH.'/tmp/yahoo/bidding3p.txt', true);
+        return File::read(\Config::get('my.test_mode.bidding_page'), true);
     }
 
     // Test function for page of won saved in local
     public function getBodyWon()
     {
-        return File::read(APPPATH.'/tmp/yahoo/won1p.txt', true);
+        return File::read(\Config::get('my.test_mode.won_page'), true);
     }
 
-    // Test function for success page of bid saved in local
-    public function getSuccesPage()
+    // Test function for result page of bid saved in local
+    public function getResultPage()
     {
-        return File::read(APPPATH.'/tmp/yahoo/success.txt', true);
-    }
-
-    // Test function for price go upper page of bid saved in local
-    public function getPriceUpPage()
-    {
-        return File::read(APPPATH.'/tmp/yahoo/price_up.txt', true);
+        return File::read(\Config::get('my.test_mode.result_page'), true);
     }
 
     function __destruct()

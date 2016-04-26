@@ -15,6 +15,9 @@
 		<div class="title"><?= $item[1]; ?></div>
 		<div class="price<?= $item[5] != Config::get('my.yahoo_user') ? ' price-up' : ''?>"><?= $item[2]; ?></div>
 		<div class="count"><?= $item[3]; ?></div>
+		<div class="time-left"><?= $item[6]; ?></div>
+		<div class="bidder"><?= $item[5] == Config::get('my.yahoo_user') ? 'me' : $item[5]; ?></div>
+		<div class="vendor"><?= $item[4]; ?></div>
 	</div>
 	<?php endforeach; ?>
 
