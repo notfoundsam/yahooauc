@@ -34,9 +34,9 @@ $summ += $auction->price;
 	<div class="price"><?= $auction->price; ?></div>
 	<div class="date"><?= Date::create_from_string($auction->won_date, 'mysql')->format('display_date'); ?></div>
 	<div class="action">
-		<span class="glyphicon glyphicon-info-sign"></span>
+		<span class="glyphicon glyphicon-comment"></span>
 		<span class="glyphicon glyphicon-edit"></span>
-		<span class="glyphicon glyphicon-remove"></span>
+		<span class="glyphicon glyphicon-remove-circle"></span>
 	</div>
 </div>
 				
@@ -51,11 +51,11 @@ $summ += $auction->price;
 	<div class="items-price">Summ: <?= $summ; ?></div>
 	<div class="total-price">Total: <?= $item->price + $summ; ?></div>
 	<div class="action">
-		<span class="glyphicon glyphicon-arrow-up"></span>
-		<span class="glyphicon glyphicon-arrow-down"></span>
-		<span class="glyphicon glyphicon-info-sign"></span>
+		<span class="glyphicon glyphicon-chevron-up"></span>
+		<span class="glyphicon glyphicon-chevron-down"></span>
+		<span class="glyphicon glyphicon-comment"></span>
 		<span class="glyphicon glyphicon-edit"></span>
-		<span class="glyphicon glyphicon-remove"></span>
+		<span class="glyphicon glyphicon-remove-circle"></span>
 	</div>
 </div>
 
