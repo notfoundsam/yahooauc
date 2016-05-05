@@ -27,10 +27,10 @@ $(function(){
 	}
 
 	// Refresh button on sort page
-	$('#form-refresh').click(function(){ 
+	$('.sort-form button').click(function(){ 
 		var l = Ladda.create(this);
 		l.start();
-		var pages = $('#pages').val();
+		var pages = $(this).parent().find('input').val();
 		$.ajax({
 			url: '/admin/api/refresh',
 			type: 'POST',
@@ -39,38 +39,26 @@ $(function(){
 				pages: pages
 			},
 			success: function (data) {
-				if (data.error.length == 0){
+				if (!data.error){
 
 					if (data.result) {
-						$('.ajax p').html(data.result + " auction was won, refresh the page");
-						$('.ajax').removeClass('alert-danger');
-						$('.ajax').addClass('alert-success').show();
+						showAlert(data.result + " auction was won, refresh the page", 'alert-success');
 						$('html, body').animate({scrollTop: '0px'}, 0);
 					}
 					else {
-						$('.ajax p').html("No items was won");
-						$('.ajax').removeClass('alert-danger');
-						$('.ajax').addClass('alert-success').show();
+						showAlert("No items was won", 'alert-success');
 						$('html, body').animate({scrollTop: '0px'}, 0);
 					}
 				}
 				else {
-					var error_message = '';
-					for (i = 0; i < data.error.length; i++) {
-						error_message += data.error[i] + "<br>";
-					}
-					$('.ajax p').html(error_message);
-					$('.ajax').removeClass('alert-success');
-					$('.ajax').addClass('alert-danger').show();
+					showAlert(data.error, 'alert-danger');
 					$('html, body').animate({scrollTop: '0px'}, 0);
 				}
 				l.stop();
 			},
 			error: function(){
 				l.stop();
-				$('.ajax p').html("API error has occurred!");
-				$('.ajax').removeClass('alert-success');
-				$('.ajax').addClass('alert-danger').show();
+				showAlert("API error has occurred!", 'alert-danger');
 				$('html, body').animate({scrollTop: '0px'}, 0);
 			}
 		});
@@ -88,7 +76,7 @@ $(function(){
 	});
 
 	// Bid button
-	$('#form-bid').click(function(){ 
+	$('.bid-form button').click(function(){ 
 		var l = Ladda.create(this);
 		l.start();
 		var auc_id = $('#auc_id').val();
@@ -102,34 +90,27 @@ $(function(){
 				price: price
 			},
 			success: function (data) {
-				if (data.error.length == 0){
+				if (!data.error){
 
 					if (data.result) {
-						$('.ajax p').html(data.result);
-						$('.ajax').removeClass('alert-danger');
-						$('.ajax').addClass('alert-success').show();
-						$('html, body').animate({scrollTop: '0px'}, 0);
+						showAlert(data.result, 'alert-success');
 					}
 				}
 				else {
-					var error_message = '';
-					for (i = 0; i < data.error.length; i++) {
-						error_message += data.error[i] + "<br>";
-					}
-					$('.ajax p').html(error_message);
-					$('.ajax').removeClass('alert-success');
-					$('.ajax').addClass('alert-danger').show();
-					$('html, body').animate({scrollTop: '0px'}, 0);
+					showAlert(data.error, 'alert-danger');
 				}
 				l.stop();
 			},
-			error: function(){
+			error: function() {
 				l.stop();
-				$('.ajax p').html("API error has occurred!");
-				$('.ajax').removeClass('alert-success');
-				$('.ajax').addClass('alert-danger').show();
-				$('html, body').animate({scrollTop: '0px'}, 0);
+				showAlert("API error has occurred!", 'alert-danger');
 			}
 		});
 	});
+
+	function showAlert(message, class) {
+		$('#alert p').html(message);
+		$('#alert').removeClass()
+		.addClass(class);
+	}
 });

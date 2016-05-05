@@ -27,23 +27,21 @@ $summ += $auction->price;
 ?>
 
 <div class="item-wrapper">
-	<div class="count-circle"></div>
 	<div class="count"><?= $auction->item_count; ?></div>
 	<div class="aucid"><?= $auction->auc_id; ?></div>
 	<div class="title"><?= $auction->title; ?></div>
 	<div class="price"><?= $auction->price; ?></div>
 	<div class="date"><?= Date::create_from_string($auction->won_date, 'mysql')->format('display_date'); ?></div>
 	<div class="action">
-		<span class="glyphicon glyphicon-comment"></span>
-		<span class="glyphicon glyphicon-edit"></span>
-		<span class="glyphicon glyphicon-remove-circle"></span>
+		<i class="fa fa-comment" aria-hidden="true"></i>
+		<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+		<i class="fa fa-times-circle-o" aria-hidden="true"></i>
 	</div>
 </div>
 				
 <?php endforeach; ?>
 
 <div class="part-wrapper">
-	<div class="count-circle"></div>
 	<div class="count"><?= $count ?></div>
 	<div class="tracking">Tracking: <?= $item->tracking; ?></div>
 	<div class="box">Box: <?= $item->box_number; ?></div>
@@ -51,11 +49,11 @@ $summ += $auction->price;
 	<div class="items-price">Summ: <?= $summ; ?></div>
 	<div class="total-price">Total: <?= $item->price + $summ; ?></div>
 	<div class="action">
-		<span class="glyphicon glyphicon-chevron-up"></span>
-		<span class="glyphicon glyphicon-chevron-down"></span>
-		<span class="glyphicon glyphicon-comment"></span>
-		<span class="glyphicon glyphicon-edit"></span>
-		<span class="glyphicon glyphicon-remove-circle"></span>
+		<i class="fa fa-chevron-up" aria-hidden="true"></i>
+		<i class="fa fa-chevron-down" aria-hidden="true"></i>
+		<i class="fa fa-comment" aria-hidden="true"></i>
+		<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+		<i class="fa fa-times-circle-o" aria-hidden="true"></i>
 	</div>
 </div>
 

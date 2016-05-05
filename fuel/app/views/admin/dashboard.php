@@ -1,12 +1,12 @@
-<div class="alert alert-dismissable ajax" style="display: none;">
-	<button type="button" class="close" onclick="$('.alert').hide()">&times;</button>
-	<p></p>
-</div>
+<div class="bid-form">
+	<label class="control-label">Lot ID:</label>
+	<input class="form-control" id="auc_id" type="text" placeholder="Enter lot's ID"><br />
+	<label class="control-label">Price:</label>
+	<input class="form-control" id="price" type="text" placeholder="Enter wishful price"><br />
 
-<div class="center-form">
-	<label class="control-label">Lot ID:</label> <input class="form-control" id="auc_id" type="text" placeholder="Enter lot ID"><br />
-	<label class="control-label">Price:</label> <input class="form-control" id="price" type="text" placeholder="Enter wishful price"><br />
-	<button id="form-bid" class="btn btn-primary ladda-button" data-style="zoom-in"><span class="ladda-label">Bid</span></button>
+	<button class="ladda-button" data-style="zoom-in" data-size="s" data-color="blue">
+		<span class="ladda-label">Bid</span>
+	</button>
 </div>
 
 
