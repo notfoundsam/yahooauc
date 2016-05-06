@@ -20,7 +20,7 @@
 	</div>
 
 	<div id="alert" class="<?= Session::get_flash('alert') ? 'alert-' . Session::get_flash('alert.status') : 'alert-hide'; ?>">
-		<button type="button" class="close" onclick="$('#alert').addClass('alert-hide');">&times;</button>
+		<button type="button" onclick="$('#alert').addClass('alert-hide');">&times;</button>
 		<p>
 		<?= implode('<br>', (array) Session::get_flash('alert.message')); ?>
 		</p>

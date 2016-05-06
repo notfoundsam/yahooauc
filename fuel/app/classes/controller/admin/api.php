@@ -93,7 +93,7 @@ class Controller_Admin_Api extends Controller_Rest
 			$val_error[] = "Parser error: ".$e->getMessage();
 		}
 
-		$this->response(['result' => $result, 'error' => $this->implode_errors($val_error)]);
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
 	}
 
 	public function post_bid()
@@ -159,22 +159,6 @@ class Controller_Admin_Api extends Controller_Rest
 				$val_error[] = $error->get_message();
 			}
 		}
-
-		$this->response(['result' => $result, 'error' => $this->implode_errors($val_error)]);
-	}
-
-	private function implode_errors($errors)
-	{
-		$m = '';
-
-		if (!empty($errors))
-		{
-			foreach ($errors as $error)
-			{
-				$m = $m.$error.'<br>';
-			}
-		}
-
-		return rtrim($m, '<br>');
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
 	}
 }
