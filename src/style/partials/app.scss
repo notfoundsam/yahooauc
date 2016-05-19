@@ -269,6 +269,7 @@ body {
 		float: right;
 		i {
 			margin-left: 10px;
+			cursor: pointer;
 		}
 	}
 	.count {
@@ -452,6 +453,7 @@ body {
 	}
 }
 
+/* Alert block */
 #alert {
 	padding: 10px;
 	border-radius: 4px;
@@ -487,6 +489,31 @@ body {
 
 .alert-hide {
 	display: none;
+}
+
+/* Auction item popup */
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: opacity 500ms;
+	/*visibility: hidden;*/
+	display: none;
+	/*opacity: 1;*/
+	z-index: 15;
+
+	.popup {
+		margin: 70px auto;
+		padding: 20px;
+		background: #fff;
+		border-radius: 5px;
+		width: 70%;
+		position: relative;
+		transition: all 5s ease-in-out;
+	}
 }
 
 .bid-form {

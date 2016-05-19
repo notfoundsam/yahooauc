@@ -1,7 +1,15 @@
 <?php 
 $redirect = Uri::segment(3) ?  Uri::segment(2).'/'.Uri::segment(3) : Uri::segment(2);
 ?>
-
+<div id="auc-item-popup" class="overlay">
+	<div class="popup">
+		<h2></h2>
+		<a class="close" href="#">&times;</a>
+		<div class="content">
+			Thank to pop me out of that button, but now i'm done so you can close this window.
+		</div>
+	</div>
+</div>
 <?php if ($items): ?>
 
 <?php foreach ($items as $item): ?>	
@@ -26,7 +34,7 @@ $count += $auction->item_count;
 $summ += $auction->price;
 ?>
 
-<div class="item-wrapper">
+<div class="item-wrapper" auc-id="<?= $auction->id; ?>">
 	<div class="count"><?= $auction->item_count; ?></div>
 	<div class="aucid"><?= $auction->auc_id; ?></div>
 	<div class="title"><?= $auction->title; ?></div>
@@ -34,7 +42,7 @@ $summ += $auction->price;
 	<div class="date"><?= Date::create_from_string($auction->won_date, 'mysql')->format('display_date'); ?></div>
 	<div class="action">
 		<i class="fa fa-comment" aria-hidden="true"></i>
-		<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+		<i class="fa fa-pencil-square-o auc-edit-button" aria-hidden="true"></i>
 		<i class="fa fa-times-circle-o" aria-hidden="true"></i>
 	</div>
 </div>

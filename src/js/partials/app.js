@@ -108,9 +108,25 @@ $(function(){
 		});
 	});
 
-	function showAlert(message, class) {
-		$('#alert p').html(message);
-		$('#alert').removeClass()
-		.addClass(class);
-	}
+	// Auction item edit button
+	$('#auc-item-popup .close').on('click', function() {
+		$('#auc-item-popup').hide();
+	});
+	$('.auc-edit-button').each(function() {
+		$(this).on('click', function() {
+			var item = $(this).closest('.item-wrapper');
+			var popup = $('#auc-item-popup');
+			popup.find('h2').text(item.find('.title').text());
+			// var auc_id = $(this).closest('.item-wrapper').attr('auc-id');
+			// console.log(auc_id);
+			popup.show();
+		});
+	});
+
 });
+
+function showAlert(message, class) {
+	$('#alert p').html(message);
+	$('#alert').removeClass()
+	.addClass(class);
+}

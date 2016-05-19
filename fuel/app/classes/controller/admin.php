@@ -102,14 +102,14 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{	
-		$test = [];
-		$test[] = 'aaa ddd a';
-		$test[] = 'bb  s   sbb';
+		// $test = [];
+		// $test[] = 'aaa ddd a';
+		// $test[] = 'bb  s   sbb';
 		$this->template->title = 'Dashboard';
-		Session::set_flash('alert', [
-						'status'  => 'danger',
-						'message' => $test
-					]);
+		// Session::set_flash('alert', [
+		// 				'status'  => 'danger',
+		// 				'message' => $test
+		// 			]);
 		$this->template->content = View::forge('admin/dashboard');
 	}
 }
