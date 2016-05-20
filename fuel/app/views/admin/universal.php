@@ -5,8 +5,19 @@ $redirect = Uri::segment(3) ?  Uri::segment(2).'/'.Uri::segment(3) : Uri::segmen
 	<div class="popup">
 		<h2></h2>
 		<a class="close" href="#">&times;</a>
-		<div class="content">
-			Thank to pop me out of that button, but now i'm done so you can close this window.
+		<div class="item-inputs">
+			<label>Items count</label>
+			<input id="count" type="text">
+			<label>Price</label>
+			<input id="price" type="text">
+			<input id="item-id" type="hidden">
+		</div>
+		<label>comment</label>
+		<textarea id="comment"></textarea>
+		<div class="send-button">
+			<button class="ladda-button" data-style="zoom-in" data-size="xs" data-color="blue">
+				<span class="ladda-label">Update</span>
+			</button>
 		</div>
 	</div>
 </div>
@@ -34,7 +45,7 @@ $count += $auction->item_count;
 $summ += $auction->price;
 ?>
 
-<div class="item-wrapper" auc-id="<?= $auction->id; ?>">
+<div class="item-wrapper" item-id="<?= $auction->id; ?>">
 	<div class="count"><?= $auction->item_count; ?></div>
 	<div class="aucid"><?= $auction->auc_id; ?></div>
 	<div class="title"><?= $auction->title; ?></div>

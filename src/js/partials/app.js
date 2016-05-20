@@ -108,17 +108,70 @@ $(function(){
 		});
 	});
 
-	// Auction item edit button
+	// Auction item popup window close button
 	$('#auc-item-popup .close').on('click', function() {
 		$('#auc-item-popup').hide();
+		$('body').css('overflow','auto');
 	});
+
+	// Auction item popup update button
+	$('#auc-item-popup button').click(function(){
+		var popup = $('#auc-item-popup');
+		var item_id = popup.find('#item-id').val();
+		var count = popup.find('#count').val();
+		var price = popup.find('#price').val();
+		var comment = popup.find('#comment').val();
+
+		var l = Ladda.create(this);
+		l.start();
+		$.ajax({
+			url: '/admin/api/updateauc',
+			type: 'POST',
+			data: {
+				csrf_token_key: "<?= \Security::fetch_token();?>",
+				id: item_id,
+				count: count,
+				price: price,
+				comment: comment
+			},
+			success: function (data) {
+				l.stop();
+				popup.hide();
+				$('body').css('overflow','auto');
+				if (!data.error) {
+						console.log('OK');
+
+					if (data.result) {
+						showAlert(data.result, 'alert-success');
+					}
+				}
+				else {
+					console.log('OPPS');
+					showAlert(data.error, 'alert-danger');
+				}
+			},
+			error: function() {
+				l.stop();
+				console.log('FAIL');
+				popup.hide();
+				$('body').css('overflow','auto');
+				showAlert("API error has occurred!", 'alert-danger');
+			}
+		});
+	});
+
+	// Auction item edit button
 	$('.auc-edit-button').each(function() {
 		$(this).on('click', function() {
 			var item = $(this).closest('.item-wrapper');
 			var popup = $('#auc-item-popup');
 			popup.find('h2').text(item.find('.title').text());
+			popup.find('#count').val(item.find('.count').text());
+			popup.find('#price').val(item.find('.price').text());
+			popup.find('#item-id').val(item.attr('item-id'));
 			// var auc_id = $(this).closest('.item-wrapper').attr('auc-id');
 			// console.log(auc_id);
+			$('body').css('overflow','hidden')
 			popup.show();
 		});
 	});

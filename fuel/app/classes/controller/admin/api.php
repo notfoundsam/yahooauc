@@ -161,4 +161,37 @@ class Controller_Admin_Api extends Controller_Rest
 		}
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
 	}
+
+	public function post_updateauc()
+	{
+		$result = '';
+		$val_error = [];
+
+		$val = Validation::forge();
+		$val->add_field('id', '[ID]', 'required|valid_string[numeric]');
+		$val->add_field('count', '[Count]', 'required|valid_string[numeric]|max_length[5]');
+		$val->add_field('price', '[Price]', 'required|valid_string[numeric]|max_length[5]');
+		$val->add('comment', '[Comment]');
+
+		$values['id'] = \Input::post('id');
+		$values['count'] = \Input::post('count');
+		$values['price'] = \Input::post('price');
+		$values['comment'] = \Input::post('comment');
+
+		if ( $val->run($values) )
+		{
+			$result = 'ok';
+			Log::debug("OK");
+			sleep(2);
+		}
+		else
+		{
+			foreach ($val->error() as $error)
+			{
+				$val_error[] = $error->get_message();
+				Log::debug($error->get_message());
+			}
+		}
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+	}
 }

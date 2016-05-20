@@ -513,6 +513,46 @@ body {
 		width: 70%;
 		position: relative;
 		transition: all 5s ease-in-out;
+
+		h2 {
+			margin-top: 0px;
+			padding-right: 20px;
+		}
+
+		.close {
+			position: absolute;
+			top: 5px;
+			right: 15px;
+			transition: all 200ms;
+			font-size: 30px;
+			font-weight: bold;
+			text-decoration: none;
+			color: #333;
+
+			&:hover {
+				color: #A9A9A9;
+			}
+		}
+		.item-inputs {
+			margin-bottom: 10px;
+		}
+		.send-button {
+			text-align: center;
+			padding-top: 10px;
+		}
+
+		label {
+			font-weight: 700;
+			padding-right: 10px;
+		}
+		input {
+			margin-right: 10px;
+		}
+		textarea {
+			width: 100%;
+			resize: vertical;
+			margin-top: 5px;
+		}
 	}
 }
 
