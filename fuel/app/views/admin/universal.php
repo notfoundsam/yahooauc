@@ -1,26 +1,7 @@
 <?php 
 $redirect = Uri::segment(3) ?  Uri::segment(2).'/'.Uri::segment(3) : Uri::segment(2);
 ?>
-<div id="auc-item-popup" class="overlay">
-	<div class="popup">
-		<h2></h2>
-		<a class="close" href="#">&times;</a>
-		<div class="item-inputs">
-			<label>Items count</label>
-			<input id="count" type="text">
-			<label>Price</label>
-			<input id="price" type="text">
-			<input id="item-id" type="hidden">
-		</div>
-		<label>comment</label>
-		<textarea id="comment"></textarea>
-		<div class="send-button">
-			<button class="ladda-button" data-style="zoom-in" data-size="xs" data-color="blue">
-				<span class="ladda-label">Update</span>
-			</button>
-		</div>
-	</div>
-</div>
+
 <?php if ($items): ?>
 
 <?php foreach ($items as $item): ?>	
@@ -52,10 +33,11 @@ $summ += $auction->price;
 	<div class="price"><?= $auction->price; ?></div>
 	<div class="date"><?= Date::create_from_string($auction->won_date, 'mysql')->format('display_date'); ?></div>
 	<div class="action">
-		<i class="fa fa-comment" aria-hidden="true"></i>
+		<i class="fa fa-comment<?= $auction->memo ? '' : ' hidden'; ?>" aria-hidden="true"></i>
 		<i class="fa fa-pencil-square-o auc-edit-button" aria-hidden="true"></i>
-		<i class="fa fa-times-circle-o" aria-hidden="true"></i>
+		<i class="fa fa-times-circle-o auc-delete-button" aria-hidden="true"></i>
 	</div>
+	<div class="comment hidden"><?= $auction->memo; ?></div>
 </div>
 				
 <?php endforeach; ?>

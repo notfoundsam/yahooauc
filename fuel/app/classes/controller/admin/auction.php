@@ -45,23 +45,23 @@ class Controller_Admin_Auction extends Controller_Admin
 
 	}
 
-	public function action_delete($id = null, $one = null, $two = null)
-	{
-		$redirect = $two ? $one.'/'.$two : $one;
+	// public function action_delete($id = null, $one = null, $two = null)
+	// {
+	// 	$redirect = $two ? $one.'/'.$two : $one;
 
-		if ($auction = \Model_Auction::find($id) and \Security::check_token())
-		{
+	// 	if ($auction = \Model_Auction::find($id) and \Security::check_token())
+	// 	{
 
-			$auction->part_id = null;
-			$auction->save();
+	// 		$auction->part_id = null;
+	// 		$auction->save();
 
-			Session::set_flash('success', e('Deleted auction #'.$auction->auc_id));
-		}
-		else
-		{
-			Session::set_flash('error', e('Could not delete auction #'.$auction->auc_id));
-		}
+	// 		Session::set_flash('success', e('Deleted auction #'.$auction->auc_id));
+	// 	}
+	// 	else
+	// 	{
+	// 		Session::set_flash('error', e('Could not delete auction #'.$auction->auc_id));
+	// 	}
 
-		Response::redirect('admin/'.$redirect);
-	}
+	// 	Response::redirect('admin/'.$redirect);
+	// }
 }

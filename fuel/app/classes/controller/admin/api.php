@@ -180,16 +180,57 @@ class Controller_Admin_Api extends Controller_Rest
 
 		if ( $val->run($values) )
 		{
-			$result = 'ok';
-			Log::debug("OK");
-			sleep(2);
+			$auction = \Model_Auction::find($val->validated('id'));
+			$auction->item_count = $val->validated('count');
+			$auction->price = $val->validated('price');
+			$auction->memo = $val->validated('comment');
+			if ($auction->save())
+			{
+				$result = 'Auction ID: '.$auction->auc_id.' was successfully updated';
+			}
+			else
+			{
+				$val_error[] = 'Could not update auction '.$auction->aucid;
+			}
 		}
 		else
 		{
 			foreach ($val->error() as $error)
 			{
 				$val_error[] = $error->get_message();
-				Log::debug($error->get_message());
+			}
+		}
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+	}
+
+	public function post_deleteauc()
+	{
+		$result = '';
+		$val_error = [];
+
+		$val = Validation::forge();
+		$val->add_field('id', '[ID]', 'required|valid_string[numeric]');
+
+		$values['id'] = \Input::post('id');
+
+		if ( $val->run($values) )
+		{
+			$auction = \Model_Auction::find($val->validated('id'));
+			$auction->part_id = null;
+			if ($auction->save())
+			{
+				$result = 'Auction ID: '.$auction->auc_id.' was successfully deleted';
+			}
+			else
+			{
+				$val_error[] = 'Could not delete auction '.$auction->aucid;
+			}
+		}
+		else
+		{
+			foreach ($val->error() as $error)
+			{
+				$val_error[] = $error->get_message();
 			}
 		}
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
