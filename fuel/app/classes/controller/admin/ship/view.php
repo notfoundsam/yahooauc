@@ -6,7 +6,7 @@ class Controller_Admin_Ship_View extends Controller_Admin
 	{
 		$data['items'] = Model_Part::find('all',[
 			'where' => [
-				'status' => \Config::get('my.status.ship'),
+				'status' => \Config::get('my.status.ship.id'),
 			],
 			'related' => [
 				'auctions' => [
@@ -17,7 +17,7 @@ class Controller_Admin_Ship_View extends Controller_Admin
 			],
 		]);
 		$this->template->title = "Ship";
-		$this->template->content = View::forge('admin/universal', $data);
+		$this->template->content = View::forge('admin/list', $data);
 
 	}
 

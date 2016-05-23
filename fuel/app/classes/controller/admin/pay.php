@@ -6,7 +6,7 @@ class Controller_Admin_Pay extends Controller_Admin
 	{
 		$data['items'] = Model_Part::find('all',[
 			'where' => [
-				'status' => \Config::get('my.status.pay'),
+				'status' => \Config::get('my.status.pay.id'),
 			],
 			'related' => [
 				'auctions' => [
@@ -18,7 +18,7 @@ class Controller_Admin_Pay extends Controller_Admin
 		]);
 
 		$this->template->title = "Pay";
-		$this->template->content = View::forge('admin/universal', $data);
+		$this->template->content = View::forge('admin/list', $data);
 	}
 
 	public function action_edit($id = null)

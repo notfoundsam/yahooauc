@@ -7,9 +7,7 @@
 	right: 0;
 	background: rgba(0, 0, 0, 0.7);
 	transition: opacity 500ms;
-	/*visibility: hidden;*/
 	display: none;
-	/*opacity: 1;*/
 	z-index: 15;
 
 	.popup {
@@ -19,7 +17,6 @@
 		border-radius: 5px;
 		width: 70%;
 		position: relative;
-		transition: all 5s ease-in-out;
 
 		h2 {
 			margin-top: 0px;
@@ -28,9 +25,8 @@
 
 		.close {
 			position: absolute;
-			top: 5px;
+			top: 14px;
 			right: 15px;
-			transition: all 200ms;
 			font-size: 30px;
 			font-weight: bold;
 			text-decoration: none;
@@ -57,10 +53,36 @@
 		input {
 			margin-right: 10px;
 		}
+		#part-ship {
+			width: 60px;
+		}
+		#part-box {
+			width: 50px;
+		}
 		textarea {
 			width: 100%;
 			resize: vertical;
 			margin-top: 5px;
+		}
+
+		@media screen and (max-width: $max-screen) {
+			margin: 55px auto;
+			width: 95%;
+
+			.item-inputs {
+				margin-bottom: 0;
+			}
+			.item-label {
+				padding: 5px 0;
+				display: block;
+			}
+			.item-input {
+			    margin-right: 0;
+				width: 100%;
+			}
+			textarea {
+				margin-top: 0;
+			}
 		}
 	}
 }

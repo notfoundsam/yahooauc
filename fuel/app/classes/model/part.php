@@ -10,7 +10,9 @@ class Model_Part extends \Orm\Model
 			'default' => 0,
 		],
 		'ship_number',
-		'box_number',
+		'box_number' => [
+			'default' => 0,
+		],
 		'tracking',
 		'memo',
 		'created_at',

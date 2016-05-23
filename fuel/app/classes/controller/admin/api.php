@@ -164,7 +164,7 @@ class Controller_Admin_Api extends Controller_Rest
 
 	public function post_updateauc()
 	{
-		$result = '';
+		$result    = '';
 		$val_error = [];
 
 		$val = Validation::forge();
@@ -173,24 +173,24 @@ class Controller_Admin_Api extends Controller_Rest
 		$val->add_field('price', '[Price]', 'required|valid_string[numeric]|max_length[5]');
 		$val->add('comment', '[Comment]');
 
-		$values['id'] = \Input::post('id');
-		$values['count'] = \Input::post('count');
-		$values['price'] = \Input::post('price');
+		$values['id']      = \Input::post('id');
+		$values['count']   = \Input::post('count');
+		$values['price']   = \Input::post('price');
 		$values['comment'] = \Input::post('comment');
 
 		if ( $val->run($values) )
 		{
 			$auction = \Model_Auction::find($val->validated('id'));
 			$auction->item_count = $val->validated('count');
-			$auction->price = $val->validated('price');
-			$auction->memo = $val->validated('comment');
+			$auction->price      = $val->validated('price');
+			$auction->memo       = $val->validated('comment');
 			if ($auction->save())
 			{
 				$result = 'Auction ID: '.$auction->auc_id.' was successfully updated';
 			}
 			else
 			{
-				$val_error[] = 'Could not update auction '.$auction->aucid;
+				$val_error[] = 'Could not update auction ID: '.$auction->aucid;
 			}
 		}
 		else
@@ -205,7 +205,7 @@ class Controller_Admin_Api extends Controller_Rest
 
 	public function post_deleteauc()
 	{
-		$result = '';
+		$result    = '';
 		$val_error = [];
 
 		$val = Validation::forge();
@@ -223,7 +223,95 @@ class Controller_Admin_Api extends Controller_Rest
 			}
 			else
 			{
-				$val_error[] = 'Could not delete auction '.$auction->aucid;
+				$val_error[] = 'Could not delete auction ID: '.$auction->auc_id;
+			}
+		}
+		else
+		{
+			foreach ($val->error() as $error)
+			{
+				$val_error[] = $error->get_message();
+			}
+		}
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+	}
+
+	public function post_updatepart()
+	{
+		$result    = '';
+		$val_error = [];
+
+		$val = Validation::forge();
+		$val->add_field('id', '[ID]', 'required|valid_string[numeric]');
+		$val->add_field('status', '[Status]', 'required|valid_string[numeric]');
+		$val->add_field('price', '[Ship]', 'required|valid_string[numeric]|max_length[5]');
+		$val->add_field('box', '[Box]', 'valid_string[numeric]|max_length[3]');
+		$val->add('tracking', '[Tracking]');
+		$val->add('comment', '[Comment]');
+
+		$values['id']        = \Input::post('id');
+		$values['status']    = \Input::post('status');
+		$values['price']     = \Input::post('price');
+		$values['box']       = \Input::post('box');
+		$values['tracking']  = \Input::post('tracking');
+		$values['comment']   = \Input::post('comment');
+
+		if ( $val->run($values) )
+		{
+			$part = \Model_Part::find($val->validated('id'));
+			$part->status     = $val->validated('status');
+			$part->price      = $val->validated('price');
+			$part->box_number = $val->validated('box');
+			$part->tracking   = $val->validated('tracking');
+			$part->memo       = $val->validated('comment');
+			if ($part->save())
+			{
+				$result = 'Part ID: '.$part->id.' was successfully updated';
+			}
+			else
+			{
+				$val_error[] = 'Could not update part ID: '.$part->id;
+			}
+		}
+		else
+		{
+			foreach ($val->error() as $error)
+			{
+				$val_error[] = $error->get_message();
+			}
+		}
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+	}
+
+
+	public function post_deletepart()
+	{
+		$result    = '';
+		$val_error = [];
+
+		$val = Validation::forge();
+		$val->add_field('id', '[ID]', 'required|valid_string[numeric]');
+
+		$values['id'] = \Input::post('id');
+
+		if ( $val->run($values) )
+		{
+			$part = \Model_Part::find($val->validated('id'));
+
+			foreach ($part->auctions as $auction)
+			{
+				$auction->part_id = null;
+				$auction->save();
+			}
+			$part_id = $part->id;
+
+			if ($part->delete())
+			{
+				$result = 'Part ID: '.$part_id.' was successfully deleted';
+			}
+			else
+			{
+				$val_error[] = 'Could not delete part ID: '.$part_id;
 			}
 		}
 		else

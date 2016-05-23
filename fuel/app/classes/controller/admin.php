@@ -14,15 +14,15 @@ class Controller_Admin extends Controller_Base
 		{
 			if (Auth::check())
 			{
-				$admin_group_id = Config::get('auth.driver', 'Simpleauth') == 'Ormauth' ? 6 : 100;
-				if ( ! Auth::member($admin_group_id))
-				{
-					Session::set_flash('alert', [
-						'status'  => 'danger',
-						'message' => e('You don\'t have access to the admin panel')
-					]);
-					Response::redirect('/');
-				}
+				// $admin_group_id = Config::get('auth.driver', 'Simpleauth') == 'Ormauth' ? 6 : 100;
+				// if ( ! Auth::member($admin_group_id))
+				// {
+				// 	Session::set_flash('alert', [
+				// 		'status'  => 'danger',
+				// 		'message' => e('You don\'t have access to the admin panel')
+				// 	]);
+				// 	Response::redirect('/');
+				// }
 			}
 			else
 			{
@@ -102,6 +102,7 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{	
+		Arrlog::arr_to_log(Input::server());
 		// $test = [];
 		// $test[] = 'aaa ddd a';
 		// $test[] = 'bb  s   sbb';
