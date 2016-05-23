@@ -20,23 +20,23 @@ var path = {
         // js: 'build/js/',
         js: 'public/assets/js/',
         // css: 'build/css/'
-        css: 'public/assets/css/'
+        css: 'public/assets/css/',
         // img: 'build/img/',
-        // fonts: 'build/fonts/'
+        fonts: 'public/assets/fonts/'
     },
     src: { //Пути откуда брать исходники
         // html: 'src/*.html', //Синтаксис src/*.html говорит gulp что мы хотим взять все файлы с расширением .html
         js: 'src/js/main.js',//В стилях и скриптах нам понадобятся только main файлы
         style: 'src/style/main.scss',
         // img: 'src/img/**/*.*', //Синтаксис img/**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
-        // fonts: 'src/fonts/**/*.*'
+        awesomeFonts: 'bower_components/font-awesome/fonts/**/*.*'
     },
     watch: { //Тут мы укажем, за изменением каких файлов мы хотим наблюдать
         // html: 'src/**/*.html',
         js: 'src/js/**/*.js',
         style: 'src/style/**/*.scss',
         // img: 'src/img/**/*.*',
-        // fonts: 'src/fonts/**/*.*'
+        awesomeFonts: 'bower_components/font-awesome/fonts/**/*.*'
     },
     clean: './build'
 };
@@ -72,11 +72,16 @@ gulp.task('style:build', function () {
         .pipe(reload({stream: true}));
 });
 
+gulp.task('awesomeFonts:build', function() {
+    gulp.src(path.src.awesomeFonts)
+        .pipe(gulp.dest(path.build.fonts))
+});
+
 gulp.task('build', [
     // 'html:build',
     'js:build',
     'style:build',
-    // 'fonts:build',
+    'awesomeFonts:build',
     // 'image:build'
 ]);
 
@@ -93,9 +98,9 @@ gulp.task('watch', function(){
     // watch([path.watch.img], function(event, cb) {
     //     gulp.start('image:build');
     // });
-    // watch([path.watch.fonts], function(event, cb) {
-    //     gulp.start('fonts:build');
-    // });
+    watch([path.watch.awesomeFonts], function(event, cb) {
+        gulp.start('awesomeFonts:build');
+    });
 });
 
 gulp.task('webserver', function () {

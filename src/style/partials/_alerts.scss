@@ -1,0 +1,33 @@
+/* Alert block */
+#alert {
+	padding: 10px;
+	border-radius: 4px;
+    margin: 4px;
+
+	button {
+		float: right;
+		font-size: 21px;
+		font-weight: bold;
+		line-height: 1;
+		text-shadow: 0 1px 0 #ffffff;
+		opacity: 0.2;
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		border: 0;
+	}
+	p {
+		margin: 0;
+	}
+}
+.alert-danger {
+	background-color: #f2dede;
+	color: #b94a48;
+	border: 1px solid #eed3d7;
+}
+
+.alert-success {
+	background-color: #dff0d8;
+	color: #468847;
+	border: 1px solid #d6e9c6;;
+}

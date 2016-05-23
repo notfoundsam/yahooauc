@@ -1,0 +1,88 @@
+/* Auction item popup */
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: opacity 500ms;
+	display: none;
+	z-index: 15;
+
+	.popup {
+		margin: 70px auto;
+		padding: 20px;
+		background: #fff;
+		border-radius: 5px;
+		width: 70%;
+		position: relative;
+
+		h2 {
+			margin-top: 0px;
+			padding-right: 20px;
+		}
+
+		.close {
+			position: absolute;
+			top: 14px;
+			right: 15px;
+			font-size: 30px;
+			font-weight: bold;
+			text-decoration: none;
+			color: #333;
+			cursor: pointer;
+
+
+			&:hover {
+				color: #A9A9A9;
+			}
+		}
+		.item-inputs {
+			margin-bottom: 10px;
+		}
+		.send-button {
+			text-align: center;
+			padding-top: 10px;
+		}
+
+		label {
+			font-weight: 700;
+			padding-right: 10px;
+		}
+		input {
+			margin-right: 10px;
+		}
+		#part-ship {
+			width: 60px;
+		}
+		#part-box {
+			width: 50px;
+		}
+		textarea {
+			width: 100%;
+			resize: vertical;
+			margin-top: 5px;
+		}
+
+		@media screen and (max-width: $max-screen) {
+			margin: 55px auto;
+			width: 95%;
+
+			.item-inputs {
+				margin-bottom: 0;
+			}
+			.item-label {
+				padding: 5px 0;
+				display: block;
+			}
+			.item-input {
+			    margin-right: 0;
+				width: 100%;
+			}
+			textarea {
+				margin-top: 0;
+			}
+		}
+	}
+}

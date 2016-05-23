@@ -19,6 +19,9 @@
   "dependencies": {
     "normalize.css": "*",
     "jquery": "2.*",
-    "slideout.js": "~0.1.12"
+    "slideout.js": "~0.1.12",
+    "ladda": "~1.0.0",
+    "jquery-ui": "~1.11.4",
+    "font-awesome": "~4.6.3"
   }
 }

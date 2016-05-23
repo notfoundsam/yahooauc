@@ -11,12 +11,11 @@
 	<?php foreach ($table['auctions'] as $item) : ?>
 	<div class="item-wrapper">
 		<div class="bidding-action">
-			<span class="glyphicon glyphicon-arrow-up"></span>
-			<span class="glyphicon glyphicon-eye-open"></span>
+			<i class="fa fa-arrow-up" aria-hidden="true"></i>
+			<i class="fa fa-eye" aria-hidden="true"></i>
 		</div>
-		<div class="count-circle"></div>
 		<div class="aucid"><?= $item[0]; ?></div>
-		<div class="bidding-title"><?= $item[1]; ?></div>
+		<div class="bidding-title"><?= Str::truncate($item[1], 32); ?></div>
 		<div class="price<?= $item[5] != Config::get('my.yahoo_user') ? ' price-up' : ''?>"><?= $item[2]; ?></div>
 		<div class="count"><?= $item[3]; ?></div>
 		<div class="time-left"><?= $item[6]; ?></div>

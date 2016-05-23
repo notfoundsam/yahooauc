@@ -51,7 +51,10 @@ $count = 0;
 	<h4>No auctions for sort...</h4>
 <?php endif ; ?>
 
-<div style="margin-top:10px;text-align:center;">
-	<label>Count of page for refresh:</label> <input id="pages" type="text" value="1">
-	<button id="form-refresh" class="btn btn-primary ladda-button" data-style="zoom-in"><span class="ladda-label">Refresh</span></button>
+<div class="sort-form">
+	<label>Count of page for refresh:</label>
+	<input type="text" value="1">
+	<button class="ladda-button" data-style="zoom-in" data-size="s" data-color="blue">
+		<span class="ladda-label">Refresh</span>
+	</button>
 </div>

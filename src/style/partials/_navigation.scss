@@ -1,0 +1,96 @@
+.navigation {
+	background-color: #333;
+	width: 100%;
+	text-align: center;
+	position: fixed;
+	top: 0;
+	z-index: 10;
+	display: block;
+
+	@media screen and (max-width: $max-screen) {
+		position: fixed;
+		height: 100%;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		z-index: 0;
+		width: 256px;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+		display: none;
+	}
+
+	.active {
+	background-color: #111;
+	}
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		display: inline;
+		font-size: 0;
+
+		@media screen and (max-width: $max-screen) {
+			display: block;
+		}
+
+		li {
+			display: inline-block;
+			@media screen and (max-width: $max-screen) {
+				display: block;
+			}
+
+			a {
+				display: inline-block;
+				color: white;
+				text-align: center;
+				padding: 14px 16px;
+				text-decoration: none;
+				font-size: $default-font-size;
+				@media screen and (max-width: $max-screen) {
+					display: block;
+					text-align: left;
+					border-bottom: 1px solid #484848;
+					padding: 18px 16px;
+				}
+			}
+
+			&:hover {
+				background-color: #111;
+			}
+
+			ul {
+				display: none;
+				position: absolute;
+				width: 150px;
+
+				@media screen and (max-width: $max-screen) {
+					width: auto;
+					position: relative;
+				}
+				li {
+					background-color: #202427;
+					display: block;
+
+					a {
+						display: block;
+						text-align: left;
+						@media screen and (max-width: $max-screen) {
+							padding-left: 50px;
+						}
+					}
+					&:hover {
+						background-color: #000;
+					}
+				}
+			}
+			&:hover ul {
+				display: block;
+				@media screen and (max-width: $max-screen) {
+					display: none;
+				}
+			}
+		}
+	}
+}

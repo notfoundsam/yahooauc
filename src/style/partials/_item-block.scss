@@ -1,0 +1,233 @@
+/* Header Item wrapper*/
+.head-wrapper {
+	@include contaner-wrapper(#8198A0);
+	color: #fff;
+
+	.part-id, .vendor-id, .index, .address {
+		display: inline-block;
+		padding: 4px;
+	}
+	.part-id {
+		width: 70px;
+		text-align: center;
+	}
+	.vendor-id {
+		width: 160px;
+		color: #05087B;
+	}
+	.index {
+		width: 70px;
+	}
+	@media screen and (max-width: $max-screen) {
+		.vendor-id {
+			width: auto;
+		}
+		.index {
+			float: right;
+			width: auto;
+			padding-right: 5px;
+		}
+		.address {
+			font-size: 0.9em;
+		}
+	}
+}
+
+/* Auction Item wrapper */
+.item-wrapper {
+	@include contaner-wrapper(#f6f6f6);
+	&:nth-of-type(odd) {
+		background: #e9e9e9
+	}
+	.count, .aucid, .title, .bidding-title, .price, .date, .action, .time-left, .vendor, .bidder, .bidding-action {
+		display: inline-block;
+		padding: 4px;
+	}
+	.action {
+		float: right;
+		i {
+			margin-left: 10px;
+			cursor: pointer;
+		}
+	}
+	.count {
+		width: 25px;
+	}
+	.aucid {
+		width: 90px;
+	}
+	.title {
+		width: 430px;
+	}
+	.bidding-title {
+		width: 380px;
+	}
+	.price {
+		width: 50px;
+	}
+	.time-left {
+		width: 60px;
+	}
+	.bidder {
+		width: 65px;
+	}
+	.bidding-action {
+		i {
+			margin-left: 5px;
+		}
+	}
+	@media screen and (max-width: $max-screen) {
+		padding-bottom: 50px;
+		.title, .bidding-title {
+			padding-left: 30px;
+			width: auto;
+			display: block;
+		}
+		.count, .aucid, .price, .date, .action {
+			position: absolute;
+		}
+		.count {
+			@include count-number($count-color, $count-b-color);
+		}
+		.aucid {
+			@include rectangle($aucid-color);
+			left: 80px;
+			width: 110px;
+		}
+		.price {
+			@include rectangle($price-color);
+			position: absolute;
+			left: 5px;
+			width: 65px;
+		}
+		.action {
+			position: absolute;
+			float: none;
+			bottom: 20px;
+			right: 0;
+
+			i {
+				margin: 0;
+				padding: 10px;
+				font-size: 1.2em;
+			}
+		}
+		.date {
+			position: absolute;
+			bottom: 0;
+			right: 2px;
+			color: $date-color;
+			font-style: italic;
+		}
+		.time-left {
+			bottom: 14px;
+			color: #E83434;
+			font-size: 1.2em;
+			text-align: center;
+			position: absolute;
+			left: 190px;
+			width: 70px;
+		}
+		.bidder {
+			margin-left: 5px;
+			background-color: #CACACA;
+			padding: 0;
+			text-align: center;
+		}
+		.vendor {
+			background-color: #CACACA;
+			padding: 0;
+			text-align: center;
+			width: 180px;
+			margin-left: 6px;
+		}
+		.bidding-action {
+			text-align: center;
+			position: absolute;
+			float: none;
+			bottom: 5px;
+			right: 5px;
+			width: 50px;
+
+			i {
+				font-size: 1.2em;
+				padding: 10px;
+			}
+		}
+	}
+}
+
+/* Part Item wrapper */
+.part-wrapper {
+	@include contaner-wrapper(#808080);
+	color: #fff;
+	margin-bottom: 15px;
+
+	.count, .items-price, .ship, .total-price, .tracking, .box, .action {
+		display: inline-block;
+		padding: 4px;
+	}
+	.count {
+		width: 25px;
+	}
+	.action {
+		float: right;
+		i {
+			margin-left: 10px;
+			cursor: pointer;
+		}
+	}
+	.ship {
+		width: 80px;
+	}
+	.items-price {
+		width: 100px;
+	}
+	.tracking {
+		width: 200px;
+	}
+	.box {
+		width: 80px;
+	}
+
+	@media screen and (max-width: $max-screen) {
+		padding-bottom: 80px;
+			.count, .tracking, .box, .ship, .items-price, .total-price, .action {
+			position: absolute;
+		}
+		.count {
+			@include count-number($count-part-color, $count-part-b-color);
+		}
+		.tracking {
+			left: 28px;
+			top: 0;
+		}
+		.box {
+			right: 5px;
+			text-align: right;
+		}
+		.ship {
+			bottom: 0;
+			left: 5px;
+		}
+		.items-price {
+			bottom: 26px;
+			left: 5px;
+		}
+		.total-price {
+			bottom: 25px;
+			right: 5px;
+			text-align: right;
+		}
+		.action {
+			right: 0;
+			bottom: -4px;
+
+			i {
+				margin: 0;
+				padding: 10px;
+				font-size: 1.2em;
+			}
+		}
+	}
+}

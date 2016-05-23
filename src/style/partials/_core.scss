@@ -1,0 +1,38 @@
+$max-screen: 900px;
+$count-color: #3EC4D3;
+$count-b-color: #8E8E8E;
+$count-part-color: #6A3EF1;
+$count-part-b-color: #E0E0E0;
+$date-color: #B56FFF;
+$price-color: #8F8690;
+$aucid-color: #95A59D;
+$time-left-color: #6D7D84;
+$default-font-size: 14px;
+
+@mixin contaner-wrapper($bg-color){
+	margin: auto;
+	max-width: $max-screen;
+	position: relative;
+	background: $bg-color;
+}
+@mixin count-number($color, $border-color){
+	top: 2px;
+	left: 2px;
+	height: 24px;
+	width: 24px;
+	border: 2px solid $border-color;
+	border-radius: 50%;
+	background-color: $color;
+	padding: 0px;
+	text-align: center;
+	color: #fff;
+	font-weight: 700;
+}
+@mixin rectangle($rect-b-color){
+	bottom: 14px;
+	color: #fff;
+	font-weight: 700;
+	font-size: 1.2em;
+	background-color: $rect-b-color;
+	text-align: center;
+}

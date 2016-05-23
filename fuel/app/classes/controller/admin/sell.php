@@ -7,7 +7,7 @@ class Controller_Admin_Sell extends Controller_Admin
 	{
 		$data['items'] = Model_Part::find('all',[
 			'where' => [
-				'status' => \Config::get('my.status.sell'),
+				'status' => \Config::get('my.status.sell.id'),
 			],
 			'related' => [
 				'auctions' => [
@@ -18,7 +18,7 @@ class Controller_Admin_Sell extends Controller_Admin
 			],
 		]);
 		$this->template->title = "Pay";
-		$this->template->content = View::forge('admin/universal', $data);
+		$this->template->content = View::forge('admin/list', $data);
 
 	}
 

@@ -164,11 +164,11 @@ class Parser
 				}
 				if ($i == 1 || $i == 5)
 				{
-					$a_tr[] = str_replace(static::$JP, static::$EN, strip_tags($td->innertext));
+					$a_tr[] = trim(str_replace(static::$JP, static::$EN, strip_tags($td->innertext)));
 				}
 				else
 				{
-					$a_tr[] = strip_tags($td->innertext);
+					$a_tr[] = trim(strip_tags($td->innertext));
 				}
 			}
 			
