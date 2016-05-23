@@ -63,4 +63,3 @@ return [
 		'non-activated' => 7,
 	]
 ];
-
