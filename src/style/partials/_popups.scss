@@ -64,6 +64,9 @@
 			resize: vertical;
 			margin-top: 5px;
 		}
+		.radio-group {
+			display: inline-block;
+		}
 
 		@media screen and (max-width: $max-screen) {
 			margin: 10px auto;
@@ -91,7 +94,6 @@
 			}
 
 			.radio-group {
-				display: inline-block;
 				padding-top: 10px;
 			}
 		}
