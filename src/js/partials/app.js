@@ -110,6 +110,7 @@ $(function(){
 
 	// Auction item edit popup window close button
 	$('#item-edit-popup .close').on('click', function() {
+		$('body').removeClass('freeze');
 		$('#item-edit-popup').hide();
 	});
 
@@ -185,6 +186,7 @@ $(function(){
 				showAlert("API error has occurred!", 'alert-danger');
 			}
 		});
+		$('body').removeClass('freeze');
 	});
 
 	// Auction item edit button
@@ -204,7 +206,6 @@ $(function(){
 
 	// Auction item delete popup window close button
 	$('#item-delete-popup .close').on('click', function() {
-		$('body').removeClass('freeze');
 		$('#item-delete-popup').hide();
 	});
 
@@ -339,6 +340,7 @@ $(function(){
 				showAlert("API error has occurred!", 'alert-danger');
 			}
 		});
+		$('body').removeClass('freeze');
 	});
 
 	// Auction part edit button
