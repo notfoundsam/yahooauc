@@ -16,14 +16,14 @@ html {
 body {
 	font-size: $default-font-size;
 	line-height: 1.428571429;
-
-	@media screen and (max-height: $popup-screen) {
-		overflow: hidden;
-	}
 }
 
 .hidden {
 	display: none;
+}
+
+.freeze {
+	overflow: hidden;
 }
 
 .slideout-panel {
