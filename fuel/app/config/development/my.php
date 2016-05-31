@@ -7,4 +7,4 @@ return [
 		'won_page'     => APPPATH.'/tmp/yahoo/won.txt',
 		'result_page'  => APPPATH.'/tmp/yahoo/success.txt',
 	]
-]
+];

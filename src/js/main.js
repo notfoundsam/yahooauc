@@ -10,5 +10,6 @@
 
 /*
  * Custom
+ * separate app.js
  */
 //= partials/app.js

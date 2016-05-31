@@ -349,7 +349,7 @@ $(function(){
 			popup.find('#part-box').val(part.find('.box span').text());
 			popup.find('#comment').val(part.find('.comment').text());
 			popup.find('#part-id').val(part.attr('part-id'));
-			popup.find('#radio_' + part.attr('part-status')).prop('checked', true);;
+			popup.find('#radio_' + part.attr('part-status')).prop('checked', true);
 			popup.show();
 		});
 	});
