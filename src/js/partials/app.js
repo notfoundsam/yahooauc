@@ -197,12 +197,14 @@ $(function(){
 			popup.find('#price').val(item.find('.price').text());
 			popup.find('#comment').val(item.find('.comment').text());
 			popup.find('#item-id').val(item.attr('item-id'));
+			$('body').addClass('freeze');
 			popup.show();
 		});
 	});
 
 	// Auction item delete popup window close button
 	$('#item-delete-popup .close').on('click', function() {
+		$('body').removeClass('freeze');
 		$('#item-delete-popup').hide();
 	});
 
@@ -259,6 +261,7 @@ $(function(){
 
 	// Auction part edit popup window close button
 	$('#part-edit-popup .close').on('click', function() {
+		$('body').removeClass('freeze');
 		$('#part-edit-popup').hide();
 	});
 
@@ -350,6 +353,7 @@ $(function(){
 			popup.find('#comment').val(part.find('.comment').text());
 			popup.find('#part-id').val(part.attr('part-id'));
 			popup.find('#radio_' + part.attr('part-status')).prop('checked', true);
+			$('body').addClass('freeze');
 			popup.show();
 		});
 	});
