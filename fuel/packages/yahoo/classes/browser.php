@@ -1,32 +1,10 @@
 <?php
-// use Fuel\Log;
-/**
- * Class login and grub HTML your yahoo.co.jp pages
- *
- * PHP version 5
- *
- * Copyright (c) 2015, Zazimko Alexey <notfoundsam@gmail.com>
- * All rights reserved.
- *
- * @category Grab
- * @package  Yahoo
- * @author   Zazimko Alexey <notfoundsam@gmail.com>
- * @license  http://www.opensource.org/licenses/mit-license.php MIT License
- * @link     https://github.com/notfoundsam/yahooauc
- */
-
-/*
- * Class representing a HTTP request message
- * PEAR package should be installed
- */
-// require_once 'HTTP/Request2.php';
-// require_once 'HTTP/Request2/CookieJar.php';
 
 class BrowserException extends Exception {}
 class BrowserLoginException extends Exception {}
 
 /**
- * Class using HTTP Requests for get HTML content from yahoo.co.jp
+ * Class use HTTP Requests for get HTML content from yahoo.co.jp
  * It's have Login to yahoo, bid to auction lot, get lots on bid,
  * get won lots and manage your cookie
  * @category Browser
