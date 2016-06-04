@@ -24,13 +24,11 @@ return [
 		],
 	],
 
-	// 'yahoo_user'       => 'pekopeko_haraheringu',
-	'yahoo_user'       => 'notfoundsam',
-	// 'yahoo' => [
-	// 	'user_name'  => Input::server('YAHOO_USER'),
-	// 	'user_pass'  => Input::server('YAHOO_PASS'),
-	// 	'user_appid' => Input::server('YAHOO_APPID'),
-	// ],
+	'yahoo' => [
+		'user_name'  => Input::server('YAHOO_USER'),
+		'user_pass'  => Input::server('YAHOO_PASS'),
+		'user_appid' => Input::server('YAHOO_APPID'),
+	],
 
 	'main_bidder'      => 'vyacheslav',
 	// 'main_bidder'      => 'sosetcadmin',
@@ -54,12 +52,12 @@ return [
 	],
 
 	'groups' => [
-		'banned' => 1,
-		'guest' => 2,
-		'user' => 3,
-		'moderator' => 4,
+		'banned'        => 1,
+		'guest'         => 2,
+		'user'          => 3,
+		'moderator'     => 4,
 		'administrator' => 5,
-		'superadmin' => 6,
+		'superadmin'    => 6,
 		'non-activated' => 7,
 	]
 ];

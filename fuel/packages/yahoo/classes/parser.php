@@ -46,7 +46,7 @@ class Parser
 
 		if ($p_result = $html->find('div[class=yjmthloginarea]', 0))
 		{
-			if (Config::get('my.yahoo_user') == trim($p_result->find('strong', 0)->innertext))
+			if (\Config::get('my.yahoo.user_name') == trim($p_result->find('strong', 0)->innertext))
 			{
 				return true;
 			}

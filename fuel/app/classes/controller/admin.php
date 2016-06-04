@@ -102,7 +102,11 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{	
-		Arrlog::arr_to_log(Input::server());
+		// Arrlog::arr_to_log(Input::server());
+		
+		// \Log::debug(\Config::get('my.yahoo.user_name'));
+		// \Log::debug(\Config::get('my.yahoo.user_pass'));
+		// \Log::debug(\Config::get('my.yahoo.user_appid'));
 		// $test = [];
 		// $test[] = 'aaa ddd a';
 		// $test[] = 'bb  s   sbb';
