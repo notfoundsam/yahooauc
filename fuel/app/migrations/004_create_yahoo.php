@@ -6,15 +6,29 @@ class Create_yahoo
 {
 	public function up()
 	{
-		\DBUtil::create_table('yahoo', array(
-			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
-			'userid' => array('constraint' => 50, 'type' => 'varchar'),
-			'password' => array('constraint' => 255, 'type' => 'varchar'),
-			'cookies' => array('type' => 'text', 'null' => true),
-			'appid' => array('constraint' => 255, 'type' => 'varchar'),
-			'updated_at' => array('constraint' => 11, 'type' => 'int', 'default' => time()),
+		\DBUtil::create_table('yahoo', [
+			'id' => [
+				'constraint' => 11,
+				'type' => 'int',
+				'auto_increment' => true,
+			],
+			'userid' => [
+				'constraint' => 50,
+				'type' => 'varchar'
+			],
+			'cookies' => [
+				'type' => 'text',
+				'null' => true
+			],
+			'updated_at' => [
+				'constraint' => 11,
+				'type' => 'int',
+				'default' => time()
+			],
 
-		), array('id'));
+		],[
+			'id'
+		]);
 	}
 
 	public function down()

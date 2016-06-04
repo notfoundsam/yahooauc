@@ -60,12 +60,13 @@ class Browser
             'Keep-Alive' => 115,
             'Connection' => 'keep-alive'
         ];
-        // Need to optimize select, separete pass, user, cookies e.g.
-    	$this->select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo_user'))->execute()->as_array();
+
+        // Get cookie by Yahoo user name
+    	$this->select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo.user_name'))->execute()->as_array();
 
     	if (empty($this->select))
     	{
-    		throw new BrowserLoginException('User in config/my.yahoo_user not found in DB');
+    		throw new BrowserLoginException('User in config/my.yahoo.user_name not found in DB');
     	}
 
     	if ($this->select[0]['cookies'] && ($this->select[0]['updated_at'] > strtotime('-1 week')))
@@ -126,8 +127,8 @@ class Browser
             $options[$value['name']] = $value['value'];
         }
 
-        $options['login'] = $this->select[0]['userid'];
-        $options['passwd'] = $this->select[0]['password'];
+        $options['login']  = \Config::get('my.yahoo.user_name');
+        $options['passwd'] = \Config::get('my.yahoo.user_pass');
         $options['.persistent'] = 'y';
 
         // Pause before submit
@@ -178,7 +179,7 @@ class Browser
         }
 
         $query = [
-            'appid' => $this->select[0]['appid'],
+            'appid' => \Config::get('my.yahoo.user_appid'),
             'auctionID' => $auc_id,
         ];
 
@@ -346,7 +347,7 @@ class Browser
                 'cookies'  => serialize($cookies),
                 'updated_at' => time()
             ])
-            ->where('userid', Config::get('my.yahoo_user'))
+            ->where('userid', \Config::get('my.yahoo.user_name'))
             ->execute();
         }
     }
