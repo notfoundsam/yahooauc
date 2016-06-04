@@ -26,12 +26,12 @@ class BrowserException extends Exception {}
 class BrowserLoginException extends Exception {}
 
 /**
- * Class login and scraping your yahoo.co.jp pages
- *
- * @category Grab
+ * Class using HTTP Requests for get HTML content from yahoo.co.jp
+ * It's have Login to yahoo, bid to auction lot, get lots on bid,
+ * get won lots and manage your cookie
+ * @category Browser
  * @package  Yahoo
  * @author   Zazimko Alexey <notfoundsam@gmail.com>
- * @license  
  * @link     https://github.com/notfoundsam/yahooauc
  */
 class Browser
@@ -49,8 +49,8 @@ class Browser
     protected $session             = null;
 
     /**
-     * init function
-     *
+     * Get cookie from DB and check them when was been last update.
+     * If last update was been more than one week, get login again.
      * @return void
      */
     public function __construct()
@@ -83,8 +83,9 @@ class Browser
     }
 
     /**
-    * Login to yahoo 
-    *
+    * Login to yahoo auction use user name and password
+    * @return void
+    * @throws BrowserLoginException Throw exception if can not login
     */
     protected function login()
     {
@@ -149,12 +150,11 @@ class Browser
     }
 
     /**
-    * Get response body
-    *
-    * @param string $url     target url
-    * @param string $query   query parameters
-    *
-    * @return string         response body
+    * Send request to Yahoo and return body of HTML
+    * @param string $url       Target url
+    * @param string $query     Query parameters
+    * @return string           Response body
+    * @throws BrowserException Throw exception if URL for request not given
     */
     protected function getBody($url = null, $query = null, $options = [], $method = Requests::GET)
     {
@@ -170,7 +170,12 @@ class Browser
         return $response->body;
     }
 
-    // Get XML odject by auction id
+    /**
+     * Get XML odject by auction id
+     * @param  string $auc_id   Auction ID
+     * @return SimpleXMLElement Return XML Object
+     * @throws BrowserException Throw exception if auction ID not given
+     */
     public function getXmlObject($auc_id = null)
     {
         if (empty($auc_id))
@@ -201,7 +206,14 @@ class Browser
         return $auc_xml;
     }
 
-    protected function createFormValues($page_values = null, $price = 0)
+    /**
+     * Create new options for request by values recived from response
+     * @param  array   $page_values Array with pair name and value
+     * @param  integer $price       Bidding price
+     * @return array                Return options for request
+     * @throws BrowserException     Throw exception if given price lower than current
+     */
+    protected function createRequstOptions($page_values = null, $price = 0)
     {
         $options = [];
         $price_setted = false;
@@ -242,6 +254,11 @@ class Browser
         return $options;
     }
 
+    /**
+     * Return won auction IDs from setted page
+     * @param  int $page Number of page with won lots
+     * @return array     Return array with won auction IDs
+     */
     public function won($page = null)
     {
         $query = [
@@ -264,6 +281,11 @@ class Browser
         return $ids;
     }
 
+    /**
+     * Get lot information in bid by setted page
+     * @param  int $page Number of page with lots in bid
+     * @return array     Return array with lot information
+     */
     public function bidding($page = null)
     {
          $query = [
@@ -286,12 +308,18 @@ class Browser
         return $table; 
     }
 
-    public function bid($auc_id = null, $price = null, $auc_url = null)
+    /**
+     * Bid on yahoo lot with seted price
+     * @param  int $price      Price for bid
+     * @param  string $auc_url URL with auction ID
+     * @return bool            Reurn true if bid successful
+     */
+    public function bid($price = null, $auc_url = null)
     {
         $body = $this->getBody($auc_url);
         $values = Parser::getAuctionPageValues($body);
 
-        $options = $this->createFormValues($values, $price);
+        $options = $this->createRequstOptions($values, $price);
         Log::debug('------ Browser start ------');
         Arrlog::arr_to_log($options);
         Log::debug('------- Browser end -------');
@@ -299,7 +327,7 @@ class Browser
         $body = $this->getBody(static::$BID_PREVIEW, null, $options, Requests::POST);
         $values = Parser::getAuctionPageValues($body);
 
-        $options = $this->createFormValues($values, $price);
+        $options = $this->createRequstOptions($values, $price);
         Log::debug('------ Browser start ------');
         Arrlog::arr_to_log($options);
         Log::debug('------- Browser end -------');
@@ -336,9 +364,12 @@ class Browser
         return File::read(\Config::get('my.test_mode.result_page'), true);
     }
 
+    /**
+     * Save cookies into DB after bid
+     */
     function __destruct()
     {
-        // Save cookies into DB
+        // 
         if ($this->loggedin)
         {
             $cookies = $this->session->options['cookies'];
