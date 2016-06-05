@@ -1,44 +1,29 @@
 <?php
-/**
- * Use Simple_Html_Dom for parse HTML
- *
- * PHP version 5
- *
- * Copyright (c) 2015, Zazimko Alexey <notfoundsam@gmail.com>
- * All rights reserved.
- *
- * @category Parse
- * @package  Yahoo
- * @author   Zazimko Alexey <notfoundsam@gmail.com>
- * @license  http://www.opensource.org/licenses/mit-license.php MIT License
- * @link     https://github.com/notfoundsam/yahooauc
- */
 
 use Sunra\PhpSimple\HtmlDomParser;
 
 class ParserException extends Exception {}
 
 /**
- * Class get items in bidding
- *
- * @category Parse
+ * Class parse Yahoo HTML pages
+ * @category Parser
  * @package  Yahoo
  * @author   Zazimko Alexey <notfoundsam@gmail.com>
- * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     https://github.com/notfoundsam/yahooauc
  */
 class Parser
 {
-	/**
-     * Parser Class Object
-     */
 	protected static $JP          = array(",", "円", "分", "時間", "日");
 	protected static $EN          = array("", "", "min", "hour", "day");
 	protected static $BID_SUCCESS = '入札を受け付けました。あなたが現在の最高額入札者です。';
 	protected static $PRICE_UP    = '申し訳ありません。開始価格よりも高い値段で入札してください。';
 	protected static $AUCTION_WON = 'おめでとうございます!!　あなたが落札しました。';
 
-
+	/**
+	 * Check Log In
+	 * @param  string $body Body of HTML page
+	 * @return bool         Return true if loggedin or false
+	 */
 	public static function checkLogin($body)
 	{
 		$html = new HtmlDomParser;
@@ -55,9 +40,10 @@ class Parser
 	}
 
 	/**
-	 * Parse body for auction id
-	 * @param  string $body Html with won auctions
+	 * Take only Auction IDs from Auction won HTML page
+	 * @param  string $body HTML page with won auctions
 	 * @return array        Array of auction ids
+	 * @throws ParserException Throw exception if HTML not given
 	 */
 	public static function parseWonPageNew($body = null)
 	{
@@ -96,9 +82,10 @@ class Parser
 	}
 
 	/**
-	 * [parseBiddingPageNew description]
-	 * @param  string $body Html with bidding auctions
-	 * @return array        Array of auction ids
+	 * Take all (ID, Title, Price etc.) from bidding HTML page
+	 * @param  string $body HTML page with bidding auctions
+	 * @return array        Array of bidding auctions
+	 * @throws ParserException Throw exception if HTML not given
 	 */
 	public static function parseBiddingPageNew($body = null)
 	{
@@ -184,8 +171,9 @@ class Parser
 	 * Parse HTML page for hidden fields in form
 	 * @param  string $body Html with form
 	 * @return array        Return array with pair name and value
+	 * @throws ParserException Throw exception if POST form not found
 	 */
-	public static function getAuctionPageValues($body)
+	public static function getHiddenInputValues($body)
 	{
 		$page_values = [];
 		$html = new HtmlDomParser;

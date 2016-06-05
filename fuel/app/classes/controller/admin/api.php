@@ -118,11 +118,10 @@ class Controller_Admin_Api extends Controller_Rest
 
 				if ((string) $auc_xml->Result->Status == 'open')
 				{
-					$auc_id = $val->validated('auc_id');
 					$price = $val->validated('price');
 					$auc_url = (string) $auc_xml->Result->AuctionItemUrl;
 
-					if ($browser->bid($auc_id, $price, $auc_url))
+					if ($browser->bid($price, $auc_url))
 					{
 						$result = 'Bid on '. $val->validated('auc_id'). ' successful';
 					}
