@@ -76,7 +76,7 @@ class Browser
         $this->getBody(static::$AUCTION_URL);
         $body = $this->getBody(static::$LOGIN_URL, $query);
 
-        $values = Parser::getAuctionPageValues($body);
+        $values = Parser::getHiddenInputValues($body);
 
         preg_match_all(
             '/document\.getElementsByName\("\.albatross"\)\[0\]\.value = "(.*?)";/',
@@ -295,7 +295,7 @@ class Browser
     public function bid($price = null, $auc_url = null)
     {
         $body = $this->getBody($auc_url);
-        $values = Parser::getAuctionPageValues($body);
+        $values = Parser::getHiddenInputValues($body);
 
         $options = $this->createRequstOptions($values, $price);
         Log::debug('------ Browser start ------');
@@ -303,7 +303,7 @@ class Browser
         Log::debug('------- Browser end -------');
 
         $body = $this->getBody(static::$BID_PREVIEW, null, $options, Requests::POST);
-        $values = Parser::getAuctionPageValues($body);
+        $values = Parser::getHiddenInputValues($body);
 
         $options = $this->createRequstOptions($values, $price);
         Log::debug('------ Browser start ------');

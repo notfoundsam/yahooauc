@@ -173,7 +173,7 @@ class Parser
 	 * @return array        Return array with pair name and value
 	 * @throws ParserException Throw exception if POST form not found
 	 */
-	public static function getAuctionPageValues($body)
+	public static function getHiddenInputValues($body)
 	{
 		$page_values = [];
 		$html = new HtmlDomParser;
