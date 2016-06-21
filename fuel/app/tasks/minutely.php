@@ -22,12 +22,12 @@ class Minutely
 	{
 		try
 		{
-			self::$LAST_CHECK_TIME = Cache::get('won_last_check');
+			self::$LAST_CHECK_TIME = Cache::get('yahoo.won_last_check');
 			print self::$LAST_CHECK_TIME."\n";
 		}
 		catch (\CacheNotFoundException $e)
 		{
-			Cache::set('won_last_check', time());
+			Cache::set('yahoo.won_last_check', time());
 		}
 
 		self::db_backup_at_time();
@@ -112,7 +112,7 @@ class Minutely
 				\Log::error("Parser error: ".$e->getMessage());
 			}
 
-			Cache::set('won_last_check', time());
+			Cache::set('yahoo.won_last_check', time());
 		}
 	}
 
