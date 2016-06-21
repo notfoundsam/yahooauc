@@ -32,6 +32,7 @@ class Minutely
 
 		self::db_backup_at_time();
 		self::check_won_at_time();
+		\Log::error('test');
 	}
 
 	private static function check_won_at_time()
@@ -40,6 +41,7 @@ class Minutely
 
 		if ( self::$LAST_CHECK_TIME < strtotime("-{$interval} minute") )
 		{
+			\Log::error('check_won_at_time');
 			$auc_ids = [];
 			$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(\Config::get('my.task.last_won_limit'))->execute()->as_array();
 			$user_id = \DB::select('id')->from('users')->where('username', \Config::get('my.main_bidder'))->execute()->as_array();
