@@ -7,6 +7,7 @@ class BrowserLoginException extends Exception {}
  * Class use HTTP Requests for get HTML content from yahoo.co.jp
  * It's have Login to yahoo, bid to auction lot, get lots on bid,
  * get won lots and manage your cookie
+ * 
  * @category Browser
  * @package  Yahoo
  * @author   Zazimko Alexey <notfoundsam@gmail.com>

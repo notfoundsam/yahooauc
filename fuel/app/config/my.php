@@ -30,12 +30,22 @@ return [
 		'user_appid' => Input::server('YAHOO_APPID'),
 	],
 
+	'dropbox' => [
+		'token' => Input::server('DBX_TOKEN'),
+		// IMPORTANT PATH STARTS WITH "/"
+		'db_path' => '/db_backup'
+	],
+
+	'task' => [
+		'backup_time' => '02:00',
+		// Check every $n minutes
+		'lot_update_interval' => 10,
+		'last_won_limit' => 250,
+	],
+
 	'main_bidder'      => 'vyacheslav',
 	// 'main_bidder'      => 'sosetcadmin',
 	'second_bidder'    => 'sosetcadmin',
-
-	// Limit of auctions getting from DB
-	'limit'            => 250,
 
 	// Commission per item
 	'commission'       => 300,

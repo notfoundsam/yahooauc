@@ -6,6 +6,7 @@ class ParserException extends Exception {}
 
 /**
  * Class parse Yahoo HTML pages
+ * 
  * @category Parser
  * @package  Yahoo
  * @author   Zazimko Alexey <notfoundsam@gmail.com>
@@ -55,7 +56,7 @@ class Parser
 		$ids = [];
 		$html = new HtmlDomParser;
 		$html = str_get_html($body);
-		$won_table = self::findTable ($html, Config::get('my.table.won'));
+		$won_table = self::findTable($html, Config::get('my.table.won'));
 
 		if (!$won_table)
 		{
@@ -100,7 +101,7 @@ class Parser
 
 		$html = new HtmlDomParser;
 		$html = str_get_html($body);
-		$bidding_table = self::findTable ($html, Config::get('my.table.bidding'));
+		$bidding_table = self::findTable($html, Config::get('my.table.bidding'));
 
 		if (!$bidding_table)
 		{
@@ -116,9 +117,9 @@ class Parser
 					$pages = $p_td->find('a');
 					foreach($pages as $page)
 					{
-						if ( !(int)$page->innertext ) {
+						if ( !(int)$page->innertext )
 							break;
-						}
+						
 			   			$a_pages[] = $page->innertext;
 					}
 				}
@@ -136,7 +137,8 @@ class Parser
 			if (!$tr->children())
 				continue;
 
-			if ($first_tr){
+			if ($first_tr)
+			{
 				$first_tr = false;
 				continue;
 			}

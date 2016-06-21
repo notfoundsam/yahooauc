@@ -20,8 +20,8 @@ class Controller_Admin_Api extends Controller_Rest
 		$val_error = [];
 		$auc_ids = [];
 		$page = (int)\Input::post('pages');
-		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(Config::get('my.limit'))->execute()->as_array();
-		$user_id = \DB::select('id')->from('users')->where('username', '=', Config::get('my.main_bidder'))->execute()->as_array();
+		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(Config::get('my.task.last_won_limit'))->execute()->as_array();
+		$user_id = \DB::select('id')->from('users')->where('username', Config::get('my.main_bidder'))->execute()->as_array();
 
 		foreach ($select as $value) {
 			$auc_ids[] = $value['auc_id'];
