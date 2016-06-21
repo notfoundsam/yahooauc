@@ -5,8 +5,11 @@
 
 return array(
 	'default' => array(
+		'type'        => 'mysqli',
 		'connection'  => array(
-			'dsn'        => 'mysql:host='.getenv('OPENSHIFT_MYSQL_DB_HOST').';port='.getenv('OPENSHIFT_MYSQL_DB_PORT').';dbname=htmlunit',
+			'hostname'   => getenv('OPENSHIFT_MYSQL_DB_HOST'),
+			'port'       => getenv('OPENSHIFT_MYSQL_DB_PORT'),
+			'database'   => 'htmlunit',
 			'username'   => getenv('OPENSHIFT_MYSQL_DB_USERNAME'),
 			'password'   => getenv('OPENSHIFT_MYSQL_DB_PASSWORD'),
 		)

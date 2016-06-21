@@ -1,1 +1,0 @@
-php $OPENSHIFT_REPO_DIR/oil refine cron

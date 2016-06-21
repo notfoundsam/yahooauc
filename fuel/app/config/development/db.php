@@ -5,8 +5,11 @@
 
 return array(
 	'default' => array(
+		'type'        => 'mysqli',
 		'connection'  => array(
-			'dsn'        => 'mysql:host=localhost;dbname=htmlunit',
+			'hostname'   => 'localhost',
+			'port'       => '3306',
+			'database'   => 'htmlunit',
 			'username'   => 'root',
 			'password'   => '1',
 		),
