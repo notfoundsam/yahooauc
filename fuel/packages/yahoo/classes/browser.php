@@ -41,6 +41,23 @@ class Browser
         ];
 
         // Get cookie by Yahoo user name
+        // try
+        // {
+        //     if ( \Cache::get('yahoo.cookies_exp') > strtotime('-1 week') )
+        //     {
+        //         $cookies = \Cache::get('yahoo.cookies');
+        //         $this->session = new Requests_Session(self::$AUCTION_URL, $headers, [], ['cookies' => $cookies]);
+        //     }
+        //     else
+        //     {
+        //         $this->login();
+        //     }
+        // }
+        // catch (\CacheNotFoundException $e)
+        // {
+        //     $this->login();
+        // }
+
     	$this->select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo.user_name'))->execute()->as_array();
 
     	if (empty($this->select))
@@ -68,6 +85,9 @@ class Browser
     */
     protected function login()
     {
+        $this->loggedin = false;
+        $this->session = new Requests_Session(self::$AUCTION_URL, $headers);
+
         $query = [
             '.lg' => 'jp',
             '.intl' => 'jp',
@@ -115,7 +135,7 @@ class Browser
         sleep(3);
         $this->getBody(static::$LOGIN_URL, $query, $options, Requests::POST);
         
-        // Check by login
+        // Check login
         $body = $this->getBody(static::$AUCTION_URL);
 
         if (Parser::checkLogin($body))
@@ -359,6 +379,9 @@ class Browser
             ])
             ->where('userid', \Config::get('my.yahoo.user_name'))
             ->execute();
+
+            \Cache::set('yahoo.cookies', $cookies);
+            \Cache::set('yahoo.cookies_exp', time());
         }
     }
 }
