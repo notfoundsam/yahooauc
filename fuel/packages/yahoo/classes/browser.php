@@ -27,6 +27,12 @@ class Browser
     protected $select              = null;
     protected $session             = null;
 
+    private static $_headers = [
+        'User-Agent' => 'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)',
+        'Keep-Alive' => 115,
+        'Connection' => 'keep-alive'
+    ];
+
     /**
      * Get cookie from DB and check them when was been last update.
      * If last update was been more than one week, get login again.
@@ -34,48 +40,23 @@ class Browser
      */
     public function __construct()
     {
-        $headers = [
-            'User-Agent' => 'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)',
-            'Keep-Alive' => 115,
-            'Connection' => 'keep-alive'
-        ];
-
         // Get cookie by Yahoo user name
-        // try
-        // {
-        //     if ( \Cache::get('yahoo.cookies_exp') > strtotime('-1 week') )
-        //     {
-        //         $cookies = \Cache::get('yahoo.cookies');
-        //         $this->session = new Requests_Session(self::$AUCTION_URL, $headers, [], ['cookies' => $cookies]);
-        //     }
-        //     else
-        //     {
-        //         $this->login();
-        //     }
-        // }
-        // catch (\CacheNotFoundException $e)
-        // {
-        //     $this->login();
-        // }
-
-    	$this->select = DB::select()->from('yahoo')->where('userid', Config::get('my.yahoo.user_name'))->execute()->as_array();
-
-    	if (empty($this->select))
-    	{
-    		throw new BrowserLoginException('User in config/my.yahoo.user_name not found in DB');
-    	}
-
-    	if ($this->select[0]['cookies'] && ($this->select[0]['updated_at'] > strtotime('-1 week')))
-    	{
-            $cookies = unserialize($this->select[0]['cookies']);
-            $this->session = new Requests_Session(self::$AUCTION_URL, $headers, [], ['cookies' => $cookies]);
-    	}
-    	else
-    	{
-            $this->session = new Requests_Session(self::$AUCTION_URL, $headers);
-            $this->loggedin = false;
-	        $this->login();
-    	}
+        try
+        {
+            if ( \Cache::get('yahoo.cookies_exp') > strtotime('-1 week') )
+            {
+                $cookies = \Cache::get('yahoo.cookies');
+                $this->session = new Requests_Session(static::$AUCTION_URL, static::$_headers, [], ['cookies' => $cookies]);
+            }
+            else
+            {
+                $this->login();
+            }
+        }
+        catch (\CacheNotFoundException $e)
+        {
+            $this->login();
+        }
     }
 
     /**
@@ -86,7 +67,7 @@ class Browser
     protected function login()
     {
         $this->loggedin = false;
-        $this->session = new Requests_Session(self::$AUCTION_URL, $headers);
+        $this->session = new Requests_Session(static::$AUCTION_URL, static::$_headers);
 
         $query = [
             '.lg' => 'jp',
@@ -368,18 +349,10 @@ class Browser
      */
     function __destruct()
     {
-        // 
+        // Cache cookie and last update time
         if ($this->loggedin)
         {
             $cookies = $this->session->options['cookies'];
-            DB::update('yahoo')
-            ->set([
-                'cookies'  => serialize($cookies),
-                'updated_at' => time()
-            ])
-            ->where('userid', \Config::get('my.yahoo.user_name'))
-            ->execute();
-
             \Cache::set('yahoo.cookies', $cookies);
             \Cache::set('yahoo.cookies_exp', time());
         }
