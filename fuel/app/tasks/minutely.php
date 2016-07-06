@@ -22,17 +22,15 @@ class Minutely
 	{
 		try
 		{
-			self::$LAST_CHECK_TIME = Cache::get('yahoo.won_last_check');
-			print self::$LAST_CHECK_TIME."\n";
+			self::$LAST_CHECK_TIME = \Cache::get('yahoo.won_last_check');
 		}
 		catch (\CacheNotFoundException $e)
 		{
-			Cache::set('yahoo.won_last_check', time());
+			\Cache::set('yahoo.won_last_check', time());
 		}
 
 		self::db_backup_at_time();
 		self::check_won_at_time();
-		\Log::error('test');
 	}
 
 	private static function check_won_at_time()
@@ -41,7 +39,6 @@ class Minutely
 
 		if ( self::$LAST_CHECK_TIME < strtotime("-{$interval} minute") )
 		{
-			\Log::error('check_won_at_time');
 			$auc_ids = [];
 			$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(\Config::get('my.task.last_won_limit'))->execute()->as_array();
 			$user_id = \DB::select('id')->from('users')->where('username', \Config::get('my.main_bidder'))->execute()->as_array();
@@ -114,7 +111,7 @@ class Minutely
 				\Log::error("Parser error: ".$e->getMessage());
 			}
 
-			Cache::set('yahoo.won_last_check', time());
+			\Cache::set('yahoo.won_last_check', time());
 		}
 	}
 

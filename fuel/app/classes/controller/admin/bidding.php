@@ -4,7 +4,7 @@ class Controller_Admin_Bidding extends Controller_Admin
 {
 	public function action_index($page = null)
 	{
-		$val_error = [];
+		$data['table'] = null;
 
 		try
 		{
@@ -13,11 +13,17 @@ class Controller_Admin_Bidding extends Controller_Admin
 		}
 		catch (BrowserLoginException $e)
 		{
-			Session::set_flash('error', e("Login error: ".$e->getMessage()));
+			Session::set_flash('alert', [
+				'status'  => 'danger',
+				'message' => e("Login error: ".$e->getMessage())
+			]);
 		}
 		catch (ParserException $e)
 		{
-			Session::set_flash('error', e("Parser error: ".$e->getMessage()));
+			Session::set_flash('alert', [
+				'status'  => 'danger',
+				'message' => e("Parser error: ".$e->getMessage())
+			]);
 		}
 		
 		$this->template->title = 'Bidding list';

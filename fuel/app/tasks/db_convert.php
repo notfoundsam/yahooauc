@@ -126,8 +126,8 @@ class Db_convert
 
 			\DB::commit_transaction();
 			
-		} catch (Exception $e)
-		{
+		} catch (\Exception $e) {
+			
 			\DB::rollback_transaction();
 			print "Replace vendor name to vendor id in auctions and add vendor if not exists was filed\n";
 		}
@@ -151,7 +151,7 @@ class Db_convert
 				'won_user' => ['constraint' => 11, 'type' => 'int', 'name' => 'user_id'],
 			]);
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			\DB::rollback_transaction();
 			print "Replace won_user to user_id in auctions was filed\n";
