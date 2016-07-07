@@ -125,11 +125,11 @@ class Minutely
 
 	public static function db_backup()
 	{
-		$host = \Config::get('db.default.connection.hostname');
-		$port = \Config::get('db.default.connection.port');
-		$user = \Config::get('db.default.connection.username');
-		$pass = \Config::get('db.default.connection.password');
-		$db   = \Config::get('db.default.connection.database');
+		$host = getenv('OPENSHIFT_MYSQL_DB_HOST');
+		$port = getenv('OPENSHIFT_MYSQL_DB_PORT');
+		$user = getenv('OPENSHIFT_MYSQL_DB_USERNAME');
+		$pass = getenv('OPENSHIFT_MYSQL_DB_PASSWORD');
+		$db   = 'htmlunit';
 
 		$name = \Date::forge(time())->format('db_backup') . '.sql.gz';
 		$path = APPPATH.'/tmp/'. $name;

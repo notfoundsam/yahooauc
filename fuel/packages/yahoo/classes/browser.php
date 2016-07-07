@@ -34,13 +34,12 @@ class Browser
     ];
 
     /**
-     * Get cookie from DB and check them when was been last update.
+     * Get cookie and last update time from cache and check them when was been last update.
      * If last update was been more than one week, get login again.
      * @return void
      */
     public function __construct()
     {
-        // Get cookie by Yahoo user name
         try
         {
             if ( \Cache::get('yahoo.cookies_exp') > strtotime('-1 week') )
@@ -345,7 +344,7 @@ class Browser
     }
 
     /**
-     * Save cookies into DB after bid
+     * Cache cookie and cookie update time after bid
      */
     function __destruct()
     {
