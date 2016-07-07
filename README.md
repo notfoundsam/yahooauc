@@ -1,6 +1,6 @@
 #Yahoo Auction bidder
 
-Requare php 5.4 or late 5.x version.
+Require php 5.4 or late 5.x version.
 
 ## Description
 
