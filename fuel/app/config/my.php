@@ -10,6 +10,10 @@ return [
 			'id'       => 1,
 			'name'     => 'Paid'
 		],
+		'checking' => [
+			'id'       => 5,
+			'name'     => 'Checking'
+		],
 		'received' => [
 			'id'       => 2,
 			'name'     => 'Received'
@@ -18,6 +22,10 @@ return [
 			'id'       => 3,
 			'name'     => 'Ship'
 		],
+		// 'shipped'     => [
+		// 	'id'       => 4,
+		// 	'name'     => 'Shipped'
+		// ],
 		'sell'     => [
 			'id'       => 10,
 			'name'     => 'Sell'
