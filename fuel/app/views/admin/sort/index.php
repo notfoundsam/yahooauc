@@ -1,4 +1,30 @@
-
+<div class="create-part-hide">
+	<div class="create-box">
+		<label>Create new part or add to exists:</label>
+		<input type="text" name="combine_id">
+		<button id="create_part" class="ladda-button" data-style="zoom-in" data-color="blue">
+			<span class="ladda-label">Create/Add</span>
+		</button>
+		<button id="select_all" class="ladda-button" data-style="zoom-in" data-color="blue">
+			<span class="ladda-label">Check all</span>
+		</button>
+	</div>
+	<div class="refresh-button">
+		<i class="fa fa-refresh" aria-hidden="true"></i>
+	</div>
+	<div class="refresh-confirm">
+		<div>
+			<label>Page number:</label>
+			<input type="text" name="page" value="1">
+		</div>
+		<button class="ladda-button refresh-won" data-style="zoom-in" data-color="blue">
+			<span class="ladda-label">Confirm</span>
+		</button>
+		<button class="ladda-button cancel" data-style="zoom-in" data-color="blue">
+			<span class="ladda-label">Cancel</span>
+		</button>
+	</div>
+</div>
 <?php if (!empty($items)) : ?>
 
 	<?php foreach ($items as $item) : ?>
@@ -7,7 +33,7 @@
 		<?= \Form::checkbox('ids[]', $item->id); ?>
 		</label>
 		<div class="aucid"><?= $item->auc_id; ?></div>
-		<div class="title"><?= Str::truncate($item->title, 38); ?></div>
+		<div class="title"><?= Str::truncate($item->title, 25); ?></div>
 		<div class="price"><?= $item->price; ?></div>
 		<div class="date"><?= Date::create_from_string($item->won_date, 'mysql')->format('display_date'); ?></div>
 		<div class="vendor"><?= $item->vendor->name; ?></div>
@@ -20,20 +46,7 @@
 		</div>
 	</div>
 	<?php endforeach; ?>
-<div style="margin-top:10px;text-align:right;">
-	<?= \Form::label('Create new part or add to exists:'); ?>
-	<?= \Form::input('part_id'); ?>
-	<?= \Form::submit('','Create/Add to'); ?>
-	<?= \Form::close(); ?>	
-</div>
+
 <?php else : ?>
 	<h4>Nothing for show...</h4>
 <?php endif ; ?>
-
-<div class="sort-form">
-	<label>Count of page for refresh:</label>
-	<input type="text" value="1">
-	<button class="ladda-button" data-style="zoom-in" data-size="s" data-color="blue">
-		<span class="ladda-label">Refresh</span>
-	</button>
-</div>

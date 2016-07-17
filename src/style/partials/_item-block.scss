@@ -244,6 +244,10 @@
 		padding: 4px;
 	}
 
+	.aucid {
+		width: 90px;
+	}
+
 	.title {
 		width: 410px;
 	}
@@ -253,7 +257,9 @@
 	}
 
 	.action {
-		float: right;
+		right: 0;
+		top: 0;
+    	position: absolute;
 		i {
 			margin-left: 10px;
 			cursor: pointer;

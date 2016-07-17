@@ -9,7 +9,13 @@
 
 
 /*
- * Custom
- * separate app.js
+ * Custom scripts
  */
-//= partials/app.js
+$(function(){
+//= partials/bid_page.js
+//= partials/slideout_menu.js
+//= partials/sort_page.js
+//= partials/auction_actions.js
+//= partials/part_actions.js
+});
+//= partials/core_functions.js

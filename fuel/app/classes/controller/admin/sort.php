@@ -4,40 +4,40 @@ class Controller_Admin_Sort extends Controller_Admin
 
 	public function action_index()
 	{
-		if (Input::method() == 'POST' && \Security::check_token())
-		{
-			if ( $ids = \Input::post('ids') )
-			{
-				$part_id = null;
+		// if (Input::method() == 'POST' && \Security::check_token())
+		// {
+		// 	if ( $ids = \Input::post('ids') )
+		// 	{
+		// 		$part_id = null;
 
-				if ($combine_id = (int) \Input::post('part_id'))
-				{
-					$part_id = $combine_id;
-					Session::set_flash('success', e('Updated part #' . $part_id));
-				}
-				else
-				{
-					$part = new Model_part();
+		// 		if ($combine_id = (int) \Input::post('part_id'))
+		// 		{
+		// 			$part_id = $combine_id;
+		// 			Session::set_flash('success', e('Updated part #' . $part_id));
+		// 		}
+		// 		else
+		// 		{
+		// 			$part = new Model_part();
 
-					if ($part->save())
-					{
-						$part_id = $part->id;
-					}
-					Session::set_flash('success', e('Created part #' . $part_id));
-				}
+		// 			if ($part->save())
+		// 			{
+		// 				$part_id = $part->id;
+		// 			}
+		// 			Session::set_flash('success', e('Created part #' . $part_id));
+		// 		}
 
-				foreach ($ids as $id)
-				{
-					$auction = \Model_Auction::find($id);
-					$auction->part_id = $part_id;
-					$auction->save();
-				}
-			}
-			else
-			{
-				Session::set_flash('error', e('Could not create new part'));
-			}
-		}
+		// 		foreach ($ids as $id)
+		// 		{
+		// 			$auction = \Model_Auction::find($id);
+		// 			$auction->part_id = $part_id;
+		// 			$auction->save();
+		// 		}
+		// 	}
+		// 	else
+		// 	{
+		// 		Session::set_flash('error', e('Could not create new part'));
+		// 	}
+		// }
 
 		$data['items'] = \Model_Auction::find('all',[
 			'where' => [
