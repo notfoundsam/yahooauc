@@ -26,7 +26,8 @@ class Controller_Admin extends Controller_Base
 			}
 			else
 			{
-				Response::redirect('admin/login');
+				\Cookie::set('redirect_back_url', \Uri::string(), 60 * 10);
+				\Response::redirect('admin/login');
 			}
 		}
 	}
@@ -34,7 +35,7 @@ class Controller_Admin extends Controller_Base
 	public function action_login()
 	{
 		// Already logged in
-		Auth::check() and Response::redirect('admin');
+		\Auth::check() and Response::redirect('admin');
 
 		$val = Validation::forge();
 
@@ -62,7 +63,7 @@ class Controller_Admin extends Controller_Base
 									'status'  => 'success',
 									'message' => e('Welcome, '.$current_user->username)
 								]);
-								Response::redirect('admin');
+								\Response::redirect(\Cookie::get('redirect_back_url', 'admin'));
 							}
 						}
 					}
@@ -91,6 +92,7 @@ class Controller_Admin extends Controller_Base
 	public function action_logout()
 	{
 		Auth::logout();
+		\Cookie::delete('redirect_back_url');
 		Response::redirect('admin');
 	}
 

@@ -13,7 +13,9 @@
 	}
 	.vendor-id {
 		width: 160px;
-		color: #05087B;
+		color: #1c2f35;
+		background-color: #a0c0cc;
+		text-align: center;
 	}
 	.index {
 		width: 70px;
@@ -228,6 +230,49 @@
 				padding: 10px;
 				font-size: 1.2em;
 			}
+		}
+	}
+}
+
+/* Part Item wrapper */
+.sort-wrapper {
+	@include contaner-wrapper(#f6f6f6);
+	&:nth-of-type(odd) {
+		background: #e9e9e9
+	}
+
+	.sort-check, .aucid, .title, .price, .date, .vendor, .action {
+		display: inline-block;
+		padding: 4px;
+	}
+
+	.aucid {
+		width: 90px;
+	}
+
+	.title {
+		width: 410px;
+	}
+
+	.price {
+		width: 50px;
+	}
+
+	.action {
+		right: 0;
+		top: 0;
+    	position: absolute;
+		i {
+			margin-left: 10px;
+			cursor: pointer;
+		}
+	}
+
+	.sort-check {
+		padding-left: 8px;
+
+		input {
+			vertical-align: middle;
 		}
 	}
 }

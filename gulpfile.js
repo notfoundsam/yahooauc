@@ -11,6 +11,7 @@ var gulp = require('gulp'),
     // imagemin = require('gulp-imagemin'),
     // pngquant = require('imagemin-pngquant'),
     rimraf = require('rimraf'),
+    // browser-sync not important may be delete
     browserSync = require("browser-sync"),
     reload = browserSync.reload;
 
@@ -103,8 +104,8 @@ gulp.task('watch', function(){
     });
 });
 
-gulp.task('webserver', function () {
-    browserSync(config);
-});
+// gulp.task('webserver', function () {
+//     browserSync(config);
+// });
 
 gulp.task('default', ['build', 'watch']);

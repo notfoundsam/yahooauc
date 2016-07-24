@@ -1,4 +1,6 @@
-<?= \Pagination::instance('default')->render() ?>
+<div class="pagination-box">
+<?= \Pagination::instance('default')->render(); ?>
+</div>
 <p>
 	<?php echo Html::anchor('admin/vendor/create', 'Add new Vendor', array('class' => 'btn btn-success')); ?>
 </p>

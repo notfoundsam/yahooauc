@@ -15,7 +15,7 @@
 			<i class="fa fa-eye" aria-hidden="true"></i>
 		</div>
 		<div class="aucid"><?= $item[0]; ?></div>
-		<div class="bidding-title"><?= Str::truncate($item[1], 32); ?></div>
+		<div class="bidding-title"><?= $item[1]; ?></div>
 		<div class="price<?= $item[5] != \Config::get('my.yahoo.user_name') ? ' price-up' : ''?>"><?= $item[2]; ?></div>
 		<div class="count"><?= $item[3]; ?></div>
 		<div class="time-left"><?= $item[6]; ?></div>

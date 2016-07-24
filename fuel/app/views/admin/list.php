@@ -1,7 +1,3 @@
-<?php 
-$redirect = Uri::segment(3) ?  Uri::segment(2).'/'.Uri::segment(3) : Uri::segment(2);
-?>
-
 <?php if ($items): ?>
 
 <?php foreach ($items as $item): ?>	

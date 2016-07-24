@@ -4,6 +4,7 @@
 @import "item-block";
 @import "alerts";
 @import "popups";
+@import "pagination";
 
 *, *:before, *:after {
 	box-sizing: border-box;
@@ -118,4 +119,81 @@ body {
 .sort-form {
 	margin-top: 10px;
 	text-align: center;
+}
+
+.create-part-hide {
+	width: 100%;
+	position: absolute;
+	top: 58px;
+	z-index: 2;
+
+	.refresh-button {
+		position: absolute;
+		right: 22px;
+		top: -4px;
+		font-size: 200%;
+		cursor: pointer;
+	}
+
+	.create-box {
+		position: absolute;
+		right: 80px;
+	}
+
+	input {
+		width: 80px;
+		height: 30px;
+		padding: 2px;
+		margin-left: 2px;
+	}
+
+	button {
+		padding: 2px 8px;
+	}
+
+	.refresh-confirm {
+		display: none;
+		position: absolute;
+		right: 6px;
+		top: 50px;
+		border: 1px solid #b0b0b0;
+		padding: 20px;
+		border-radius: 2px;
+		background-color: #fff;
+
+		> div {
+			padding-bottom: 10px;
+			text-align: center;
+
+			input {
+				width: 45px;
+			}
+		}
+
+		&:after, &:before {
+			bottom: 100%;
+			left: 50%;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+		}
+
+		
+		&:after {
+			border-color: rgba(0, 0, 0, 0);
+			border-bottom-color: #fff;
+			border-width: 17px;
+			margin-left: 55px;
+		}
+
+		&:before {
+			border-color: rgba(0, 0, 0, 0);
+			border-bottom-color: #b0b0b0;
+			border-width: 18px;
+			margin-left: 54px;
+		}
+	}
 }

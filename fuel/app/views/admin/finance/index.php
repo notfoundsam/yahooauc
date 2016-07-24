@@ -16,7 +16,10 @@
 		</tr>
 	</tbody>
 </table>
-<?= \Pagination::instance('default')->render() ?>
+
+<div class="pagination-box">
+<?= \Pagination::instance('default')->render(); ?>
+</div>
 <p>
 	<?php echo Html::anchor('admin/finance/create', 'Add new record', array('class' => 'btn btn-success')); ?>
 </p>

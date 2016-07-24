@@ -322,4 +322,46 @@ class Controller_Admin_Api extends Controller_Rest
 		}
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
 	}
+
+	public function post_createpart()
+	{
+		$result    = '';
+		$val_error = [];
+		$combine_id = (int) \Input::post('combine_id');
+		$ids = \Input::post('ids');
+
+		if ($ids)
+		{
+			$part_id = null;
+
+			if ($combine_id && \Model_part::find($combine_id))
+			{
+				$part_id = $combine_id;
+				$result = 'Part ID: '.$part_id.' was successfully updated';
+			}
+			else
+			{
+				$part = new \Model_part();
+
+				if ($part->save())
+				{
+					$part_id = $part->id;
+				}
+				$result = 'Part ID: '.$part_id.' was successfully created';
+			}
+
+			foreach ($ids as $id)
+			{
+				$auction = \Model_Auction::find($id);
+				$auction->part_id = $part_id;
+				$auction->save();
+			}
+		}
+		else
+		{
+			$val_error[] = 'Could not create new part';
+		}
+
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+	}
 }
