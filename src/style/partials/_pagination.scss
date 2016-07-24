@@ -1,0 +1,43 @@
+.pagination-box {
+	text-align: center;
+	margin: 20px 0;
+	
+	ul {
+		padding: 0;
+		margin: 0;
+
+		li {
+			display: inline-block;
+			background-color: #fff;
+			border-radius: 2px;
+			border: 1px solid #DEDEDE;
+			margin-right: 5px;
+
+			a {
+				color: #000;
+				text-decoration: none;
+				font-weight: 700;
+				display: block;
+				width: 30px;
+				padding: 4px;
+			}
+		}
+
+		.active {
+			background-color: #53b5e6;
+
+			a {
+				color: #fff;
+			}
+		}
+
+		.disabled {
+			background-color: #E4E4E4;
+
+			a {
+				color: #aaaaaa;
+				cursor: default;
+			}
+		}
+	}
+}
