@@ -17,7 +17,7 @@ class Parser
 	protected static $JP          = array(",", "円", "分", "時間", "日");
 	protected static $EN          = array("", "", "min", "hour", "day");
 	protected static $BID_SUCCESS = '入札を受け付けました。あなたが現在の最高額入札者です。';
-	protected static $PRICE_UP    = '申し訳ありません。開始価格よりも高い値段で入札してください。';
+	protected static $PRICE_UP    = '/再入札/';
 	protected static $AUCTION_WON = 'おめでとうございます!!　あなたが落札しました。';
 
 	/**
@@ -227,16 +227,16 @@ class Parser
 				throw new ParserException('Page says: '.$p_result->innertext);
 			}
 		}
-		else if ($p_result = $html->find('div[id=modInfoBox]', 0))
+		else if ($p_result = $html->find('div[class=decSmryTable]', 0))
 		{
-			if (static::$PRICE_UP == str_replace(' ', '', $p_result->find('strong', 0)->innertext))
+			if (preg_match(static::$PRICE_UP, $p_result))
 			{
 
 				throw new ParserException('Price goes up', 10);
 			}
 			else
 			{
-				throw new ParserException('Parser could not find result');
+				throw new ParserException('Parser could not find result, maby price goes up');
 			}
 		}
 		return false;

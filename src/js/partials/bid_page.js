@@ -4,8 +4,9 @@ $(function(){
 	$('.bid-form button').click(function(){ 
 		var l = Ladda.create(this);
 		l.start();
-		var auc_id = $('#auc_id').val();
-		var price = $('#price').val();
+		var auc_id = $('#bid_id').val();
+		var price = $('#bid_price').val();
+		console.log(auc_id);
 		$.ajax({
 			url: '/admin/api/bid',
 			type: 'POST',
