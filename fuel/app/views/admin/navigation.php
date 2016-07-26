@@ -6,6 +6,7 @@
 		<li class="<?php echo Uri::segment(2) == 'bidding' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/bidding') ?>">Bidding</a>
 		</li>
+	<?php if(\Fuel::$env != \Fuel::PRODUCTION) : ?>
 		<li class="<?= in_array(\Uri::segment(2), ['pay', 'paid', 'received']) ? 'active' : '' ?>">
 		<a href="#">Won</b>
 		</a>
@@ -42,6 +43,7 @@
 		<li class="<?php echo Uri::segment(2) == 'statistic' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/statistic') ?>">Statistic</a>
 		</li>
+	<?php endif; ?>
 	</ul>
 	<ul>
 		<li>
