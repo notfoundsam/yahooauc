@@ -2,7 +2,7 @@
 <?= \Pagination::instance('default')->render(); ?>
 </div>
 <p>
-	<?php echo Html::anchor('admin/vendor/create', 'Add new Vendor', array('class' => 'btn btn-success')); ?>
+	
 </p>
 <?php if ($vendors): ?>
 <table class="table table-striped vendor">
@@ -13,7 +13,6 @@
 			<th width="100px">Post index</th>
 			<th>Address</th>
 			<th>Memo</th>
-			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -24,9 +23,6 @@
 			<td><?php echo $item->post_index; ?></td>
 			<td><?php echo $item->address; ?></td>
 			<td><?php echo $item->memo; ?></td>
-			<td style="text-align:right;">
-				<?php echo Html::anchor('admin/vendor/edit/'.$item->id, 'Edit'); ?>
-			</td>
 		</tr>
 <?php endforeach; ?>	</tbody>
 </table>
