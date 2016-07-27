@@ -20,6 +20,29 @@
 	</tbody>
 </table>
 
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>On hand + won</th>
+			<th>On hand</th>
+			<th>Not paid</th>
+			<th>Waiting vendors</th>
+			<th>Today</th>
+			<th>Yesterday</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><?= $on_hand_won; ?></td>
+			<td><?= $on_hand; ?></td>
+			<td></td>
+			<td></td>
+			<td><?= $today_won; ?></td>
+			<td><?= $yesterday_won; ?></td>
+		</tr>
+	</tbody>
+</table>
+
 <?php if (false): ?>
 <table class="table table-striped vendor">
 	<thead>

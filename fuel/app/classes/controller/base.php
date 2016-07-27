@@ -21,7 +21,6 @@ class Controller_Base extends Controller_Template
 		// Set a global variable so views can use it
 		View::set_global('current_user', $this->current_user);
 
-
 	}
 
 }
