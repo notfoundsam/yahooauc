@@ -21,7 +21,6 @@
 <?= \Pagination::instance('default')->render(); ?>
 </div>
 <p>
-	<?php echo Html::anchor('admin/finance/create', 'Add new record', array('class' => 'btn btn-success')); ?>
 </p>
 <?php if ($finances): ?>
 <table class="table table-striped vendor">
@@ -31,7 +30,6 @@
 			<th>Descriotion</th>
 			<th>USD</th>
 			<th>JPY</th>
-			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -42,9 +40,6 @@
 			<td><?php echo $item->memo; ?></td>
 			<td><?php echo number_format($item->usd, 2, '.', ','); ?></td>
 			<td><?php echo number_format($item->jpy); ?></td>
-			<td style="text-align:right;">
-				<?php echo Html::anchor('admin/balance/edit/'.$item->id, 'Edit'); ?>
-			</td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>

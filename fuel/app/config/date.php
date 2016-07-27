@@ -10,5 +10,6 @@ return array(
 		'display_date' => '%d-%m-%Y %H:%M',
 		'db_backup'    => '%Y-%m-%d_%H-%M',
 		'db_task'      => '%H:%M',
+		'static_ymd'   => '%d-%m-%Y',
 	),
 );

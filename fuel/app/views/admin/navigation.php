@@ -6,7 +6,6 @@
 		<li class="<?php echo Uri::segment(2) == 'bidding' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/bidding') ?>">Bidding</a>
 		</li>
-	<?php if(\Fuel::$env != \Fuel::PRODUCTION) : ?>
 		<li class="<?= in_array(\Uri::segment(2), ['pay', 'paid', 'received']) ? 'active' : '' ?>">
 		<a href="#">Won</b>
 		</a>
@@ -28,12 +27,14 @@
 			</li>
 			</ul>
 		</li>
+	<?php if($this->current_user->group->id == 6) : ?>
 		<li class="<?php echo Uri::segment(2) == 'sort' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/sort') ?>">Sort</a>
 		</li>
 		<li class="<?php echo Uri::segment(3) == 'create' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/ship/create') ?>">Create Ship</a>
 		</li>
+	<?php endif; ?>
 		<li class="<?php echo Uri::segment(2) == 'vendor' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/vendor') ?>">Vendors</a>
 		</li>
@@ -43,7 +44,6 @@
 		<li class="<?php echo Uri::segment(2) == 'statistic' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/statistic') ?>">Statistic</a>
 		</li>
-	<?php endif; ?>
 	</ul>
 	<ul>
 		<li>
