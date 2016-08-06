@@ -7,7 +7,7 @@ class Controller_Admin_Vendor extends Controller_Admin
 		$pagination = \Pagination::forge('default', [
 			'name' => 'bootstrap3',
 			'total_items' => \Model_Vendor::count(),
-			'per_page' => 50,
+			'per_page' => 1000,
 			'uri_segment' => 'p',
 			'num_links' => 20,
 		]);
