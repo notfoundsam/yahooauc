@@ -282,7 +282,6 @@ class Controller_Admin_Api extends Controller_Rest
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
 	}
 
-
 	public function post_deletepart()
 	{
 		$result    = '';
@@ -360,6 +359,48 @@ class Controller_Admin_Api extends Controller_Rest
 		else
 		{
 			$val_error[] = 'Could not create new part';
+		}
+
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+	}
+
+	public function post_addvendor()
+	{
+		$result    = '';
+		$val_error = [];
+
+		$val = Model_Vendor::validate('create');
+
+		$id                   = \Input::post('vendor_id');
+		$values['name']       = \Input::post('vendor_name');
+		$values['by_now']     = \Input::post('by_now');
+		$values['post_index'] = \Input::post('post_index');
+		$values['address']    = \Input::post('address');
+		$values['color']      = \Input::post('color');
+		$values['memo']       = \Input::post('comment');
+
+		if ( $val->run($values) )
+		{
+			Log::debug($id);
+			$vendor = ( $id && \Model_Vendor::find($id) ) ? \Model_Vendor::find($id) : \Model_Vendor::forge($values);
+
+			$vendor->set($values);
+
+			if ($vendor->save())
+			{
+				$result = $id ? 'Vendor was successfully updated' : 'New vendor was successfully created';
+			}
+			else
+			{
+				$val_error[] = 'Could not create new vendor';
+			}
+		}
+		else
+		{
+			foreach ($val->error() as $error)
+			{
+				$val_error[] = $error->get_message();
+			}
 		}
 
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);

@@ -59,7 +59,7 @@ return array(
 		/**
 		 * Whether or not remember me functionality is enabled
 		 */
-		'enabled' => true,
+		'enabled' => false,
 
 		/**
 		 * Name of the cookie used to record this functionality
