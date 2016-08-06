@@ -160,16 +160,6 @@ $('#comment-popup .close').on('click', function() {
 	$('#comment-popup').hide();
 });
 
-// Item comment button
-$('.item-wrapper .fa-comment').each(function() {
-	$(this).on('click', function() {
-		var item = $(this).closest('.item-wrapper');
-		var popup = $('#comment-popup');
-		popup.find('h2').text(item.find('.comment').text());
-		popup.show();
-	});
-});
-
 // Part comment button
 $('.part-wrapper .fa-comment').each(function() {
 	$(this).on('click', function() {

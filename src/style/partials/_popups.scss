@@ -38,9 +38,15 @@
 				color: #A9A9A9;
 			}
 		}
-		.item-inputs {
+
+		.item-inputs, .part-status-radio {
 			margin-bottom: 10px;
+
+			.address {
+				width: 450px;
+			}
 		}
+
 		.send-button {
 			text-align: center;
 			padding-top: 10px;

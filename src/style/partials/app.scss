@@ -121,13 +121,13 @@ body {
 	text-align: center;
 }
 
-.create-part-hide {
+.create-part-hide, .add-vendor {
 	width: 100%;
 	position: absolute;
 	top: 58px;
 	z-index: 2;
 
-	.refresh-button {
+	.refresh-button, .add-button {
 		position: absolute;
 		right: 22px;
 		top: -4px;
