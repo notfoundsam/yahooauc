@@ -43,23 +43,55 @@
 	</tbody>
 </table>
 
-<?php if (false): ?>
-<table class="table table-striped vendor">
+
+
+
+<?php foreach ($statistic as $s) : ?>
+<table>
 	<thead>
 		<tr>
-			<th>Operation Date</th>
-			<th>Descriotion</th>
-			<th>USD</th>
-			<th>JPY</th>
-			<th></th>
+			<th>Jan</th>
+			<th>Feb</th>
+			<th>Mar</th>
+			<th>Apr</th>
+			<th>May</th>
+			<th>Jun</th>
+			<th>Jul</th>
+			<th>Aug</th>
+			<th>Sep</th>
+			<th>Oct</th>
+			<th>Now</th>
+			<th>Dec</th>
 		</tr>
 	</thead>
 	<tbody>
-	
+		<tr>
+			<?php for ($i = 1; $i < 12; $i++): ?>
+				<?php if( isset($s[$i]) ) : ?>
+			<td><?= $s[$i]['count']; ?></td>
+				<?php else : ?>
+			<td>---</td>
+				<?php endif; ?>
+			<?php endfor; ?>
+		</tr>
+		<tr>
+			<?php for ($i = 1; $i < 12; $i++): ?>
+				<?php if( isset($s[$i]) ) : ?>
+			<td><?= $s[$i]['price']; ?></td>
+				<?php else : ?>
+			<td>---</td>
+				<?php endif; ?>
+			<?php endfor; ?>
+		</tr>
+		<tr>
+			<?php for ($i = 1; $i < 12; $i++): ?>
+				<?php if( isset($s[$i]) ) : ?>
+			<td><?= $s[$i]['aprox']; ?></td>
+				<?php else : ?>
+			<td>---</td>
+				<?php endif; ?>
+			<?php endfor; ?>
+		</tr>
 	</tbody>
 </table>
-
-<?php else: ?>
-<p>Nothing for show.</p>
-
-<?php endif; ?>
+<?php endforeach; ?>
