@@ -116,3 +116,23 @@
 		</div>
 	</div>
 </div>
+
+<div id="finance_popup" class="overlay">
+	<div class="popup">
+		<h2>Add history</h2>
+		<span class="close">&times;</span>
+		<div class="item-inputs">
+			<label>Income USD</label>
+			<input id="finance_usd" type="text">
+			<label>Income JPY</label>
+			<input id="finance_jpy" type="text">
+		</div>
+		<label>comment</label>
+		<textarea id="comment"></textarea>
+		<div class="send-button">
+			<button class="ladda-button" data-style="zoom-in" data-size="xs" data-color="blue">
+				<span class="ladda-label">Add</span>
+			</button>
+		</div>
+	</div>
+</div>
