@@ -16,6 +16,7 @@ $(function(){
 //= partials/slideout_menu.js
 //= partials/sort_page.js
 //= partials/vendor_page.js
+//= partials/finance_page.js
 //= partials/auction_actions.js
 //= partials/part_actions.js
 });

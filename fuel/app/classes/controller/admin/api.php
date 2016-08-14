@@ -381,7 +381,6 @@ class Controller_Admin_Api extends Controller_Rest
 
 		if ( $val->run($values) )
 		{
-			Log::debug($id);
 			$vendor = ( $id && \Model_Vendor::find($id) ) ? \Model_Vendor::find($id) : \Model_Vendor::forge($values);
 
 			$vendor->set($values);
@@ -393,6 +392,44 @@ class Controller_Admin_Api extends Controller_Rest
 			else
 			{
 				$val_error[] = 'Could not create new vendor';
+			}
+		}
+		else
+		{
+			foreach ($val->error() as $error)
+			{
+				$val_error[] = $error->get_message();
+			}
+		}
+
+		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+	}
+
+	public function post_addfinance()
+	{
+		$result    = '';
+		$val_error = [];
+
+		$val = Model_Finance::validate('create');
+
+		$values['usd']           = \Input::post('finance_usd') ? \Input::post('finance_usd') : 0;
+		$values['jpy']           = \Input::post('finance_jpy') ? \Input::post('finance_jpy') : 0;
+		$values['operationData'] = \Date::forge()->format('mysql');
+		$values['memo']          = \Input::post('comment');
+
+		if ( $val->run($values) )
+		{
+			$finance = \Model_Finance::forge($values);
+
+			$finance->set($values);
+
+			if ($finance->save())
+			{
+				$result = 'Record successfully created';
+			}
+			else
+			{
+				$val_error[] = 'Could not create new record';
 			}
 		}
 		else

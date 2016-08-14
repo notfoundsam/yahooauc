@@ -36,7 +36,7 @@
 }
 
 /* Auction Item wrapper */
-.item-wrapper, .vendor-wrapper {
+.item-wrapper, .vendor-wrapper, .finance-wrapper {
 	@include contaner-wrapper(#f6f6f6);
 	&:nth-of-type(odd) {
 		background: #e9e9e9
@@ -45,7 +45,7 @@
 		background-color: #808080;
 		color: #fff;
 	}
-	.count, .aucid, .title, .bidding-title, .price, .date, .action, .time-left, .vendor, .bidder, .bidding-action, .vendor-name, .by-now, .post-index, .address {
+	.count, .aucid, .title, .bidding-title, .price, .date, .action, .time-left, .vendor, .bidder, .bidding-action, .vendor-name, .by-now, .post-index, .address, .opertion-date, .finance-usd, .finance-jpy, .memo {
 		display: inline-block;
 		padding: 4px;
 	}
@@ -88,6 +88,18 @@
 	}
 	.by-now {
 		width: 60px;
+	}
+	.opertion-date {
+		width: 150px;
+	}
+	.memo {
+		width: 500px;
+	}
+	.finance-usd {
+		width: 80px;
+	}
+	.finance-jpy {
+		width: 80px;
 	}
 	@media screen and (max-width: $max-screen) {
 		padding-bottom: 50px;
