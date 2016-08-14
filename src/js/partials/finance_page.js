@@ -1,46 +1,31 @@
 // Show popup
-$('.add-vendor .add-button').on('click', function(){
+$('.add-finance .add-button').on('click', function(){
 	$('body').addClass('freeze');
-	var popup = $('#vendor_popup');
-	popup.find('h2').text('Add vendor');
-	popup.find('.send-button span').text('Add');
-	popup.find('#vendor_name').val('');
-	popup.find('#post_index').val('');
-	popup.find('#address').val('');
-	popup.find('#vendor_id').val('');
-	popup.find('#comment').val('');
-	popup.find('#radio_0').prop('checked', true);
-	popup.show();
+	$('#finance_popup').show();
 });
 
 // Close popup
-$('#vendor_popup .close').on('click', function() {
+$('#finance_popup .close').on('click', function() {
 	$('body').removeClass('freeze');
-	$('#vendor_popup').hide();
+	$('#finance_popup').hide();
 });
 
 // Add new vendor update button
-$('#vendor_popup button').click(function(){
-	var popup = $('#vendor_popup');
-	var vendor_id = popup.find('#vendor_id').val();
-	var vendor_name = popup.find('#vendor_name').val();
-	var post_index = popup.find('#post_index').val();
-	var address = popup.find('#address').val();
-	var by_now = popup.find('input[name=by_now]:checked').val();
+$('#finance_popup button').click(function(){
+	var popup = $('#finance_popup');
+	var finance_usd = popup.find('#finance_usd').val();
+	var finance_jpy = popup.find('#finance_jpy').val();
 	var comment = popup.find('#comment').val();
 
 	var l = Ladda.create(this);
 	l.start();
 	$.ajax({
-		url: '/admin/api/addvendor',
+		url: '/admin/api/addfinance',
 		type: 'POST',
 		data: {
 			csrf_token_key: "<?= \Security::fetch_token();?>",
-			vendor_id: vendor_id,
-			vendor_name: vendor_name,
-			post_index: post_index,
-			address: address,
-			by_now: by_now,
+			finance_usd: finance_usd,
+			finance_jpy: finance_jpy,
 			comment: comment
 		},
 		success: function (data) {
