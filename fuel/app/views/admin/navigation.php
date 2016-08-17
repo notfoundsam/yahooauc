@@ -20,7 +20,7 @@
 			<a href="<?= \Uri::create('admin/received') ?>">Received</a>
 			</li>
 			<li>
-			<a href="<?= \Uri::create('admin/ship/view') ?>">Ship</a>
+			<a href="<?= \Uri::create('admin/ship') ?>">Ship</a>
 			</li>
 			<li>
 			<a href="<?= \Uri::create('admin/sell') ?>">Sell</a>

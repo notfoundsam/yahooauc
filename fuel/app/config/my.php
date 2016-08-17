@@ -22,10 +22,10 @@ return [
 			'id'       => 3,
 			'name'     => 'Ship'
 		],
-		// 'shipped'     => [
-		// 	'id'       => 4,
-		// 	'name'     => 'Shipped'
-		// ],
+		'shipped'     => [
+			'id'       => 4,
+			'name'     => 'Shipped'
+		],
 		'sell'     => [
 			'id'       => 10,
 			'name'     => 'Sell'

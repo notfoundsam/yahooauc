@@ -121,13 +121,13 @@ body {
 	text-align: center;
 }
 
-.create-part-hide, .add-vendor, .add-finance {
+.create-part-hide, .add-vendor, .add-finance, .create-sell {
 	width: 100%;
 	position: absolute;
 	top: 58px;
 	z-index: 2;
 
-	.refresh-button, .add-button {
+	.refresh-button, .add-button, .sell-count {
 		position: absolute;
 		right: 22px;
 		top: -4px;
@@ -194,6 +194,15 @@ body {
 			border-bottom-color: #b0b0b0;
 			border-width: 18px;
 			margin-left: 54px;
+		}
+	}
+
+	.sell-box {
+		position: absolute;
+		right: 80px;
+
+		input {
+			width: 120px;
 		}
 	}
 }

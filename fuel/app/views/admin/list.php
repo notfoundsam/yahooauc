@@ -6,6 +6,23 @@ $count = 0;
 $summ = 0;
 ?>
 
+<?php if (Uri::segment(2) === 'ship'): ?>
+<?= Form::open(); ?>
+<div class="create-sell">
+	<div class="sell-box">
+		<label>Enter sell number:</label>
+		<input type="text" name="sell_id">
+		<button id="create_ship" class="ladda-button" data-style="zoom-in" data-color="blue" type="submit">
+			<span class="ladda-label">Create</span>
+		</button>
+	</div>
+	<div class="sell-count">
+		<?= $ship_count; ?>
+	</div>
+</div>
+<?= Form::close(); ?>
+<?php endif; ?>
+
 <div class="conteiner-wrapper">
 	<div class="head-wrapper">
 		<div class="part-id">ID: <?= $item->id; ?></div>
