@@ -27,12 +27,12 @@
 			</li>
 			</ul>
 		</li>
-	<?php if($this->current_user->group->id == 6) : ?>
+		<li class="<?php echo Uri::segment(2) == 'shipped' ? 'active' : '' ?>">
+		<a href="<?= \Uri::create('admin/shipped') ?>">Shipped</a>
+		</li>
+	<?php if( Auth::member(\Config::get('my.groups.superadmin')) ) : ?>
 		<li class="<?php echo Uri::segment(2) == 'sort' ? 'active' : '' ?>">
 		<a href="<?= \Uri::create('admin/sort') ?>">Sort</a>
-		</li>
-		<li class="<?php echo Uri::segment(3) == 'create' ? 'active' : '' ?>">
-		<a href="<?= \Uri::create('admin/ship/create') ?>">Create Ship</a>
 		</li>
 	<?php endif; ?>
 		<li class="<?php echo Uri::segment(2) == 'vendor' ? 'active' : '' ?>">

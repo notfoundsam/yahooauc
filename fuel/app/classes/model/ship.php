@@ -17,6 +17,14 @@ class Model_Ship extends \Orm\Model
 		],
 	];
 
+	protected static $_has_many = [
+		'parts' => [
+			'model_to' => 'Model_Part',
+			'key_from' => 'shipNumber',
+			'key_to' => 'ship_number',
+		],
+	];
+
 	public static function validate($factory)
 	{
 		$val = Validation::forge($factory);

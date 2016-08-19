@@ -121,7 +121,7 @@ body {
 	text-align: center;
 }
 
-.create-part-hide, .add-vendor, .add-finance, .create-sell {
+.create-part-hide, .add-vendor, .add-finance, .create-sell, .shipped-count {
 	width: 100%;
 	position: absolute;
 	top: 58px;
@@ -205,4 +205,47 @@ body {
 			width: 120px;
 		}
 	}
+}
+
+.shipped-box {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: $max-screen;
+    margin: auto;
+    margin-bottom: 30px;
+
+    > a {
+    	display: flex;
+    	flex: 0 0 20%;
+    	height: 30px;
+    	align-items: center;
+    	justify-content: center;
+    	background-color: #f6f6f6;
+    	text-decoration: none;
+    	color: #000;
+
+    	&:nth-child(10n+1) {
+		    background-color: #e9e9e9;
+		}
+    	&:nth-child(10n+2) {
+		    background-color: #e9e9e9;
+		}
+		&:nth-child(10n+3) {
+		    background-color: #e9e9e9;
+		}
+		&:nth-child(10n+4) {
+		    background-color: #e9e9e9;
+		}
+		&:nth-child(10n+5) {
+		    background-color: #e9e9e9;
+		}
+		&:hover {
+			background-color: #d5dce2;
+			text-decoration: none;
+		}
+    }
+
+    .selected {
+    	border: 1px solid #b2b1bb;
+    }
 }

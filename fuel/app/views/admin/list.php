@@ -1,4 +1,21 @@
-<?php if ($items): ?>
+<?php if (Uri::segment(2) === 'shipped'): ?>
+<?php if ($count_in_part !== 0): ?>
+<div class="shipped-count">
+	<div class="sell-count">
+		Item in part: <?= $count_in_part; ?>
+	</div>
+</div>
+<?php endif; ?>
+<div class="shipped-box">
+<?php foreach ($ships as $ship): ?>
+	<a href="<?= \Uri::create('admin/shipped/index/'.$ship->shipNumber); ?>" class="<?= $ship->shipNumber == $ship_id ? 'selected' : ''; ?>">
+		<div>Ship <?= $ship->shipNumber; ?> : <?= $ship->shipAuctionID; ?></div>
+	</a>
+<?php endforeach; ?>
+</div>
+<?php endif; ?>
+
+<?php if (!empty($items)): ?>
 
 <?php foreach ($items as $item): ?>	
 <?php
