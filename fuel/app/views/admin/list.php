@@ -1,10 +1,44 @@
-<?php if ($items): ?>
+<?php if (Uri::segment(2) === 'shipped'): ?>
+<?php if ($count_in_part !== 0): ?>
+<div class="shipped-count">
+	<div class="sell-count">
+		Item in part: <?= $count_in_part; ?>
+	</div>
+</div>
+<?php endif; ?>
+<div class="shipped-box">
+<?php foreach ($ships as $ship): ?>
+	<a href="<?= \Uri::create('admin/shipped/index/'.$ship->shipNumber); ?>" class="<?= $ship->shipNumber == $ship_id ? 'selected' : ''; ?>">
+		<div>Ship <?= $ship->shipNumber; ?> : <?= $ship->shipAuctionID; ?></div>
+	</a>
+<?php endforeach; ?>
+</div>
+<?php endif; ?>
+
+<?php if (!empty($items)): ?>
 
 <?php foreach ($items as $item): ?>	
 <?php
 $count = 0;
 $summ = 0;
 ?>
+
+<?php if (Uri::segment(2) === 'ship'): ?>
+<?= Form::open(); ?>
+<div class="create-sell">
+	<div class="sell-box">
+		<label>Enter sell number:</label>
+		<input type="text" name="sell_id">
+		<button id="create_ship" class="ladda-button" data-style="zoom-in" data-color="blue" type="submit">
+			<span class="ladda-label">Create</span>
+		</button>
+	</div>
+	<div class="sell-count">
+		<?= $ship_count; ?>
+	</div>
+</div>
+<?= Form::close(); ?>
+<?php endif; ?>
 
 <div class="conteiner-wrapper">
 	<div class="head-wrapper">

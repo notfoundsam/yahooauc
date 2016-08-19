@@ -23,8 +23,8 @@ class Model_Part extends \Orm\Model
 		'auctions' => [
 			'conditions' => [
 				'order_by' => [
-			        'won_date' => 'DESC'
-		        ],
+					'won_date' => 'DESC'
+				],
 			],
 		],
 	];
