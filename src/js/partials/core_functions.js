@@ -1,5 +1,11 @@
-function showAlert(message, class) {
+$('.overlay').on('click', function(e) {
+	if (e.target !== this)
+		return;
+	$(this).hide();
+});	
+
+function showAlert(message, class)
+{
 	$('#alert p').html(message);
-	$('#alert').removeClass()
-	.addClass(class);
+	$('#alert').removeClass().addClass(class);
 }

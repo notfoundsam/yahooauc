@@ -1,27 +1,25 @@
+<?php if (Auth::member(\Config::get('my.groups.superadmin'))): ?>
 <div class="add-finance">
 	<div class="add-button">
 		<i class="fa fa-plus-circle" aria-hidden="true"></i>
 	</div>
 </div>
+<?php endif; ?>
 
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th>Balance USD</th>
-			<th>USD Withdrawal</th>
-			<th>JPY Receive</th>
-			<th>Balance JPY</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td><?= number_format($usd_balance, 2, '.', ','); ?></td>
-			<td><?= number_format($usd, 2, '.', ','); ?></td>
-			<td><?= number_format($jpy); ?></td>
-			<td><?= number_format($balance); ?></td>
-		</tr>
-	</tbody>
-</table>
+<div class="finance-box">
+	<div class="finance-row">
+		<div>Balance USD</div>
+		<div>USD Withdrawal</div>
+		<div>JPY Received</div>
+		<div>Balance JPY</div>
+	</div>
+	<div class="finance-row">
+		<div><?= number_format($usd_balance, 2, '.', ','); ?></div>
+		<div><?= number_format($usd, 2, '.', ','); ?></div>
+		<div><?= number_format($jpy); ?></div>
+		<div><?= number_format($balance); ?></div>
+	</div>
+</div>
 
 <div class="pagination-box">
 <?= \Pagination::instance('default')->render(); ?>

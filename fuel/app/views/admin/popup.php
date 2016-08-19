@@ -47,6 +47,7 @@
 		</div>
 		<div class="part-status-radio">
 			<?php foreach (Config::get('my.status') as $status) : ?>
+			<?php if ($status['id'] === 4) continue; ?>
 				<div class="radio-group">
 					<input id="radio_<?= $status['id']; ?>" type="radio" name="status" value="<?= $status['id']; ?>">
 					<label for="radio_<?= $status['id']; ?>"><?= $status['name']; ?></label>
