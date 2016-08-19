@@ -1,8 +1,10 @@
+<?php if (Auth::member(\Config::get('my.groups.superadmin'))): ?>
 <div class="add-vendor">
 	<div class="add-button">
 		<i class="fa fa-plus-circle" aria-hidden="true"></i>
 	</div>
 </div>
+<?php endif; ?>
 
 <div class="pagination-box">
 <?= \Pagination::instance('default')->render(); ?>

@@ -1,28 +1,9 @@
 <?php
+
 class Controller_Admin_Statistic extends Controller_Admin
 {
-// private final String YEAR_QUERY = "SELECT DISTINCT YEAR(wonDate) FROM auction ORDER BY wonDate DESC";
 	public function action_index()
 	{
-		$result = DB::select(DB::expr('YEAR(won_date) as year'))->from('auctions')->distinct(true)->order_by('won_date','desc')->execute();
-		Profiler::console($result);
-		foreach ($result as $row) {
-			// Profiler::console($row);
-			Log::debug($row['year']);
-			
-		}
-
-		// $condition = [
-		// 	'related' => [
-		// 		'user' => [
-		// 			'where' => [
-		// 				'username' => Config::get('my.main_bidder')
-		// 			]
-		// 		]	
-		// 	]
-		// ];
-
-		// $auc_count = \Model_Auction::count($condition);
 		$item_count = DB::select(DB::expr('SUM(item_count) as count'))
 			->from('auctions')
 			->join('users','LEFT')
@@ -156,20 +137,6 @@ class Controller_Admin_Statistic extends Controller_Admin
 				$statistic[$year['year']][$month['month']]['aprox'] = number_format($sum / $items[0]['count']);
 			}
 		}
-
-// SELECT DISTINCT YEAR(wonDate) FROM auction ORDER BY wonDate DESC
-		// Debug::dump($today_won[0]['count']);
-		// Debug::dump($yesterday_won);
-		// Debug::dump(DB::last_query());
-		// Debug::dump($next_date);
-		// Debug::dump($years);
-		// $date = DateTime::createFromFormat('j-M-Y', '15-Feb-2009');
-		// $cur_day = DateTime::createFromFormat('Y-m-d', $ymd_date);
-		// Debug::dump($date);
-		// echo date_format($cur_day, 'd-m-Y');
-		// $createDate = new DateTime();
-
-// $strip = $createDate->format('Y-m-d');
 
 		$this->template->title   = "Statistic";
 		$this->template->content = View::forge('admin/statistic/index', [

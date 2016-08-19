@@ -23,11 +23,11 @@ $count = 0;
 $summ = 0;
 ?>
 
-<?php if (Uri::segment(2) === 'ship'): ?>
+<?php if (Uri::segment(2) === 'ship' && Auth::member(\Config::get('my.groups.superadmin'))): ?>
 <?= Form::open(); ?>
 <div class="create-sell">
 	<div class="sell-box">
-		<label>Enter sell number:</label>
+		<label>Enter ship number:</label>
 		<input type="text" name="sell_id">
 		<button id="create_ship" class="ladda-button" data-style="zoom-in" data-color="blue" type="submit">
 			<span class="ladda-label">Create</span>

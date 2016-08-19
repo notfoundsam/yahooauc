@@ -1,15 +1,6 @@
 <?php
 class Controller_Admin_Shipped extends Controller_Admin
 {
-	public function before()
-	{
-		parent::before();
-
-		if ( !Auth::member(\Config::get('my.groups.superadmin')) )
-		{
-			\Response::redirect('admin');
-		}
-	}
 	
 	public function action_index($id = null)
 	{
