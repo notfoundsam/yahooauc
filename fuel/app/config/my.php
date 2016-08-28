@@ -60,7 +60,7 @@ return [
 
 	// Columns in pase page
 	'table' => [
-		'bidding'      => 7,
+		'bidding'      => 8,
 		'won'          => 8,
 	],
 
