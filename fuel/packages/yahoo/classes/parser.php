@@ -145,13 +145,17 @@ class Parser
 
 			foreach ($tr->children() as $i => $td)
 			{
-				if ($i > 5)
-					break;
 				if ($i == 0)
+				{
+					continue;
+				}
+				if ($i > 6)
+					break;
+				if ($i == 1)
 				{
 					$a_tr[] = end((explode('/', $td->find('a', 0)->href)));
 				}
-				if ($i == 1 || $i == 5)
+				if ($i == 2 || $i == 6)
 				{
 					$a_tr[] = trim(str_replace(static::$JP, static::$EN, strip_tags($td->innertext)));
 				}
