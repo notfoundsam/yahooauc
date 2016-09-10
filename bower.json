@@ -22,6 +22,7 @@
     "slideout.js": "~0.1.12",
     "ladda": "~1.0.0",
     "jquery-ui": "~1.11.4",
-    "font-awesome": "~4.6.3"
+    "font-awesome": "~4.6.3",
+    "Framework7": "framework7#^1.4.2"
   }
 }
