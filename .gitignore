@@ -37,6 +37,6 @@ desktop.ini
 /bower_components/
 /node_modules/
 
-# mobile app
+# mobile appddd
 /public/mobile/.openshift
 

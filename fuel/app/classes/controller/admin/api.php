@@ -25,7 +25,7 @@ class Controller_Admin_Api extends Controller_Rest
 		{
 			return true;
 		}
-
+//tets
 		return false;
 	}
 
