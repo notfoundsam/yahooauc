@@ -38,5 +38,5 @@ desktop.ini
 /node_modules/
 
 # mobile app
-/public/mobile/
+/public/mobile/.openshift/*
 
