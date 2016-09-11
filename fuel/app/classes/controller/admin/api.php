@@ -6,32 +6,23 @@ class Controller_Admin_Api extends Controller_Rest
 
 	public function before()
 	{
-		// Log::debug('test1');
-		// parent::before();
-		// Log::debug('test11');
-		
+		parent::before();
+
 		if (!\Input::is_ajax())
 		{
-			Log::debug('not logged in');
 			throw new HttpNotFoundException;
 		}
-		// if (\Auth::check())
-		// {
-		// 	Log::debug('Login OK');
-			
-		// }
 	}
 
 	public function auth()
-    {
-        if (\Auth::check())
-        {
-        	Log::debug('not logged in');
-            return true;
-        }
-        Log::debug('not logged in');
-        return false;
-    }
+	{
+		if (Auth::check())
+		{
+			return true;
+		}
+
+		return false;
+	}
 
 	public function post_refresh()
 	{
