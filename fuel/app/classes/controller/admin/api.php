@@ -502,7 +502,7 @@ class Controller_Admin_Api extends Controller_Rest
 
 	public function post_test()
 	{
-		Log::debug('run method');
-		$this->response(['result' => 'test_ajax']);
+		// Log::debug('run method');
+		// $this->response(['result' => 'test_ajax']);
 	}
 }
