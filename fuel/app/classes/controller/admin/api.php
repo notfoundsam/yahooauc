@@ -8,10 +8,20 @@ class Controller_Admin_Api extends Controller_Rest
 	{
 		parent::before();
 		
-		if (!\Auth::check() && !\Input::is_ajax())
+		if (!\Input::is_ajax())
 		{
 			throw new HttpNotFoundException;
 		}
+	}
+
+	public function auth()
+	{
+		if (Auth::check())
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	public function post_refresh()
@@ -442,4 +452,6 @@ class Controller_Admin_Api extends Controller_Rest
 
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
 	}
+
+
 }
