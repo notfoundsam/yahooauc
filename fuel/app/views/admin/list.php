@@ -15,14 +15,6 @@
 </div>
 <?php endif; ?>
 
-<?php if (!empty($items)): ?>
-
-<?php foreach ($items as $item): ?>	
-<?php
-$count = 0;
-$summ = 0;
-?>
-
 <?php if (Uri::segment(2) === 'ship' && Auth::member(\Config::get('my.groups.superadmin'))): ?>
 <?= Form::open(); ?>
 <div class="create-sell">
@@ -39,6 +31,14 @@ $summ = 0;
 </div>
 <?= Form::close(); ?>
 <?php endif; ?>
+
+<?php if (!empty($items)): ?>
+
+<?php foreach ($items as $item): ?>	
+<?php
+$count = 0;
+$summ = 0;
+?>
 
 <div class="conteiner-wrapper">
 	<div class="head-wrapper">
