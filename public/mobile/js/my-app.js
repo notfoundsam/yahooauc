@@ -10,6 +10,14 @@ var mainView = myApp.addView('.view-main', {
   // dynamicNavbar: true
 });
 
+$$('#logout').on('click', function() {
+	$$.post('/admin/api/test', {
+		data: 'test',
+	}, function(data) {
+		console.log(data.result);
+	});
+});
+
 // Callbacks to run specific code for specific pages, for example for About page:
 // myApp.onPageInit('about', function (page) {
 //     // run createContentPage func after link was clicked

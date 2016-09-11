@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#2196f3">
     <!-- Your app title -->
     <title>My App</title>
-    <?php echo Asset::css(['framework7.material.min.css', 'framework7.material.colors.min.css', 'my-app.css']); ?>
+    <?php echo Asset::css(['framework7.material.min2.css', 'framework7.material.colors.min.css', 'my-app.css']); ?>
   </head>
   <body>
 
@@ -19,7 +19,7 @@
     <div class="panel panel-left panel-cover">
       <div class="navbar">
         <div class="navbar-inner">
-          <div class="center">Username</div>
+          <div class="center">Username2</div>
         </div>
       </div>
 
@@ -78,10 +78,10 @@
             </div>
           </li>
           <li>
-            <a href="#" class="item-link item-content">
+            <a id="logout" href="#" class="item-link item-content">
               <div class="item-media"><i class="icon icon-f7"></i></div>
               <div class="item-inner">
-                <div class="item-title">Logout</div>
+                <div class="item-title">Logout2</div>
               </div>
             </a>
           </li>

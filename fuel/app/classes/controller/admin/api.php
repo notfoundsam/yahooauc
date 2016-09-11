@@ -6,13 +6,32 @@ class Controller_Admin_Api extends Controller_Rest
 
 	public function before()
 	{
-		parent::before();
+		// Log::debug('test1');
+		// parent::before();
+		// Log::debug('test11');
 		
-		if (!\Auth::check() && !\Input::is_ajax())
+		if (!\Input::is_ajax())
 		{
+			Log::debug('not logged in');
 			throw new HttpNotFoundException;
 		}
+		// if (\Auth::check())
+		// {
+		// 	Log::debug('Login OK');
+			
+		// }
 	}
+
+	public function auth()
+    {
+        if (\Auth::check())
+        {
+        	Log::debug('not logged in');
+            return true;
+        }
+        Log::debug('not logged in');
+        return false;
+    }
 
 	public function post_refresh()
 	{
@@ -441,5 +460,11 @@ class Controller_Admin_Api extends Controller_Rest
 		}
 
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+	}
+
+	public function post_test()
+	{
+		Log::debug('run method');
+		$this->response(['result' => 'test_ajax']);
 	}
 }
