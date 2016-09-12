@@ -7,6 +7,7 @@ class Controller_Admin_Api extends Controller_Rest
 		'login_success'  => 10,
 		'alredy_logedin' => 20,
 		'login_faild'    => 30,
+		'logout'         => 40,
 	];
 
 	public function before()
@@ -69,6 +70,12 @@ class Controller_Admin_Api extends Controller_Rest
 		{
 			$this->response(['status_code' => $this->_status_code['login_faild']]);
 		}
+	}
+
+	public function post_logout()
+	{
+		\Auth::logout();
+		$this->response(['status_code' => $this->_status_code['logout']]);
 	}
 
 	public function post_refresh()
