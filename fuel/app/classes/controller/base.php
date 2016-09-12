@@ -3,11 +3,16 @@
 class Controller_Base extends Controller_Template
 {
 
+	protected $current_user = null;
+
 	public function before()
 	{
-		parent::before();
+		if (Agent::is_mobiledevice())
+		{
+			\Response::redirect('mobile/index.html');
+		}
 
-		$this->current_user = null;
+		parent::before();
 
 		foreach (\Auth::verified() as $driver)
 		{
@@ -20,7 +25,5 @@ class Controller_Base extends Controller_Template
 
 		// Set a global variable so views can use it
 		View::set_global('current_user', $this->current_user);
-
 	}
-
 }

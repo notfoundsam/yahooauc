@@ -3,11 +3,17 @@
 class Controller_Admin_Api extends Controller_Rest
 {
 	protected $rest_format = 'json';
+	protected $_status_code = [
+		'login_success'  => 10,
+		'alredy_logedin' => 20,
+		'login_faild'    => 30,
+		'logout'         => 40,
+	];
 
 	public function before()
 	{
 		parent::before();
-		
+
 		if (!\Input::is_ajax())
 		{
 			throw new HttpNotFoundException;
@@ -16,12 +22,60 @@ class Controller_Admin_Api extends Controller_Rest
 
 	public function auth()
 	{
-		if (Auth::check())
+		if (Auth::check() || in_array(Request::active()->action, ['login', 'logout']))
 		{
 			return true;
 		}
 
 		return false;
+	}
+
+	public function post_check_login() {}
+
+	public function post_login()
+	{
+		$val = Validation::forge();
+
+		$val->add('email', 'Email or Username')->add_rule('required');
+		$val->add('password', 'Password')->add_rule('required');
+
+		if ($val->run())
+		{
+			if (!Auth::check())
+			{
+				if (Auth::login(Input::post('email'), Input::post('password')))
+				{
+					// assign the user id that lasted updated this record
+					foreach (\Auth::verified() as $driver)
+					{
+						if (($id = $driver->get_user_id()) !== false)
+						{
+							// credentials ok, go right in
+							$current_user = Model\Auth_User::find($id[1]);
+							$this->response(['status_code' => $this->_status_code['login_success']]);
+						}
+					}
+				}
+				else
+				{
+					$this->response(['status_code' => $this->_status_code['login_faild']]);
+				}
+			}
+			else
+			{
+				$this->response(['status_code' => $this->_status_code['alredy_logedin']]);
+			}
+		}
+		else
+		{
+			$this->response(['status_code' => $this->_status_code['login_faild']]);
+		}
+	}
+
+	public function post_logout()
+	{
+		\Auth::logout();
+		$this->response(['status_code' => $this->_status_code['logout']]);
 	}
 
 	public function post_refresh()
@@ -453,5 +507,9 @@ class Controller_Admin_Api extends Controller_Rest
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
 	}
 
-
+	public function post_test()
+	{
+		// Log::debug('run method');
+		// $this->response(['result' => 'test_ajax']);
+	}
 }

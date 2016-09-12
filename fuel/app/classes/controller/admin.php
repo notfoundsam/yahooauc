@@ -14,15 +14,7 @@ class Controller_Admin extends Controller_Base
 		{
 			if (Auth::check())
 			{
-				// $admin_group_id = Config::get('auth.driver', 'Simpleauth') == 'Ormauth' ? 6 : 100;
-				// if ( ! Auth::member($admin_group_id))
-				// {
-				// 	Session::set_flash('alert', [
-				// 		'status'  => 'danger',
-				// 		'message' => e('You don\'t have access to the admin panel')
-				// 	]);
-				// 	Response::redirect('/');
-				// }
+				
 			}
 			else
 			{
@@ -104,19 +96,7 @@ class Controller_Admin extends Controller_Base
 	 */
 	public function action_index()
 	{	
-		// Arrlog::arr_to_log(Input::server());
-		
-		// \Log::debug(\Config::get('my.yahoo.user_name'));
-		// \Log::debug(\Config::get('my.yahoo.user_pass'));
-		// \Log::debug(\Config::get('my.yahoo.user_appid'));
-		// $test = [];
-		// $test[] = 'aaa ddd a';
-		// $test[] = 'bb  s   sbb';
 		$this->template->title = 'Dashboard';
-		// Session::set_flash('alert', [
-		// 				'status'  => 'danger',
-		// 				'message' => $test
-		// 			]);
 		$this->template->content = View::forge('admin/dashboard');
 	}
 }
