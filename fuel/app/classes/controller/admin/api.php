@@ -8,6 +8,8 @@ class Controller_Admin_Api extends Controller_Rest
 		'alredy_logedin' => 20,
 		'login_faild'    => 30,
 		'logout'         => 40,
+		'failed'         => 90,
+		'success'        => 100,
 	];
 
 	public function before()
@@ -30,7 +32,25 @@ class Controller_Admin_Api extends Controller_Rest
 		return false;
 	}
 
-	public function post_check_login() {}
+	public function post_check_login()
+	{
+		$result = [];
+
+		foreach (\Auth::verified() as $driver)
+		{
+			if (($id = $driver->get_user_id()) !== false)
+			{
+				$result['current_user'] = Model\Auth_User::find($id[1])->username;
+			}
+			break;
+		}
+		$result['current_bidder'] = \Config::get('my.yahoo.user_name');
+
+		$this->response([
+			'status_code' => $this->_status_code['success'],
+			'result' => $result
+		]);
+	}
 
 	public function post_login()
 	{
@@ -507,9 +527,36 @@ class Controller_Admin_Api extends Controller_Rest
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
 	}
 
-	public function post_test()
+	public function get_bidding()
 	{
-		// Log::debug('run method');
-		// $this->response(['result' => 'test_ajax']);
+		$p = \Input::get('page');
+
+		try
+		{
+			$browser = new Browser();
+			$result = $browser->bidding($p);
+			// $result['username'] = \Config::get('my.yahoo.user_name');
+			// $result = ['auctions' => [
+			// 	'aaaa', 'dddddd'
+			// ]];
+			$this->response([
+				'status_code' => $this->_status_code['success'],
+				'result' => $result
+			]);
+		}
+		catch (BrowserLoginException $e)
+		{
+			$this->response([
+				'status_code' => $this->_status_code['failed'],
+				'message' => e("Login error: ".$e->getMessage())
+			]);
+		}
+		catch (ParserException $e)
+		{
+			$this->response([
+				'status_code' => $this->_status_code['failed'],
+				'message' => e("Parser error: ".$e->getMessage())
+			]);
+		}
 	}
 }
