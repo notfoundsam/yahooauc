@@ -70,9 +70,14 @@ class Controller_Admin_Api extends Controller_Rest
 					{
 						if (($id = $driver->get_user_id()) !== false)
 						{
-							// credentials ok, go right in
-							$current_user = Model\Auth_User::find($id[1]);
-							$this->response(['status_code' => $this->_status_code['login_success']]);
+							$result = [];
+							$result['current_user'] = Model\Auth_User::find($id[1])->username;
+							$result['current_bidder'] = \Config::get('my.yahoo.user_name');
+
+							$this->response([
+								'status_code' => $this->_status_code['login_success'],
+								'result' => $result
+							]);
 						}
 					}
 				}
