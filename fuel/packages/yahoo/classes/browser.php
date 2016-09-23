@@ -42,15 +42,15 @@ class Browser
     {
         try
         {
-            if ( \Cache::get('yahoo.cookies_exp') > strtotime('-1 week') )
-            {
-                $cookies = \Cache::get('yahoo.cookies');
-                $this->session = new Requests_Session(static::$AUCTION_URL, static::$_headers, [], ['cookies' => $cookies]);
-            }
-            else
-            {
-                $this->login();
-            }
+            // if ( \Cache::get('yahoo.cookies_exp') > strtotime('-1 week') )
+            // {
+            $cookies = \Cache::get('yahoo.cookies');
+            $this->session = new Requests_Session(static::$AUCTION_URL, static::$_headers, [], ['cookies' => $cookies]);
+            // }
+            // else
+            // {
+            //     $this->login();
+            // }
         }
         catch (\CacheNotFoundException $e)
         {
@@ -352,8 +352,8 @@ class Browser
         if ($this->loggedin)
         {
             $cookies = $this->session->options['cookies'];
-            \Cache::set('yahoo.cookies', $cookies);
-            \Cache::set('yahoo.cookies_exp', time());
+            \Cache::set('yahoo.cookies', $cookies, \Config::get('my.yahoo.cookie_exp'));
+            // \Cache::set('yahoo.cookies_exp', time());
         }
     }
 }

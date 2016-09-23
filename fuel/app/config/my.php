@@ -36,6 +36,8 @@ return [
 		'user_name'  => Input::server('YAHOO_USER'),
 		'user_pass'  => Input::server('YAHOO_PASS'),
 		'user_appid' => Input::server('YAHOO_APPID'),
+		// Cache cookies for 1 week 3600 * 24 * 7
+		'cookie_exp' => 604800,
 	],
 
 	'dropbox' => [

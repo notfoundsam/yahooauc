@@ -25,7 +25,7 @@ class Parser
 	 * @param  string $body Body of HTML page
 	 * @return bool         Return true if loggedin or false
 	 */
-	public static function checkLogin($body)
+	public static function checkLogin(&$body)
 	{
 		$html = new HtmlDomParser;
 		$html = str_get_html($body);
@@ -46,7 +46,7 @@ class Parser
 	 * @return array        Array of auction ids
 	 * @throws ParserException Throw exception if HTML not given
 	 */
-	public static function parseWonPageNew($body = null)
+	public static function parseWonPageNew(&$body = null)
 	{
 		if (!$body)
 		{
@@ -88,7 +88,7 @@ class Parser
 	 * @return array        Array of bidding auctions
 	 * @throws ParserException Throw exception if HTML not given
 	 */
-	public static function parseBiddingPageNew($body = null)
+	public static function parseBiddingPageNew(&$body = null)
 	{
 		if (!$body)
 		{
@@ -97,7 +97,7 @@ class Parser
 
 		$table = [];
 		$a_pages = [];
-		$paging = 4;
+		// $paging = 4;
 
 		$html = new HtmlDomParser;
 		$html = str_get_html($body);
@@ -153,7 +153,9 @@ class Parser
 					break;
 				if ($i == 1)
 				{
-					$a_tr[] = end((explode('/', $td->find('a', 0)->href)));
+					$auc_id = end((explode('/', $td->find('a', 0)->href)));
+					$a_tr[] = $auc_id;
+					$a_tr['images'] = self::getCachedImages($auc_id);
 				}
 				if ($i == 2 || $i == 6)
 				{
@@ -179,7 +181,7 @@ class Parser
 	 * @return array        Return array with pair name and value
 	 * @throws ParserException Throw exception if POST form not found
 	 */
-	public static function getHiddenInputValues($body)
+	public static function getHiddenInputValues(&$body)
 	{
 		$page_values = [];
 		$html = new HtmlDomParser;
@@ -211,7 +213,7 @@ class Parser
 	 * @return bool            Return true if bid was success
 	 * @throws ParserException Throw exception if bid was not success
 	 */
-	public static function getResult($body)
+	public static function getResult(&$body)
 	{
 		$html = new HtmlDomParser;
 		$html = str_get_html($body);
@@ -252,7 +254,7 @@ class Parser
 	 * @param  string $col  Find table with $col count
 	 * @return object       Return HtmlDomParser element with table of auctions or null
 	 */
-	private static function findTable ($html = null, $col = null)
+	private static function findTable(&$html = null, $col = null)
 	{
 		if ($tables = $html->find('table'))
 		{
@@ -277,5 +279,17 @@ class Parser
 			}
 		}
 		return null;
+	}
+
+	private static function getCachedImages(&$auc_id)
+	{
+		try
+		{
+			return \Cache::get('yahoo.imges.'.$auc_id);
+		}
+		catch (\CacheNotFoundException $e)
+		{
+			return null;
+		}
 	}
 }

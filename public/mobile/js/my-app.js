@@ -8,8 +8,6 @@ var myApp = new Framework7({
     //Tell Framework7 to compile templates on app init
     template7Pages: true,
     material: true,
-    // cacheIgnore: ['bidding.html'],
-    // cache: false,
 
 });
  
@@ -31,8 +29,15 @@ $$.ajax({
 		var d_obj = JSON.parse(data);
 		if (d_obj.status_code == 100) {
 			$$('#username').text(d_obj.result.current_user);
-			console.log(d_obj.result.current_user);
 			current_bidder = d_obj.result.current_bidder;
+
+			mainView.router.load({
+				url: 'bid.html'
+				// reload: true,
+				// context: {
+				// 	title: 'Bid'
+				// }
+			});
 		}
 	},
 	statusCode: {
@@ -57,33 +62,41 @@ $$('#bidding').on('click', function() {
 		success: function (data) {
 			var d_obj = JSON.parse(data);
 			if (d_obj.status_code == 100) {
-				myApp.hideIndicator();
+				var auctions = d_obj.result === null ? [] : d_obj.result.auctions;
 
 				mainView.router.load({
 					url: 'bidding.html',
 					reload: true,
 					context: {
 						title: 'Bidding',
-						auctions: d_obj.result.auctions,
+						auctions: auctions,
 						current_bidder: current_bidder
 					}
-				})
-				console.log(d_obj.result);
+				});
+				$$('#bidding_count').text(auctions.length);
 			} else {
-				myApp.hideIndicator();
 				console.log(d_obj.message);
 			}
+			myApp.hideIndicator();
 		}
 	});
 });
 
 $$('#login').on('click', function() {
+	var email = $$('input[name=username]').val();
+	var password = $$('input[name=password]').val();
+
+	if (!email || !password) {
+		myApp.alert('Enter both username and password', 'Input error');
+		return;
+	}
+
 	$$.ajax({
 		url: ajax_host + '/admin/api/login',
 		type: 'POST',
 		data: {
-			email: $$('input[name=username]').val(),
-			password: $$('input[name=password]').val()
+			email: email,
+			password: password
 		},
 		success: function (data) {
 			var d_obj = JSON.parse(data);
@@ -91,13 +104,16 @@ $$('#login').on('click', function() {
 				case 10: 
 					$$('#username').text(d_obj.result.current_user);
 					current_bidder = d_obj.result.current_bidder;
+					mainView.router.load({
+						url: 'bid.html'
+					});
 					myApp.closeModal('.login-screen');
 					break;
 				case 20: 
 					myApp.closeModal('.login-screen');
 					break;
 				case 30:
-					console.log('wrong');
+					myApp.alert('Login or password incorect', 'Login error');
 					break;
 			}
 		}
@@ -119,7 +135,77 @@ $$('#logout').on('click', function() {
 	});
 });
 
-$$(document).on('pageInit', function (e) {
-  // console.log($$(this).find('.page').attr('data-page'));
-  
+myApp.onPageInit('bid', function (page) {
+	$$('#bid').on('click', function() {
+
+		var auc_id = $$('input[name=auc_id]').val();
+		var price = $$('input[name=price]').val();
+
+		if (!auc_id || !price) {
+			myApp.alert('Enter both Lot ID and Price', 'Input error');
+			return;
+		}
+
+		myApp.showIndicator();
+
+		bid(auc_id, price, false);
+	});
 });
+
+myApp.onPageInit('bidding', function (page) {
+	$$('.bid-up').on('click', function() {
+
+		var auc_id = $$(this).attr('data-id');
+
+		myApp.prompt('Lot ID: ' + auc_id, 'Set new price', function (value) {
+			var price = parseInt(value);
+			if (!price) {
+				return;
+			}
+			
+			myApp.showIndicator();
+
+			bid(auc_id, price, true);
+		});
+	});
+});
+
+function bid(auc_id, price, rebid) {
+	$$.ajax({
+		url: ajax_host + '/admin/api/bid',
+		type: 'POST',
+		data: {
+			auc_id: auc_id,
+			price: price
+		},
+		statusCode: {
+			401: function (xhr) {
+				myApp.hideIndicator();
+				myApp.loginScreen();
+			}
+		},
+		success: function (data) {
+			var d_obj = JSON.parse(data);
+			if (d_obj.status_code == 100) {
+
+				if (rebid) {
+					var card = $$('a[data-id=' + auc_id + ']').closest('.card');
+					card.removeClass('card-red').addClass('card-green');
+				}
+
+				myApp.addNotification({
+					message: d_obj.result,
+					hold: 3000,
+					additionalClass: 'bid-success'
+				});
+			} else {
+				myApp.addNotification({
+					message: d_obj.error,
+					hold: 3000,
+					additionalClass: 'bid-error'
+				});
+			}
+			myApp.hideIndicator();
+		}
+	});
+}
