@@ -16,10 +16,10 @@ class Controller_Admin_Api extends Controller_Rest
 	{
 		parent::before();
 
-		if (!\Input::is_ajax())
-		{
-			throw new HttpNotFoundException;
-		}
+		// if (!\Input::is_ajax())
+		// {
+		// 	throw new HttpNotFoundException;
+		// }
 	}
 
 	public function auth()
@@ -189,6 +189,7 @@ class Controller_Admin_Api extends Controller_Rest
 	{
 		$result = '';
 		$val_error = [];
+		$status_code = null;
 
 		$val = Validation::forge();
 		$val->add_field('auc_id', '[Lot ID]', 'required|max_length[15]');
@@ -207,12 +208,30 @@ class Controller_Admin_Api extends Controller_Rest
 
 				if ((string) $auc_xml->Result->Status == 'open')
 				{
+					// Save images url to cache for show on bidding page
+					try
+					{
+						\Cache::get('yahoo.imges.'.$val->validated('auc_id'));
+					}
+					catch (\CacheNotFoundException $e)
+					{
+						$imges = [];
+
+						foreach ($auc_xml->Result->Img->children() as $img)
+						{
+							$imges[] = (string) $img;
+						}
+
+						\Cache::set('yahoo.imges.'.$val->validated('auc_id'), empty($imges) ? '' : $imges, 3600 * 24 * 10);
+					}
+
 					$price = $val->validated('price');
 					$auc_url = (string) $auc_xml->Result->AuctionItemUrl;
 
 					if ($browser->bid($price, $auc_url))
 					{
 						$result = 'Bid on '. $val->validated('auc_id'). ' successful';
+						$status_code = $this->_status_code['success'];
 					}
 					else
 					{
@@ -221,7 +240,7 @@ class Controller_Admin_Api extends Controller_Rest
 				}
 				else
 				{
-					$val_error[] = 'Auction '. $val->validated('auc_id'). ' have ended';
+					$val_error[] = 'Auction '. $val->validated('auc_id'). ' has ended';
 				}
 			}
 			catch (BrowserException $e)
@@ -247,7 +266,11 @@ class Controller_Admin_Api extends Controller_Rest
 				$val_error[] = $error->get_message();
 			}
 		}
-		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+		$this->response([
+			'status_code' => $status_code,
+			'result' => $result,
+			'error' => implode('<br>', (array) $val_error)
+		]);
 	}
 
 	public function post_updateauc()
