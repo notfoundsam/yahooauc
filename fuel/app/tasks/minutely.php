@@ -31,6 +31,7 @@ class Minutely
 
 		self::db_backup_at_time();
 		self::check_won_at_time();
+		// self::save_image_from_cache();
 	}
 
 	private static function check_won_at_time()
@@ -141,5 +142,10 @@ class Minutely
 		{
 			 \File::delete($path);
 		}
+	}
+
+	private static function save_image_from_cache()
+	{
+		
 	}
 }
