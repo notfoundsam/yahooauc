@@ -45,7 +45,55 @@
 		background-color: #808080;
 		color: #fff;
 	}
-	.count, .aucid, .title, .bidding-title, .price, .date, .action, .time-left, .vendor, .bidder, .bidding-action, .vendor-name, .by-now, .post-index, .address, .opertion-date, .finance-usd, .finance-jpy, .memo {
+	.bidding-wrap {
+		display: flex;
+
+		> div {
+			display: flex;
+		}
+
+		.bidding-img {
+			flex: 0 0 40%;
+			justify-content: space-around;
+			align-items: center;
+
+			> div {
+				width: 30%;
+				font-size: 0;
+
+				img {
+					max-width: 100%;
+				}
+			}
+		}
+
+		.bidding-content {
+			flex: 0 0 60%;
+			flex-wrap: wrap;
+			justify-content: space-between;
+    		align-items: center;
+
+    		> div {
+    			padding: 5px 10px;
+    			width: 33.3333%;
+
+
+    			&:first-child {
+    				width: 100%;
+    			}
+    		}
+
+    		span {
+    			color: gray;
+    		}
+		}
+	}
+
+	.price-up {
+	    background-color: rgba(255, 174, 174, 0.5);
+	}
+
+	.count, .aucid, .title, .price, .date, .action, .vendor, .vendor-name, .by-now, .post-index, .address, .opertion-date, .finance-usd, .finance-jpy, .memo {
 		display: inline-block;
 		padding: 4px;
 	}
@@ -65,22 +113,8 @@
 	.title {
 		width: 430px;
 	}
-	.bidding-title {
-		width: 380px;
-	}
 	.price {
 		width: 50px;
-	}
-	.time-left {
-		width: 60px;
-	}
-	.bidder {
-		width: 65px;
-	}
-	.bidding-action {
-		i {
-			margin-left: 5px;
-		}
 	}
 	.vendor-name {
 		width: 200px;
@@ -213,6 +247,9 @@
 	}
 	.box {
 		width: 80px;
+	}
+	.total-price {
+		background-color: #4a4a4a;
 	}
 
 	@media screen and (max-width: $max-screen) {
