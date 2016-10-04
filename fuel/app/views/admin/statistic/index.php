@@ -38,7 +38,7 @@
 <div class="statistic-box">
 	<div class="statistic-row-year"><?= $k; ?></div>
 	<div class="statistic-row-month">
-	<?php for ($i = 1; $i < 12; $i++): ?>
+	<?php for ($i = 1; $i < 13; $i++): ?>
 		<div class="month"><?= \DateTime::createFromFormat('!m', $i)->format('F'); ?></div>
 		<div><?= isset($s[$i]) ? $s[$i]['count'] : '---'; ?></div>
 		<div><?= isset($s[$i]) ? $s[$i]['price'] : '---'; ?></div>
