@@ -60,6 +60,9 @@ return [
 	// Commission per item
 	'commission'       => 300,
 
+	// Cache statistic for one month
+	'statistic_cache'  => 2678400,
+
 	// Columns in pase page
 	'table' => [
 		'bidding'      => 8,

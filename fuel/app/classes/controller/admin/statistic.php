@@ -53,6 +53,7 @@ class Controller_Admin_Statistic extends Controller_Admin
 			->execute()->as_array();
 
 		$date = new DateTime();
+		$s_date = $date;
 		$date->setTime(0, 6, 0);
 		$cur_date = $date->format('Y-m-d H:i:s');
 		$date->modify('+1 day');
@@ -87,6 +88,8 @@ class Controller_Admin_Statistic extends Controller_Admin
 			->order_by('won_date', 'desc')
 			->execute()->as_array();
 
+		$s_date;
+		$s_date->modify('-3 month');
 		foreach ($years as $year)
 		{
 			$months = DB::select(DB::expr('DISTINCT MONTH(won_date) as month'))
@@ -97,44 +100,70 @@ class Controller_Admin_Statistic extends Controller_Admin
 
 			foreach ($months as $month)
 			{
-				$items = DB::select(DB::expr('SUM(item_count) as count'))
-					->from('auctions')
-					->join('users','LEFT')
-					->on('users.id', '=', 'auctions.user_id')
-					->where_open()
-					->where(DB::expr('YEAR(won_date) = ' . $year['year']))
-					->and_where(DB::expr('MONTH(won_date) = ' . $month['month']))
-					->and_where('username', Config::get('my.main_bidder'))
-					->where_close()
-					->execute()->as_array();
+				$s_year = $year['year'];
+				$s_month = $month['month'];
 
-				$c = $items[0]['count'];
+				try
+				{
+					$d_date = new DateTime("{$s_year}-{$s_month}-01");
 
-				$prices = DB::select(DB::expr('SUM(price) as price'))
-					->from('auctions')
-					->join('users','LEFT')
-					->on('users.id', '=', 'auctions.user_id')
-					->where_open()
-					->where(DB::expr('YEAR(won_date) = ' . $year['year']))
-					->and_where(DB::expr('MONTH(won_date) = ' . $month['month']))
-					->and_where('username', Config::get('my.main_bidder'))
-					->where_close()
-					->execute()->as_array();
+					if ($d_date > $s_date)
+					{
+						throw new CacheNotFoundException("Ignore cache", 1);
+					}
 
-				$p = $prices[0]['price'];
+					$statistic[$year['year']][$month['month']] = \Cache::get("yahoo.statistic.{$s_year}.{$s_month}");
 
-				$parts = DB::select(DB::expr('SUM(price) as price'))
-					->from('parts')
-					->where(DB::expr('id = ANY (SELECT DISTINCT part_id FROM auctions WHERE YEAR(won_date) = ' . $year['year'] . ' AND MONTH(won_date) = ' . $month['month'] . ')'))
-					->execute()->as_array();
+				} catch (\CacheNotFoundException $e) {
 
-				$pr = $parts[0]['price'];
+					$items = DB::select(DB::expr('SUM(item_count) as count'))
+						->from('auctions')
+						->join('users','LEFT')
+						->on('users.id', '=', 'auctions.user_id')
+						->where_open()
+						->where(DB::expr('YEAR(won_date) = ' . $year['year']))
+						->and_where(DB::expr('MONTH(won_date) = ' . $month['month']))
+						->and_where('username', Config::get('my.main_bidder'))
+						->where_close()
+						->execute()->as_array();
 
-				$sum = $p + $pr + $c * Config::get('my.commission');
+					$c = $items[0]['count'];
 
-				$statistic[$year['year']][$month['month']]['count'] = $items[0]['count'];
-				$statistic[$year['year']][$month['month']]['price'] = $sum;
-				$statistic[$year['year']][$month['month']]['aprox'] = number_format($sum / $items[0]['count']);
+					$prices = DB::select(DB::expr('SUM(price) as price'))
+						->from('auctions')
+						->join('users','LEFT')
+						->on('users.id', '=', 'auctions.user_id')
+						->where_open()
+						->where(DB::expr('YEAR(won_date) = ' . $year['year']))
+						->and_where(DB::expr('MONTH(won_date) = ' . $month['month']))
+						->and_where('username', Config::get('my.main_bidder'))
+						->where_close()
+						->execute()->as_array();
+
+					$p = $prices[0]['price'];
+
+					$parts = DB::select(DB::expr('SUM(price) as price'))
+						->from('parts')
+						->where(DB::expr('id = ANY (SELECT DISTINCT part_id FROM auctions WHERE YEAR(won_date) = ' . $year['year'] . ' AND MONTH(won_date) = ' . $month['month'] . ')'))
+						->execute()->as_array();
+
+					$pr = $parts[0]['price'];
+
+					$sum = $p + $pr + $c * Config::get('my.commission');
+
+					$m_stat = [
+						'count' => $items[0]['count'],
+						'price' => $sum,
+						'aprox' => number_format($sum / $items[0]['count'])
+					];
+
+					$statistic[$year['year']][$month['month']] = $m_stat;
+
+					if ($d_date > $s_date)
+						continue;
+					
+					\Cache::set("yahoo.statistic.{$s_year}.{$s_month}", $m_stat, \Config::get('my.statistic_cache'));
+				}
 			}
 		}
 
