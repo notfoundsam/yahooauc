@@ -192,8 +192,8 @@ class Controller_Admin_Api extends Controller_Rest
 		$status_code = null;
 
 		$val = Validation::forge();
-		$val->add_field('auc_id', '[Lot ID]', 'required|max_length[15]');
-		$val->add_field('price', '[Price]', 'required|valid_string[numeric]|max_length[6]');
+		$val->add_field('auc_id', '[Lot ID]', 'required|trim|max_length[15]');
+		$val->add_field('price', '[Price]', 'required|trim|valid_string[numeric]|max_length[6]');
 
 		$bid_values['auc_id'] = \Input::post('auc_id');
 		$bid_values['price'] = \Input::post('price');
