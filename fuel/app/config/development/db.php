@@ -11,7 +11,7 @@ return array(
 			'port'       => '3306',
 			'database'   => 'htmlunit',
 			'username'   => 'root',
-			'password'   => '1',
+			'password'   => 'root',
 		),
 		'profiling' => true
 	),
