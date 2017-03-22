@@ -52,7 +52,7 @@ class Minutely
 
 			try
 			{
-				$browser = new \Browser();
+				$browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR);
 
 				foreach ($browser->won(self::$PAGE_TO_UPDATE) as $auc_id) {
 					

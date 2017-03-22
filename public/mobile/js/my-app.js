@@ -62,11 +62,12 @@ $$('#bidding').on('click', function() {
 		success: function (data) {
 			var d_obj = JSON.parse(data);
 			if (d_obj.status_code == 100) {
-				var auctions = d_obj.result === null ? [] : d_obj.result.auctions;
+				var auctions = d_obj.result.lots;
 
 				mainView.router.load({
 					url: 'bidding.html',
-					reload: true,
+					reload: (mainView.url == 'bidding.html'),
+					ignoreCache: true,
 					context: {
 						title: 'Bidding',
 						auctions: auctions,
