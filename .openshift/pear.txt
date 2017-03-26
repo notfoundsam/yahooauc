@@ -1,3 +1,0 @@
-http_request2
-net_url2
-PEAR

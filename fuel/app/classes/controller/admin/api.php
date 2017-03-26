@@ -39,7 +39,7 @@ class Controller_Admin_Api extends Controller_Rest
         {
             $this->COOKIE_JAR = \Cache::get('yahoo.cookies');
         }
-        catch (Exception $e)
+        catch (CacheNotFoundException $e)
         {
             $this->COOKIE_JAR = null;
         }
