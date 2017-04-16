@@ -82,5 +82,11 @@ return [
 		'administrator' => 5,
 		'superadmin'    => 6,
 		'non-activated' => 7,
-	]
+	],
+
+	// rmccue request cUrl timeout
+	'rmccue' => [
+		'timeout' => 100,
+		'connect_timeout' => 100
+	],
 ];
