@@ -1,10 +1,13 @@
 <?php
-// use GuzzleHttp\Client;
-// use GuzzleHttp\Cookie\CookieJar;
 
 class Controller_Admin extends Controller_Base
 {
 	public $template = 'admin/template';
+
+	protected $USER_NAME;
+	protected $USER_PASS;
+	protected $APP_ID;
+	protected $COOKIE_JAR;
 
 	public function before()
 	{
@@ -14,7 +17,18 @@ class Controller_Admin extends Controller_Base
 		{
 			if (Auth::check())
 			{
-				
+				$this->USER_NAME = \Config::get('my.yahoo.user_name');
+				$this->USER_PASS = \Config::get('my.yahoo.user_pass');
+				$this->APP_ID    = \Config::get('my.yahoo.user_appid');
+
+				try
+				{
+					$this->COOKIE_JAR = \Cache::get('yahoo.cookies');
+				}
+				catch (Exception $e)
+				{
+					$this->COOKIE_JAR = null;
+				}
 			}
 			else
 			{
@@ -40,7 +54,7 @@ class Controller_Admin extends Controller_Base
 
 			if ($val->run())
 			{
-				if ( ! Auth::check())
+				if (!Auth::check())
 				{
 					if (Auth::login(Input::post('email'), Input::post('password')))
 					{

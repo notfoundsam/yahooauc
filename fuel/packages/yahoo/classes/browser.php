@@ -15,19 +15,24 @@ class BrowserLoginException extends Exception {}
  */
 class Browser
 {
-    protected static $AUCTION_URL  = 'http://auctions.yahoo.co.jp/';
-    protected static $LOGIN_URL    = 'https://login.yahoo.co.jp/config/login';
-    protected static $CLOSED_USER  = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus';
-    protected static $OPEN_USER    = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus';
-    protected static $BID_PREVIEW  = 'http://auctions.yahoo.co.jp/jp/show/bid_preview';
-    protected static $PLACE_BID    = 'http://auctions.yahoo.co.jp/jp/config/placebid';
-    protected static $API_URL      = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem';
+    private $userName            = null;
+    private $userPass            = null;
+    private $appId               = null;
 
-    protected $loggedin            = true;
-    protected $select              = null;
-    protected $session             = null;
+    private $session             = null;
+    private $loggedin            = true;
+    private $auctionInfo         = null;
+    private $testMode            = false;
 
-    private static $_headers = [
+    private static $AUCTION_URL  = 'http://auctions.yahoo.co.jp/';
+    private static $LOGIN_URL    = 'https://login.yahoo.co.jp/config/login';
+    private static $CLOSED_USER  = 'http://closeduser.auctions.yahoo.co.jp/jp/show/mystatus';
+    private static $OPEN_USER    = 'http://openuser.auctions.yahoo.co.jp/jp/show/mystatus';
+    private static $BID_PREVIEW  = 'http://auctions.yahoo.co.jp/jp/show/bid_preview';
+    private static $PLACE_BID    = 'http://auctions.yahoo.co.jp/jp/config/placebid';
+    private static $API_URL      = 'http://auctions.yahooapis.jp/AuctionWebService/V2/auctionItem';
+
+    private static $BROWSER_HEADERS = [
         'User-Agent' => 'Mozilla/6.0 (Windows; U; Windows NT 6.0; ja; rv:1.9.1.1) Gecko/20090715 Firefox/3.5.1 (.NET CLR 3.5.30729)',
         'Keep-Alive' => 115,
         'Connection' => 'keep-alive'
@@ -38,21 +43,18 @@ class Browser
      * If last update was been more than one week, get login again.
      * @return void
      */
-    public function __construct()
+    public function __construct($userName, $userPass, $appId, $cookies = null, $testMode = false)
     {
-        try
+        $this->userName = $userName;
+        $this->userPass = $userPass;
+        $this->appId    = $appId;
+        $this->testMode = $testMode;
+
+        if ($cookies)
         {
-            // if ( \Cache::get('yahoo.cookies_exp') > strtotime('-1 week') )
-            // {
-            $cookies = \Cache::get('yahoo.cookies');
-            $this->session = new Requests_Session(static::$AUCTION_URL, static::$_headers, [], ['cookies' => $cookies]);
-            // }
-            // else
-            // {
-            //     $this->login();
-            // }
+            $this->session = new Requests_Session(static::$AUCTION_URL, static::$BROWSER_HEADERS, [], ['cookies' => $cookies]);
         }
-        catch (\CacheNotFoundException $e)
+        else
         {
             $this->login();
         }
@@ -66,7 +68,7 @@ class Browser
     protected function login()
     {
         $this->loggedin = false;
-        $this->session = new Requests_Session(static::$AUCTION_URL, static::$_headers);
+        $this->session  = new Requests_Session(static::$AUCTION_URL, static::$BROWSER_HEADERS);
 
         $query = [
             '.lg' => 'jp',
@@ -74,7 +76,9 @@ class Browser
             '.src' => 'auc',
             '.done' => static::$AUCTION_URL,
         ];
+
         $this->getBody(static::$AUCTION_URL);
+
         $body = $this->getBody(static::$LOGIN_URL, $query);
 
         $values = Parser::getHiddenInputValues($body);
@@ -92,23 +96,24 @@ class Browser
         }
         
         $options = [];
-        foreach ($values as $value)
+
+        foreach ($values as $v)
         {
-            if ($value['name'] == '.nojs')
+            if ($v['name'] == '.nojs')
             {
                 continue;
             }
 
-            if ($value['name'] == '.albatross')
+            if ($v['name'] == '.albatross')
             {
-                $value['value'] = $albatross[0][1];
+                $v['value'] = $albatross[0][1];
             }
 
-            $options[$value['name']] = $value['value'];
+            $options[$v['name']] = $v['value'];
         }
 
-        $options['login']  = \Config::get('my.yahoo.user_name');
-        $options['passwd'] = \Config::get('my.yahoo.user_pass');
+        $options['login']       = $this->userName;
+        $options['passwd']      = $this->userPass;
         $options['.persistent'] = 'y';
 
         // Pause before submit
@@ -124,7 +129,7 @@ class Browser
         }
         else
         {
-            throw new BrowserLoginException('Could not login into yahoo');
+            throw new BrowserLoginException('Login failed');
         }
     }
 
@@ -139,11 +144,11 @@ class Browser
     {
         if (empty($url))
         {
-            throw new BrowserException('url can not be null');
+            throw new BrowserException('Url can not be null');
         }
         
         $request_uri = $query ? $url . '?' . http_build_query($query) : $url;
-        Log::debug('getBody: '. $request_uri);
+        // Log::debug('getBody: '. $request_uri);
         $response = $this->session->request($request_uri, [], $options, $method);
 
         return $response->body;
@@ -155,34 +160,34 @@ class Browser
      * @return SimpleXMLElement Return XML Object
      * @throws BrowserException Throw exception if auction ID not given
      */
-    public function getXmlObject($auc_id = null)
+    public function getAuctionInfo($auc_id)
     {
-        if (empty($auc_id))
-        {
-            throw new BrowserException('auc_id can not be null');
-        }
-
         $query = [
             'appid' => \Config::get('my.yahoo.user_appid'),
             'auctionID' => $auc_id,
         ];
 
         $body = $this->getBody(static::$API_URL, $query);
-        $auc_xml = simplexml_load_string($body);
+        $info = simplexml_load_string($body);
 
-        if ($auc_xml->Code)
+        if ($info->Code)
         {
-            if ( (int) $auc_xml->Code == 102)
+            if ( (int) $info->Code == 102)
             {
                 throw new BrowserException('Auction not found', 102);  
             }
-            else if ( (int) $auc_xml->Code == 302 )
+            else if ( (int) $info->Code == 302 )
             {
                 throw new BrowserException('Auction ID is invalid', 302);
             }
         }
 
-        return $auc_xml;
+        $this->auctionInfo = $info;
+    }
+
+    public function getStoredAuctionInfo()
+    {
+        return $this->auctionInfo;
     }
 
     /**
@@ -192,7 +197,7 @@ class Browser
      * @return array                Return options for request
      * @throws BrowserException     Throw exception if given price lower than current
      */
-    protected function createRequstOptions($page_values = null, $price = 0)
+    protected function createRequstOptions($page_values, $price)
     {
         $options = [];
         $price_setted = false;
@@ -267,7 +272,7 @@ class Browser
      */
     public function bidding($page = null)
     {
-         $query = [
+        $query = [
             'select'  => 'bidding',
             'picsnum' => '50',
             'apg'     => $page ? $page : 1
@@ -293,36 +298,49 @@ class Browser
      * @param  string $auc_url URL with auction ID
      * @return bool            Reurn true if bid successful
      */
-    public function bid($price = null, $auc_url = null)
+    public function bid($auc_id, $price = 0)
     {
-        $body = $this->getBody($auc_url);
+        $info = $this->getAuctionInfo($auc_id);
+
+        if ( (string) $info->Result->Status != 'open' )
+        {
+            throw new BrowserException('Auction ended');
+        }
+
+        $auc_url = (string) $info->Result->AuctionItemUrl;
+
+        $body = $this->testMode ? $this->auctionPageTest() : $this->getBody($auc_url);
         $values = Parser::getHiddenInputValues($body);
 
         $options = $this->createRequstOptions($values, $price);
-        Log::debug('------ Browser start ------');
-        Arrlog::arr_to_log($options);
-        Log::debug('------- Browser end -------');
 
-        $body = $this->getBody(static::$BID_PREVIEW, null, $options, Requests::POST);
+        $body = $this->testMode ? $this->confirmPageTest() : $this->getBody(static::$BID_PREVIEW, null, $options, Requests::POST);
         $values = Parser::getHiddenInputValues($body);
 
         $options = $this->createRequstOptions($values, $price);
-        Log::debug('------ Browser start ------');
-        Arrlog::arr_to_log($options);
-        Log::debug('------- Browser end -------');
 
-        if (\Config::get('my.test_mode.enabled'))
-        {
-            $body = $this->getResultPage();
-        }
-        else
-        {
-            $body = $this->getBody(static::$PLACE_BID, null, $options, Requests::POST);
-        }
-        
+        $body = $this->testMode ? $this->resultPageTest() : $this->getBody(static::$PLACE_BID, null, $options, Requests::POST);
         $result = Parser::getResult($body);
 
         return $result;
+    }
+
+    // Test function for page of biding saved in local
+    public function auctionPageTest()
+    {
+        return File::read(\Config::get('my.test_mode.bidding_page'), true);
+    }
+
+    // Test function for page of biding saved in local
+    public function confirmPageTest()
+    {
+        return File::read(\Config::get('my.test_mode.bidding_page'), true);
+    }
+
+    // Test function for result page of bid saved in local
+    public function resultPageTest()
+    {
+        return File::read(\Config::get('my.test_mode.result_page'), true);
     }
 
     // Test function for page of biding saved in local
@@ -337,23 +355,13 @@ class Browser
         return File::read(\Config::get('my.test_mode.won_page'), true);
     }
 
-    // Test function for result page of bid saved in local
-    public function getResultPage()
-    {
-        return File::read(\Config::get('my.test_mode.result_page'), true);
-    }
-
     /**
      * Cache cookie and cookie update time after bid
      */
-    function __destruct()
+    public function getBrowserCookie()
     {
         // Cache cookie and last update time
-        if ($this->loggedin)
-        {
-            $cookies = $this->session->options['cookies'];
-            \Cache::set('yahoo.cookies', $cookies, \Config::get('my.yahoo.cookie_exp'));
-            // \Cache::set('yahoo.cookies_exp', time());
-        }
+        return $this->session->options['cookies'];
+        // \Cache::set('yahoo.cookies', $cookies, \Config::get('my.yahoo.cookie_exp'));
     }
 }

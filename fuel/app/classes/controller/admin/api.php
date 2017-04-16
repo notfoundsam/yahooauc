@@ -1,7 +1,17 @@
 <?php
 
+use Yahoo\Auction\Browser as Browser;
+use Yahoo\Auction\Exceptions\BrowserLoginException as BrowserLoginException;
+use Yahoo\Auction\Exceptions\BrowserException as BrowserException;
+use Yahoo\Auction\Exceptions\ParserException as ParserException;
+
 class Controller_Admin_Api extends Controller_Rest
 {
+    protected $USER_NAME;
+    protected $USER_PASS;
+    protected $APP_ID;
+    protected $COOKIE_JAR;
+
 	protected $rest_format = 'json';
 	protected $_status_code = [
 		'login_success'  => 10,
@@ -20,6 +30,19 @@ class Controller_Admin_Api extends Controller_Rest
 		// {
 		// 	throw new HttpNotFoundException;
 		// }
+
+        $this->USER_NAME = \Config::get('my.yahoo.user_name');
+        $this->USER_PASS = \Config::get('my.yahoo.user_pass');
+        $this->APP_ID    = \Config::get('my.yahoo.user_appid');
+
+        try
+        {
+            $this->COOKIE_JAR = \Cache::get('yahoo.cookies');
+        }
+        catch (CacheNotFoundException $e)
+        {
+            $this->COOKIE_JAR = null;
+        }
 	}
 
 	public function auth()
@@ -103,88 +126,6 @@ class Controller_Admin_Api extends Controller_Rest
 		$this->response(['status_code' => $this->_status_code['logout']]);
 	}
 
-	public function post_refresh()
-	{
-		$result = 0;
-		$val_error = [];
-		$auc_ids = [];
-		$page = (int)\Input::post('pages');
-		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(Config::get('my.task.last_won_limit'))->execute()->as_array();
-		$user_id = \DB::select('id')->from('users')->where('username', Config::get('my.main_bidder'))->execute()->as_array();
-
-		foreach ($select as $value) {
-			$auc_ids[] = $value['auc_id'];
-		}
-		
-		$val = Model_Auction::validate();
-		
-		try
-		{
-			$browser = new Browser();
-
-			foreach ($browser->won($page) as $auc_id) {
-				
-				if ( !in_array($auc_id, $auc_ids) ){
-
-					try
-					{
-						$auc_xml = $browser->getXmlObject($auc_id);
-
-						$auc_values = [];
-						$auc_values['auc_id'] = (string) $auc_xml->Result->AuctionID;
-						$auc_values['title'] = (string) $auc_xml->Result->Title;
-						$auc_values['price'] = (int) $auc_xml->Result->Price;
-						$auc_values['won_date'] = Date::create_from_string( (string) $auc_xml->Result->EndTime , 'yahoo_date')->format('mysql');
-						$auc_values['user_id'] = $user_id[0]['id'];
-
-						$vendor_name = (string) $auc_xml->Result->Seller->Id;
-						$vendor_id = \DB::select('id')->from('vendors')->where('name', '=', $vendor_name)->execute()->as_array();
-						
-						if ( !empty($vendor_id) )
-						{
-							$auc_values['vendor_id'] = $vendor_id[0]['id'];
-						}
-						else
-						{
-							if ( Model_Vendor::forge()->set(['name' => $vendor_name, 'by_now' => 0])->save() )
-							{
-								$vendor_id = \DB::select('id')->from('vendors')->where('name', '=', $vendor_name)->execute()->as_array();
-								$auc_values['vendor_id'] = $vendor_id[0]['id'];
-							}
-						}
-						
-						if ( $val->run($auc_values) )
-						{
-							Model_Auction::forge()->set($auc_values)->save();
-							$result++;
-						}
-						else
-						{
-							foreach ($val->error() as $value) {
-								Log::error('Validation error in controller/admin/api.php: '.$value);
-							}
-							$val_error[] = "Could not save auction ".$auc_values['auc_id'];
-						}
-					}
-					catch (BrowserException $e)
-					{
-						$val_error[] = "ID: ".$auc_id." Error: ".$e->getMessage();
-					}
-				}
-			}
-		}
-		catch (BrowserLoginException $e)
-		{
-			$val_error[] = "Login error: ".$e->getMessage();
-		}
-		catch (ParserException $e)
-		{
-			$val_error[] = "Parser error: ".$e->getMessage();
-		}
-
-		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
-	}
-
 	public function post_bid()
 	{
 		$result = '';
@@ -202,61 +143,34 @@ class Controller_Admin_Api extends Controller_Rest
 		{
 			try
 			{
-				$browser = new Browser();
-				
-				$auc_xml = $browser->getXmlObject($val->validated('auc_id'));
+				$browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR);
+                $browser->bid($val->validated('auc_id'), $val->validated('price'));
 
-				if ((string) $auc_xml->Result->Status == 'open')
-				{
-					// Save images url to cache for show on bidding page
-					try
-					{
-						\Cache::get('yahoo.imges.'.$val->validated('auc_id'));
-					}
-					catch (\CacheNotFoundException $e)
-					{
-						$imges = [];
+                try
+                {
+                    \Cache::get('yahoo.images.' . $val->validated('auc_id'));
+                }
+                catch (\CacheNotFoundException $e)
+                {
+                    $images = $browser->getAuctionImgsUrl();
+                    \Cache::set('yahoo.images.' . $val->validated('auc_id'), $images, 3600 * 24 * 10);
+                }
 
-						foreach ($auc_xml->Result->Img->children() as $img)
-						{
-							$imges[] = (string) $img;
-						}
+                $cookieJar = $browser->getCookie();
+                \Cache::set('yahoo.cookies', $cookieJar, \Config::get('my.yahoo.cookie_exp'));
 
-						\Cache::set('yahoo.imges.'.$val->validated('auc_id'), empty($imges) ? '' : $imges, 3600 * 24 * 10);
-					}
-
-					$price = $val->validated('price');
-					$auc_url = (string) $auc_xml->Result->AuctionItemUrl;
-
-					if ($browser->bid($price, $auc_url))
-					{
-						$result = 'Bid on '. $val->validated('auc_id'). ' successful';
-						$status_code = $this->_status_code['success'];
-					}
-					else
-					{
-						$val_error[] = 'Needs to clean won pages or unknown result';
-					}
-				}
-				else
-				{
-					$val_error[] = 'Auction '. $val->validated('auc_id'). ' has ended';
-				}
 			}
+            catch (BrowserLoginException $e)
+            {
+                $val_error[] = e("Login error: ".$e->getMessage());
+            }
 			catch (BrowserException $e)
 			{
-				$val_error[] = "ID: ".$val->validated('auc_id')." Error: ".$e->getMessage();
+				$val_error[] = e("Browser error: ".$e->getMessage());
 			}
 			catch (ParserException $e)
 			{
-				if ($e->getCode() == 10)
-				{
-					$val_error[] = "ID: ".$val->validated('auc_id')." Error: ".$e->getMessage();
-				}
-				else
-				{
-					$val_error[] = $e->getMessage();
-				}
+				$val_error[] = e("Parser error: ".$e->getMessage());
 			}
 		}
 		else
@@ -272,6 +186,151 @@ class Controller_Admin_Api extends Controller_Rest
 			'error' => implode('<br>', (array) $val_error)
 		]);
 	}
+
+    public function get_bidding()
+    {
+        $page = \Input::get('page');
+
+        try
+        {
+            $browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR);
+            
+            $result = $browser->getBiddingLots($page);
+            $cookieJar = $browser->getCookie();
+
+            \Cache::set('yahoo.cookies', $cookieJar, \Config::get('my.yahoo.cookie_exp'));
+
+            foreach ($result['lots'] as $key => $value)
+            {
+                $auc_id = $result['lots'][$key]['id'];
+
+                try
+                {
+                    $result['lots'][$key]['images'] = \Cache::get('yahoo.images.' . $auc_id);
+                }
+                catch (\CacheNotFoundException $e)
+                {
+                    $images = $browser->getAuctionImgsUrl($auc_id);
+
+                    $result['lots'][$key]['images'] = $images;
+
+                    \Cache::set('yahoo.images.' . $auc_id, $images, 3600 * 24 * 10);
+                }
+            }
+
+            $this->response([
+                'status_code' => $this->_status_code['success'],
+                'result' => $result
+            ]);
+        }
+        catch (BrowserLoginException $e)
+        {
+            $this->response([
+                'status_code' => $this->_status_code['failed'],
+                'message' => e("Login error: ".$e->getMessage())
+            ]);
+        }
+        catch (BrowserException $e)
+        {
+            $this->response([
+                'status_code' => $this->_status_code['failed'],
+                'message' => e("Browser error: ".$e->getMessage())
+            ]);
+        }
+        catch (ParserException $e)
+        {
+            $this->response([
+                'status_code' => $this->_status_code['failed'],
+                'message' => e("Parser error: ".$e->getMessage())
+            ]);
+        }
+    }
+
+    public function post_refresh()
+    {
+        $result = 0;
+        $val_error = [];
+        $auc_ids = [];
+        $page = (int)\Input::post('pages');
+        $select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(Config::get('my.task.last_won_limit'))->execute()->as_array();
+        $user_id = \DB::select('id')->from('users')->where('username', Config::get('my.main_bidder'))->execute()->as_array();
+
+        foreach ($select as $value) {
+            $auc_ids[] = $value['auc_id'];
+        }
+        
+        $val = Model_Auction::validate();
+        
+        try
+        {
+            $browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR);
+
+            foreach ($browser->getWonIds($page) as $auc_id) {
+                
+                if ( !in_array($auc_id, $auc_ids) )
+                {
+                    try
+                    {
+                        $auc_xml = $browser->getAuctionInfoAsXml($auc_id);
+
+                        $auc_values = [
+                            'auc_id'   => (string) $auc_xml->Result->AuctionID,
+                            'title'    => (string) $auc_xml->Result->Title,
+                            'price'    => isset($auc_xml->Result->TaxinPrice) ? (int) $auc_xml->Result->TaxinPrice : (int) $auc_xml->Result->Price,
+                            'won_date' => Date::create_from_string( (string) $auc_xml->Result->EndTime, 'yahoo_date')->format('mysql'),
+                            'user_id'  => $user_id[0]['id']
+                        ];
+
+                        $vendor_name = (string) $auc_xml->Result->Seller->Id;
+                        $vendor_id = \DB::select('id')->from('vendors')->where('name', '=', $vendor_name)->execute()->as_array();
+                        
+                        if ( !empty($vendor_id) )
+                        {
+                            $auc_values['vendor_id'] = $vendor_id[0]['id'];
+                        }
+                        else
+                        {
+                            $v = Model_Vendor::forge()->set(['name' => $vendor_name, 'by_now' => 0]);
+
+                            if ($v->save())
+                            {
+                                $auc_values['vendor_id'] = $v->id;
+                            }
+                        }
+                        
+                        if ( $val->run($auc_values) )
+                        {
+                            Model_Auction::forge()->set($auc_values)->save();
+                            $result++;
+                        }
+                        else
+                        {
+                            foreach ($val->error() as $value)
+                            {
+                                Log::error('Validation error in controller/admin/api.php: '.$value);
+                            }
+
+                            $val_error[] = "Could not save auction ".$auc_values['auc_id'];
+                        }
+                    }
+                    catch (BrowserException $e)
+                    {
+                        $val_error[] = "ID: ".$auc_id." Error: ".$e->getMessage();
+                    }
+                }
+            }
+        }
+        catch (BrowserLoginException $e)
+        {
+            $val_error[] = "Login error: ".$e->getMessage();
+        }
+        catch (ParserException $e)
+        {
+            $val_error[] = "Parser error: ".$e->getMessage();
+        }
+
+        $this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+    }
 
 	public function post_updateauc()
 	{
@@ -553,38 +612,5 @@ class Controller_Admin_Api extends Controller_Rest
 		}
 
 		$this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
-	}
-
-	public function get_bidding()
-	{
-		$p = \Input::get('page');
-
-		try
-		{
-			$browser = new Browser();
-			$result = $browser->bidding($p);
-			// $result['username'] = \Config::get('my.yahoo.user_name');
-			// $result = ['auctions' => [
-			// 	'aaaa', 'dddddd'
-			// ]];
-			$this->response([
-				'status_code' => $this->_status_code['success'],
-				'result' => $result
-			]);
-		}
-		catch (BrowserLoginException $e)
-		{
-			$this->response([
-				'status_code' => $this->_status_code['failed'],
-				'message' => e("Login error: ".$e->getMessage())
-			]);
-		}
-		catch (ParserException $e)
-		{
-			$this->response([
-				'status_code' => $this->_status_code['failed'],
-				'message' => e("Parser error: ".$e->getMessage())
-			]);
-		}
 	}
 }

@@ -3,12 +3,15 @@
 namespace Fuel\Tasks;
 
 use Yahoo\Dropbox as Dbx;
-use Yahoo\Browser as Browser;
 use Fuel\Core\Log as Log;
 use Fuel\Core\File as File;
 use Fuel\Core\Date as Date;
 use Fuel\Core\Input as Input;
 use Fuel\Core\Cache as Cache;
+use Yahoo\Auction\Browser as Browser;
+use Yahoo\Auction\Exceptions\BrowserLoginException as BrowserLoginException;
+use Yahoo\Auction\Exceptions\BrowserException as BrowserException;
+use Yahoo\Auction\Exceptions\ParserException as ParserException;
 
 /**
 * 
@@ -36,81 +39,105 @@ class Minutely
 
 	private static function check_won_at_time()
 	{
+
 		$interval = \Config::get('my.task.lot_update_interval');
 
-		if ( self::$LAST_CHECK_TIME < strtotime("-{$interval} minute") )
+        if ( self::$LAST_CHECK_TIME < strtotime("-{$interval} minute") )
 		{
+
+            $userName = \Config::get('my.yahoo.user_name');
+            $userPass = \Config::get('my.yahoo.user_pass');
+            $appId    = \Config::get('my.yahoo.user_appid');
+
+            try
+            {
+                $cookieJar = \Cache::get('yahoo.cookies');
+            }
+            catch (\CacheNotFoundException $e)
+            {
+                $cookieJar = null;
+            }
+
 			$auc_ids = [];
-			$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(\Config::get('my.task.last_won_limit'))->execute()->as_array();
-			$user_id = \DB::select('id')->from('users')->where('username', \Config::get('my.main_bidder'))->execute()->as_array();
 
-			foreach ($select as $value) {
-				$auc_ids[] = $value['auc_id'];
-			}
-			
-			$val = \Model_Auction::validate();
+    		$select = \DB::select('auc_id')->from('auctions')->order_by('id','desc')->limit(\Config::get('my.task.last_won_limit'))->execute()->as_array();
+            $user_id = \DB::select('id')->from('users')->where('username', \Config::get('my.main_bidder'))->execute()->as_array();
 
-			try
-			{
-				$browser = new \Browser();
+            foreach ($select as $value) {
+                $auc_ids[] = $value['auc_id'];
+            }
+            
+            $val = \Model_Auction::validate();
+            
+            try
+            {
+                $browser = new Browser($userName, $userPass, $appId, $cookieJar);
 
-				foreach ($browser->won(self::$PAGE_TO_UPDATE) as $auc_id) {
-					
-					if ( !in_array($auc_id, $auc_ids) ){
+                foreach ($browser->getWonIds() as $auc_id) {
+                    
+                    if ( !in_array($auc_id, $auc_ids) )
+                    {
+                        try
+                        {
+                            $auc_xml = $browser->getAuctionInfoAsXml($auc_id);
 
-						try
-						{
-							$auc_xml = $browser->getXmlObject($auc_id);
+                            $auc_values = [
+                                'auc_id'   => (string) $auc_xml->Result->AuctionID,
+                                'title'    => (string) $auc_xml->Result->Title,
+                                'price'    => isset($auc_xml->Result->TaxinPrice) ? (int) $auc_xml->Result->TaxinPrice : (int) $auc_xml->Result->Price,
+                                'won_date' => \Date::create_from_string( (string) $auc_xml->Result->EndTime, 'yahoo_date')->format('mysql'),
+                                'user_id'  => $user_id[0]['id']
+                            ];
 
-							$auc_values = [];
-							$auc_values['auc_id'] = (string) $auc_xml->Result->AuctionID;
-							$auc_values['title'] = (string) $auc_xml->Result->Title;
-							$auc_values['price'] = (int) $auc_xml->Result->Price;
-							$auc_values['won_date'] = \Date::create_from_string( (string) $auc_xml->Result->EndTime , 'yahoo_date')->format('mysql');
-							$auc_values['user_id'] = $user_id[0]['id'];
+                            $vendor_name = (string) $auc_xml->Result->Seller->Id;
+                            $vendor_id = \DB::select('id')->from('vendors')->where('name', '=', $vendor_name)->execute()->as_array();
+                            
+                            if ( !empty($vendor_id) )
+                            {
+                                $auc_values['vendor_id'] = $vendor_id[0]['id'];
+                            }
+                            else
+                            {
+                                $v = \Model_Vendor::forge()->set(['name' => $vendor_name, 'by_now' => 0]);
 
-							$vendor_name = (string) $auc_xml->Result->Seller->Id;
-							$vendor_id = \DB::select('id')->from('vendors')->where('name', '=', $vendor_name)->execute()->as_array();
-							
-							if ( !empty($vendor_id) )
-							{
-								$auc_values['vendor_id'] = $vendor_id[0]['id'];
-							}
-							else
-							{
-								if ( \Model_Vendor::forge()->set(['name' => $vendor_name, 'by_now' => 0])->save() )
-								{
-									$vendor_id = \DB::select('id')->from('vendors')->where('name', '=', $vendor_name)->execute()->as_array();
-									$auc_values['vendor_id'] = $vendor_id[0]['id'];
-								}
-							}
-							
-							if ( $val->run($auc_values) )
-							{
-								\Model_Auction::forge()->set($auc_values)->save();
-							}
-							else
-							{
-								foreach ($val->error() as $value) {
-									\Log::error('Validation error in task Minutely on method check_won_at_time : '.$value);
-								}
-							}
-						}
-						catch (\BrowserException $e)
-						{
-							\Log::error("ID: ".$auc_id." Error: ".$e->getMessage());
-						}
-					}
-				}
-			}
-			catch (\BrowserLoginException $e)
-			{
-				\Log::error("Login error: ".$e->getMessage());
-			}
-			catch (\ParserException $e)
-			{
-				\Log::error("Parser error: ".$e->getMessage());
-			}
+                                if ($v->save())
+                                {
+                                    $auc_values['vendor_id'] = $v->id;
+                                }
+                            }
+                            
+                            if ( $val->run($auc_values) )
+                            {
+                                \Model_Auction::forge()->set($auc_values)->save();
+                            }
+                            else
+                            {
+                                foreach ($val->error() as $value)
+                                {
+                                    \Log::error('Validation error in task Minutely on method check_won_at_time : '.$value);
+                                }
+
+                                \Log::error("Could not save auction ".$auc_values['auc_id']);
+                            }
+                        }
+                        catch (BrowserException $e)
+                        {
+                            \Log::error("ID: ".$auc_id." Error: ".$e->getMessage());
+                        }
+                    }
+                }
+
+                $cookieJar = $browser->getCookie();
+                \Cache::set('yahoo.cookies', $cookieJar, \Config::get('my.yahoo.cookie_exp'));
+            }
+            catch (BrowserLoginException $e)
+            {
+                \Log::error("ID: ".$auc_id." Error: ".$e->getMessage());
+            }
+            catch (ParserException $e)
+            {
+                \Log::error("ID: ".$auc_id." Error: ".$e->getMessage());
+            }
 
 			\Cache::set('yahoo.won_last_check', time());
 		}
