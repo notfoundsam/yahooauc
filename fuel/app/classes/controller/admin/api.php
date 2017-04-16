@@ -145,6 +145,7 @@ class Controller_Admin_Api extends Controller_Rest
 			{
 				$browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
                 $browser->bid($val->validated('auc_id'), $val->validated('price'));
+                $result = 'Bid on '. $val->validated('auc_id'). ' successful';
 
                 try
                 {
