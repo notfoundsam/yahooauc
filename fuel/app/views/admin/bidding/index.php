@@ -1,4 +1,5 @@
 <?php if (!empty($result)): ?>
+  
   <div class="shipped-count">
     <div class="sell-count">
       Lots in bid: <?= count($result); ?>
