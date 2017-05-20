@@ -9,26 +9,42 @@ class Controller_Admin_Bidding extends Controller_Admin
 {
 	public function action_index($page = 1)
 	{
+		$result = [];
+
 		try
 		{
 			$browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR);
-			$result = $browser->getBiddingLots($page);
+
+			for ($page = 1; $page < 5; $page++)
+			{ 
+				$auctions = $browser->getBiddingLots($page);
+
+				if (empty($auctions))
+				{
+					break;
+				}
+				else
+				{
+					$result = array_merge($result, $auctions);
+				}
+			}
+			
 			$cookieJar = $browser->getCookie();
 			\Cache::set('yahoo.cookies', $cookieJar, \Config::get('my.yahoo.cookie_exp'));
 
-			foreach ($result['lots'] as $key => $value)
+			foreach ($result as $key => $value)
 			{
-				$auc_id = $result['lots'][$key]['id'];
+				$auc_id = $result[$key]['id'];
 
 				try
 				{
-					$result['lots'][$key]['images'] = \Cache::get('yahoo.images.' . $auc_id);
+					$result[$key]['images'] = \Cache::get('yahoo.images.' . $auc_id);
 				}
 				catch (\CacheNotFoundException $e)
 				{
 					$images = $browser->getAuctionImgsUrl($auc_id);
 
-					$result['lots'][$key]['images'] = $images;
+					$result[$key]['images'] = $images;
 
 					\Cache::set('yahoo.images.' . $auc_id, $images, 3600 * 24 * 10);
 				}
