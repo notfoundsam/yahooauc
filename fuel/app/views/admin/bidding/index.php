@@ -1,14 +1,11 @@
-<?php if (!empty($result['pages'])): ?>
-  <p> Go to page: 
-    <?php foreach ($result['pages'] as $page): ?>
-    <?php echo Html::anchor('admin/bidding/'.$page, $page);?>
-    <?php endforeach ; ?>
-  </p>
-<?php endif; ?>
+<?php if (!empty($result)): ?>
+  <div class="shipped-count">
+    <div class="sell-count">
+      Lots in bid: <?= count($result); ?>
+    </div>
+  </div>
 
-<?php if (!empty($result['lots'])): ?>
-    
-  <?php foreach ($result['lots'] as $item): ?>
+  <?php foreach ($result as $item): ?>
     <div class="item-wrapper">
       <div class="bidding-wrap <?= $item['bidder'] != \Config::get('my.yahoo.user_name') ? ' price-up' : ''?>">
         <div class="bidding-img">
