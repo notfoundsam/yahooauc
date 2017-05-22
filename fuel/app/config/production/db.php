@@ -7,11 +7,11 @@ return array(
 	'default' => array(
 		'type'        => 'mysqli',
 		'connection'  => array(
-			'hostname'   => getenv('OPENSHIFT_MYSQL_DB_HOST'),
-			'port'       => getenv('OPENSHIFT_MYSQL_DB_PORT'),
+			'hostname'   => $_SERVER['RDS_HOSTNAME'],
+			'port'       => $_SERVER['RDS_PORT'] 	,
 			'database'   => 'htmlunit',
-			'username'   => getenv('OPENSHIFT_MYSQL_DB_USERNAME'),
-			'password'   => getenv('OPENSHIFT_MYSQL_DB_PASSWORD'),
+			'username'   => getenv('RDS_USERNAME'),
+			'password'   => getenv('RDS_PASSWORD'),
 		)
 	),
 );
