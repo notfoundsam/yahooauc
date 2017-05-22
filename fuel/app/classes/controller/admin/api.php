@@ -194,7 +194,7 @@ class Controller_Admin_Api extends Controller_Rest
 
         try
         {
-            $browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR);
+            $browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
             
             $result = $browser->getBiddingLots($page);
             $cookieJar = $browser->getCookie();
@@ -264,7 +264,7 @@ class Controller_Admin_Api extends Controller_Rest
         
         try
         {
-            $browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR);
+            $browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
 
             foreach ($browser->getWonIds($page) as $auc_id) {
                 
