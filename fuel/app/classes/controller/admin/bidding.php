@@ -1,6 +1,6 @@
 <?php
 
-use Yahoo\Auction\Browser;
+use Yahoo\Auction\Browser as Browser;
 use Yahoo\Auction\Exceptions\BrowserLoginException as BrowserLoginException;
 use Yahoo\Auction\Exceptions\BrowserException as BrowserException;
 use Yahoo\Auction\Exceptions\ParserException as ParserException;
