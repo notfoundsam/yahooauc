@@ -8,11 +8,10 @@ use Fuel\Core\File as File;
 use Fuel\Core\Date as Date;
 use Fuel\Core\Input as Input;
 use Fuel\Core\Cache as Cache;
-use Yahoo\Auction\Browser as Browser;
-use Yahoo\Auction\Exceptions\BrowserLoginException as BrowserLoginException;
-use Yahoo\Auction\Exceptions\BrowserException as BrowserException;
-use Yahoo\Auction\Exceptions\ParserException as ParserException;
-
+use Yahooauc\Browser as Browser;
+use Yahooauc\Exceptions\BrowserLoginException as BrowserLoginException;
+use Yahooauc\Exceptions\BrowserException as BrowserException;
+use Yahooauc\Exceptions\ParserException as ParserException;
 /**
 * 
 */

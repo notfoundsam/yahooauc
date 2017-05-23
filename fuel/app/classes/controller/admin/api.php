@@ -1,9 +1,9 @@
 <?php
 
-use Yahoo\Auction\Browser as Browser;
-use Yahoo\Auction\Exceptions\BrowserLoginException as BrowserLoginException;
-use Yahoo\Auction\Exceptions\BrowserException as BrowserException;
-use Yahoo\Auction\Exceptions\ParserException as ParserException;
+use Yahooauc\Browser as Browser;
+use Yahooauc\Exceptions\BrowserLoginException as BrowserLoginException;
+use Yahooauc\Exceptions\BrowserException as BrowserException;
+use Yahooauc\Exceptions\ParserException as ParserException;
 
 class Controller_Admin_Api extends Controller_Rest
 {
