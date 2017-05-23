@@ -7,9 +7,9 @@ return array(
 	'default' => array(
 		'type'        => 'mysqli',
 		'connection'  => array(
-			'hostname'   => $_SERVER['RDS_HOSTNAME'],
-			'port'       => $_SERVER['RDS_PORT'] 	,
-			'database'   => 'htmlunit',
+			'hostname'   => getenv('RDS_HOSTNAME'),
+			'port'       => getenv('RDS_PORT'),
+			'database'   => getenv('RDS_DB_NAME'),
 			'username'   => getenv('RDS_USERNAME'),
 			'password'   => getenv('RDS_PASSWORD'),
 		)
