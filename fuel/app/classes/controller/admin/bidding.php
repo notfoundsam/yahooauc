@@ -1,6 +1,6 @@
 <?php
 
-use Yahoo\Auction\Browser as Browser;
+use Yahoo\Auction\Browser;
 use Yahoo\Auction\Exceptions\BrowserLoginException as BrowserLoginException;
 use Yahoo\Auction\Exceptions\BrowserException as BrowserException;
 use Yahoo\Auction\Exceptions\ParserException as ParserException;
@@ -13,7 +13,7 @@ class Controller_Admin_Bidding extends Controller_Admin
 
 		try
 		{
-			$browser = new \Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
+			$browser = new Yahoo\Auction\Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
 
 			for ($page = 1; $page < 5; $page++)
 			{ 
