@@ -13,7 +13,7 @@ class Controller_Admin_Bidding extends Controller_Admin
 
 		try
 		{
-			$browser = new Yah\Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
+			// $browser = new Yah\Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
 
 			for ($page = 1; $page < 5; $page++)
 			{ 
