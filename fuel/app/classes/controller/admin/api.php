@@ -21,7 +21,7 @@ class Controller_Admin_Api extends Controller_Rest
 		'failed'         => 90,
 		'success'        => 100,
 	];
-
+	
 	public function before()
 	{
 		parent::before();
