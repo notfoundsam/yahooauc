@@ -3,8 +3,8 @@ FROM eboraas/apache-php
 RUN apt-get update && \
   apt-get -y install
 
-RUN apt-get -y install curl && \
-  apt-get -y install mysql-client && \
-  apt-get -y install php5-curl
+RUN apt-get -y install curl \
+  && mysql-client \
+  && php-curl
 
-COPY httpd.conf /etc/apache2/sites-available/000-default.conf
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
