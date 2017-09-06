@@ -1,0 +1,25 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.6
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3312:3306"
+  web:
+    build: .
+    environment:
+      - FUEL_ENV=development
+      - DB_PASSWORD=root
+      - DBX_TOKEN=${DBX_TOKEN}
+      - YAHOO_APPID=${YAHOO_APPID}
+      - YAHOO_USER=${YAHOO_USER}
+      - YAHOO_PASS=${YAHOO_PASS}
+    volumes:
+      - ./:/var/www
+    ports:
+      - "8080:80"
+    expose:
+      - "80"
+    depends_on:
+      - db

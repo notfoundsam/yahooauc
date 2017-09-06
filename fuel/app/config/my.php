@@ -86,7 +86,8 @@ return [
 
 	// rmccue request cUrl timeout
 	'rmccue' => [
-		'timeout' => 100,
-		'connect_timeout' => 100
+		'timeout' => 5,
+		'connect_timeout' => 5,
+		'verify' => false
 	],
 ];
