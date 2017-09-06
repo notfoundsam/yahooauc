@@ -9,8 +9,12 @@ services:
   web:
     build: .
     environment:
-      - RAILS_ENV=development
+      - FUEL_ENV=development
       - DB_PASSWORD=root
+      - DBX_TOKEN=${DBX_TOKEN}
+      - YAHOO_APPID=${YAHOO_APPID}
+      - YAHOO_USER=${YAHOO_USER}
+      - YAHOO_PASS=${YAHOO_PASS}
     volumes:
       - ./:/var/www
     ports:
