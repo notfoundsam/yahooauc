@@ -44,7 +44,7 @@ class Model_Auction extends \Orm\Model
 		$val = Validation::forge($factory);
 		// $val->add_field('item_count', 'Item Count', 'required|valid_string[numeric]|max_length[3]');
 		$val->add_field('auc_id', 'Auc Id', 'required|trim|max_length[10]');
-		$val->add_field('title', 'Title', 'required|max_length[80]');
+		$val->add_field('title', 'Title', 'required|max_length[200]');
 		$val->add_field('price', 'Price', 'required|trim|valid_string[numeric]|max_length[5]');
 		$val->add_field('won_date', 'Won Date', 'required|valid_date');
 		$val->add_field('vendor_id', 'Vendor Id', 'required|valid_string[numeric]');

@@ -71,7 +71,7 @@ class Minutely
             
             try
             {
-                $browser = new Browser($userName, $userPass, $appId, $cookieJar);
+                $browser = new Browser($userName, $userPass, $appId, $cookieJar, \Config::get('my.rmccue'));
 
                 foreach ($browser->getWonIds() as $auc_id) {
                     

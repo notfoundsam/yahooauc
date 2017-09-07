@@ -1,9 +1,9 @@
 <?php
 
-use \Yahooauc as Yah;
-use \Yahooauc\Exceptions\BrowserLoginException as BrowserLoginException;
-use \Yahooauc\Exceptions\BrowserException as BrowserException;
-use \Yahooauc\Exceptions\ParserException as ParserException;
+use Yahooauc\Browser as Browser;
+use Yahooauc\Exceptions\BrowserLoginException as BrowserLoginException;
+use Yahooauc\Exceptions\BrowserException as BrowserException;
+use Yahooauc\Exceptions\ParserException as ParserException;
 
 class Controller_Admin_Bidding extends Controller_Admin
 {
@@ -13,7 +13,7 @@ class Controller_Admin_Bidding extends Controller_Admin
 
 		try
 		{
-			// $browser = new Yah\Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
+			$browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
 
 			for ($page = 1; $page < 5; $page++)
 			{ 

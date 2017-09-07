@@ -54,15 +54,15 @@ $$('#bidding').on('click', function() {
 		url: ajax_host + '/admin/api/bidding',
 		type: 'GET',
 		statusCode: {
-			401: function (xhr) {
+			401: function(xhr) {
 				myApp.hideIndicator();
 				myApp.loginScreen();
 			}
 		},
-		success: function (data) {
+		success: function(data) {
 			var d_obj = JSON.parse(data);
 			if (d_obj.status_code == 100) {
-				var auctions = d_obj.result.lots;
+				var auctions = d_obj.result;
 
 				mainView.router.load({
 					url: 'bidding.html',
@@ -78,6 +78,10 @@ $$('#bidding').on('click', function() {
 			} else {
 				console.log(d_obj.message);
 			}
+			myApp.hideIndicator();
+		},
+		error: function(data) {
+			console.log(data);
 			myApp.hideIndicator();
 		}
 	});
