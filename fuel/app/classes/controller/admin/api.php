@@ -190,61 +190,73 @@ class Controller_Admin_Api extends Controller_Rest
 
     public function get_bidding()
     {
-        $page = \Input::get('page');
+    	$result = [];
 
-        try
-        {
-            $browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
-            
-            $result = $browser->getBiddingLots($page);
-            $cookieJar = $browser->getCookie();
+		try
+		{
+			$browser = new Browser($this->USER_NAME, $this->USER_PASS, $this->APP_ID, $this->COOKIE_JAR, \Config::get('my.rmccue'));
 
-            \Cache::set('yahoo.cookies', $cookieJar, \Config::get('my.yahoo.cookie_exp'));
+			for ($page = 1; $page < 5; $page++)
+			{ 
+				$auctions = $browser->getBiddingLots($page);
 
-            foreach ($result['lots'] as $key => $value)
-            {
-                $auc_id = $result['lots'][$key]['id'];
+				if (empty($auctions))
+				{
+					break;
+				}
+				else
+				{
+					$result = array_merge($result, $auctions);
+				}
+			}
+			
+			$cookieJar = $browser->getCookie();
+			\Cache::set('yahoo.cookies', $cookieJar, \Config::get('my.yahoo.cookie_exp'));
 
-                try
-                {
-                    $result['lots'][$key]['images'] = \Cache::get('yahoo.images.' . $auc_id);
-                }
-                catch (\CacheNotFoundException $e)
-                {
-                    $images = $browser->getAuctionImgsUrl($auc_id);
+			foreach ($result as $key => $value)
+			{
+				$auc_id = $result[$key]['id'];
 
-                    $result['lots'][$key]['images'] = $images;
+				try
+				{
+					$result[$key]['images'] = \Cache::get('yahoo.images.' . $auc_id);
+				}
+				catch (\CacheNotFoundException $e)
+				{
+					$images = $browser->getAuctionImgsUrl($auc_id);
 
-                    \Cache::set('yahoo.images.' . $auc_id, $images, 3600 * 24 * 10);
-                }
-            }
+					$result[$key]['images'] = $images;
 
-            $this->response([
+					\Cache::set('yahoo.images.' . $auc_id, $images, 3600 * 24 * 10);
+				}
+			}
+
+			$this->response([
                 'status_code' => $this->_status_code['success'],
                 'result' => $result
             ]);
-        }
-        catch (BrowserLoginException $e)
-        {
-            $this->response([
+		}
+		catch (BrowserLoginException $e)
+		{
+			$this->response([
                 'status_code' => $this->_status_code['failed'],
                 'message' => e("Login error: ".$e->getMessage())
             ]);
-        }
-        catch (BrowserException $e)
-        {
-            $this->response([
+		}
+		catch (BrowserException $e)
+		{
+			$this->response([
                 'status_code' => $this->_status_code['failed'],
                 'message' => e("Browser error: ".$e->getMessage())
             ]);
-        }
-        catch (ParserException $e)
-        {
-            $this->response([
+		}
+		catch (ParserException $e)
+		{
+			$this->response([
                 'status_code' => $this->_status_code['failed'],
                 'message' => e("Parser error: ".$e->getMessage())
             ]);
-        }
+		}
     }
 
     public function post_refresh()
