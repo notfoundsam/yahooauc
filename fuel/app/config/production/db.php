@@ -2,16 +2,15 @@
 /**
  * The production database settings. These get merged with the global settings.
  */
-
 return array(
 	'default' => array(
 		'type'        => 'mysqli',
 		'connection'  => array(
-			'hostname'   => getenv('RDS_HOSTNAME'),
-			'port'       => getenv('RDS_PORT'),
-			'database'   => getenv('RDS_DB_NAME'),
-			'username'   => getenv('RDS_USERNAME'),
-			'password'   => getenv('RDS_PASSWORD'),
+			'hostname'   => getenv('OPENSHIFT_MYSQL_DB_HOST'),
+			'port'       => getenv('OPENSHIFT_MYSQL_DB_PORT'),
+			'database'   => 'htmlunit',
+			'username'   => getenv('OPENSHIFT_MYSQL_DB_USERNAME'),
+			'password'   => getenv('OPENSHIFT_MYSQL_DB_PASSWORD'),
 		)
 	),
 );
