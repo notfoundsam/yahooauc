@@ -40,3 +40,8 @@ desktop.ini
 # mobile appddd
 /public/mobile/.openshift
 
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

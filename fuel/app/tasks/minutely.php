@@ -12,6 +12,7 @@ use Yahooauc\Browser as Browser;
 use Yahooauc\Exceptions\BrowserLoginException as BrowserLoginException;
 use Yahooauc\Exceptions\BrowserException as BrowserException;
 use Yahooauc\Exceptions\ParserException as ParserException;
+
 /**
 * 
 */
