@@ -63,7 +63,6 @@ $$('#bidding').on('click', function() {
 			var d_obj = JSON.parse(data);
 			if (d_obj.status_code == 100) {
 				var auctions = d_obj.result;
-				console.log(d_obj.result);
 
 				mainView.router.load({
 					url: 'bidding.html',
