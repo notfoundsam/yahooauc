@@ -10,7 +10,7 @@ class Create_auctions
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
 			'item_count' => array('constraint' => 3, 'type' => 'int'),
 			'auc_id' => array('constraint' => 10, 'type' => 'varchar'),
-			'title' => array('constraint' => 80, 'type' => 'varchar'),
+			'title' => array('constraint' => 200, 'type' => 'varchar'),
 			'price' => array('constraint' => 5, 'type' => 'int'),
 			'won_date' => array('type' => 'datetime'),
 			'vendor_id' => array('constraint' => 11, 'type' => 'int'),
