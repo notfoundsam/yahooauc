@@ -49,7 +49,7 @@ return [
 	'task' => [
 		'backup_time' => '02:00',
 		// Check every $n minutes
-		'lot_update_interval' => 1,
+		'lot_update_interval' => 10,
 		'last_won_limit' => 250,
 	],
 

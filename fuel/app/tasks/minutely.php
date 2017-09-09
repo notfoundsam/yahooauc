@@ -160,7 +160,7 @@ class Minutely
 		$db   = 'htmlunit';
 
 		$name = \Date::forge(time())->format('db_backup') . '.sql.gz';
-		$path = APPPATH.'/tmp/'. $name;
+		$path = APPPATH.'/tmp/' . \Fuel::$env == "aws" ? "aws_" : "". $name;
 
 		exec("mysqldump --user={$user} --password={$pass} --host={$host} --port={$port} {$db} | gzip > {$path}");
 		Dbx::save_to_dbx($path, \Config::get('my.dropbox.db_path')."/{$name}");
