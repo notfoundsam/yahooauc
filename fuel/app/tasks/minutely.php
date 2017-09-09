@@ -159,8 +159,8 @@ class Minutely
 		$pass = getenv('OPENSHIFT_MYSQL_DB_PASSWORD');
 		$db   = 'htmlunit';
 
-		$name = \Date::forge(time())->format('db_backup') . '.sql.gz';
-		$path = APPPATH.'/tmp/'. $name;
+		$name = \Fuel::$env . "_" . \Date::forge(time())->format('db_backup') . '.sql.gz';
+		$path = APPPATH.'/tmp/' . $name;
 
 		exec("mysqldump --user={$user} --password={$pass} --host={$host} --port={$port} {$db} | gzip > {$path}");
 		Dbx::save_to_dbx($path, \Config::get('my.dropbox.db_path')."/{$name}");
