@@ -176,7 +176,31 @@ class Minutely
 
 	public static function save_image_from_cache()
     {
-		$s3 = \Helper::getS3Client();
+        $userName = \Config::get('my.yahoo.user_name');
+        $userPass = \Config::get('my.yahoo.user_pass');
+        $appId    = \Config::get('my.yahoo.user_appid');
+
+        $s3 = \Helper::getS3Client();
+
+        try
+        {
+            $cookieJar = \Cache::get('yahoo.cookies');
+        }
+        catch (\CacheNotFoundException $e)
+        {
+            $cookieJar = null;
+        }
+
+        try
+        {
+            $browser = new Browser($userName, $userPass, $appId, $cookieJar, \Config::get('my.rmccue'));
+        }
+        catch (BrowserLoginException $e)
+        {
+            \Log::error("Error: ".$e->getMessage());
+            
+            return;
+        }
 
         $items = \Model_Auction::find('all', [
             'where' => [
@@ -189,7 +213,15 @@ class Minutely
             try
             {
                 $images = \Cache::get('yahoo.images.' . $i->auc_id);
+            }    
+            catch (\CacheNotFoundException $e)
+            {
+                \Log::warning("ID: {$i->auc_id} Warning: cache not found");
+                $images = $browser->getAuctionImgsUrl($i->auc_id);
+            }
 
+            try
+            {
                 foreach ($images as $url)
                 {
                     $request = \Request::forge($url, 'curl')->execute();
@@ -211,9 +243,9 @@ class Minutely
                     ]);
                 }
             }
-            catch (\CacheNotFoundException $e)
+            catch (S3Exception $e)
             {
-                \Log::error("ID: {$i->auc_id} Error: cache not found");
+                \Log::error("ID: {$i->auc_id} S3 Error: could not put image to bucket");
             }
             catch (\Exception $e)
             {
