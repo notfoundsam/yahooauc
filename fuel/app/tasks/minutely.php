@@ -198,7 +198,7 @@ class Minutely
         catch (BrowserLoginException $e)
         {
             \Log::error("Error: ".$e->getMessage());
-            
+
             return;
         }
 
@@ -222,12 +222,12 @@ class Minutely
 
             try
             {
-                foreach ($images as $url)
+                foreach ($images as $index => $url)
                 {
                     $request = \Request::forge($url, 'curl')->execute();
                     $type = $request->response_info('content_type');
 
-                    $path = self::create_s3_path($i->id, $type);
+                    $path = self::create_s3_path($i->id, $type, $index);
 
                     if ($path === false)
                     {
@@ -236,10 +236,12 @@ class Minutely
                     }
 
                     $result = $s3->putObject([
-                        'Bucket'      => \Config::get('my.aws.bucket'),
-                        'Key'         => $path,
-                        'Body'        => $request->response()->body(),
-                        'ContentType' => $type,
+                        'Bucket'       => \Config::get('my.aws.bucket'),
+                        'Key'          => $path,
+                        'Body'         => $request->response()->body(),
+                        'ContentType'  => $type,
+                        'ACL'          => 'public-read',
+                        'CacheControl' => 'max-age=2678400',
                     ]);
                 }
             }
@@ -268,7 +270,7 @@ class Minutely
         }
 	}
 
-    private static function create_s3_path($id, $type)
+    private static function create_s3_path($id, $type, $index)
     {
 
         switch ($type)
@@ -287,6 +289,6 @@ class Minutely
                 return false;
         }
 
-        return $id . "/" . \Str::random('unique') . '.' . $extension;
+        return $id . "/{$index}_" . \Str::random('unique') . '.' . $extension;
     }
 }
