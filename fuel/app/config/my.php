@@ -46,6 +46,11 @@ return [
 		'db_path' => '/db_backup'
 	],
 
+	'aws' => [
+		'region' => 'ap-northeast-1',
+		'bucket' => 'auc-image',
+	],
+
 	'task' => [
 		'backup_time' => '02:00',
 		// Check every $n minutes

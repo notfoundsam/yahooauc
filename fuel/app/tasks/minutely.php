@@ -12,6 +12,8 @@ use Yahooauc\Browser as Browser;
 use Yahooauc\Exceptions\BrowserLoginException as BrowserLoginException;
 use Yahooauc\Exceptions\BrowserException as BrowserException;
 use Yahooauc\Exceptions\ParserException as ParserException;
+use Aws\Exception\AwsException;
+use Aws\S3\Exception\S3Exception;
 
 /**
 * 
@@ -34,7 +36,6 @@ class Minutely
 
 		self::db_backup_at_time();
 		self::check_won_at_time();
-		// self::save_image_from_cache();
 	}
 
 	private static function check_won_at_time()
@@ -141,6 +142,8 @@ class Minutely
 
 			\Cache::set('yahoo.won_last_check', time());
 		}
+
+        self::save_image_from_cache();
 	}
 
 	private static function db_backup_at_time()
@@ -171,8 +174,121 @@ class Minutely
 		}
 	}
 
-	private static function save_image_from_cache()
-	{
-		
+	public static function save_image_from_cache()
+    {
+        $userName = \Config::get('my.yahoo.user_name');
+        $userPass = \Config::get('my.yahoo.user_pass');
+        $appId    = \Config::get('my.yahoo.user_appid');
+
+        $s3 = \Helper::getS3Client();
+
+        try
+        {
+            $cookieJar = \Cache::get('yahoo.cookies');
+        }
+        catch (\CacheNotFoundException $e)
+        {
+            $cookieJar = null;
+        }
+
+        try
+        {
+            $browser = new Browser($userName, $userPass, $appId, $cookieJar, \Config::get('my.rmccue'));
+        }
+        catch (BrowserLoginException $e)
+        {
+            \Log::error("Error: ".$e->getMessage());
+
+            return;
+        }
+
+        $items = \Model_Auction::find('all', [
+            'where' => [
+                's3_img' => 0
+            ]
+        ]);
+
+        foreach ($items as $i)
+        {
+            try
+            {
+                $images = \Cache::get('yahoo.images.' . $i->auc_id);
+            }    
+            catch (\CacheNotFoundException $e)
+            {
+                \Log::warning("ID: {$i->auc_id} Warning: cache not found");
+                $images = $browser->getAuctionImgsUrl($i->auc_id);
+            }
+
+            try
+            {
+                foreach ($images as $index => $url)
+                {
+                    $request = \Request::forge($url, 'curl')->execute();
+                    $type = $request->response_info('content_type');
+
+                    $path = self::create_s3_path($i->id, $type, $index);
+
+                    if ($path === false)
+                    {
+                        \Log::error("ID: {$i->auc_id} Error: unknown image type");
+                        continue;
+                    }
+
+                    $result = $s3->putObject([
+                        'Bucket'       => \Config::get('my.aws.bucket'),
+                        'Key'          => $path,
+                        'Body'         => $request->response()->body(),
+                        'ContentType'  => $type,
+                        'ACL'          => 'public-read',
+                        'CacheControl' => 'max-age=2678400',
+                    ]);
+                }
+            }
+            catch (S3Exception $e)
+            {
+                \Log::error("ID: {$i->auc_id} S3 Error: could not put image to bucket");
+            }
+            catch (\Exception $e)
+            {
+                \Log::error("ID: {$i->auc_id} Error: could not get image from {$url}");
+            }
+
+            \DB::start_transaction();
+            
+            try
+            {
+                $i->s3_img = 1;
+                $i->save();
+                \DB::commit_transaction();
+            }
+            catch (\Exception $e)
+            {
+                \Log::error($e);
+                \DB::rollback_transaction();
+            }
+        }
 	}
+
+    private static function create_s3_path($id, $type, $index)
+    {
+
+        switch ($type)
+        {
+            case 'image/png':
+            case 'image/x-png':
+                $extension = 'png';
+                break;
+            case 'image/jpeg' :
+                $extension = 'jpg';
+                break;
+            case 'image/gif':
+                $extension = 'gif';
+                break;
+            default:
+                return false;
+        }
+
+        return $id . "/{$index}_" . \Str::random('unique') . '.' . $extension;
+    }
 }

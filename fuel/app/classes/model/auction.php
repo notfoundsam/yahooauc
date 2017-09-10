@@ -14,6 +14,9 @@ class Model_Auction extends \Orm\Model
 		'user_id',
 		'part_id',
 		'memo',
+		's3_img' => [
+			'default' => 0,
+		],
 		'created_at',
 		'updated_at',
 	);
