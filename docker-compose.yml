@@ -7,16 +7,21 @@ services:
     ports:
       - "3306:3306"
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
+      - "WEB_DOCUMENT_ROOT=/app/public"
       - FUEL_ENV=development
       - DB_PASSWORD=root
       - DBX_TOKEN=${DBX_TOKEN}
       - YAHOO_APPID=${YAHOO_APPID}
       - YAHOO_USER=${YAHOO_USER}
       - YAHOO_PASS=${YAHOO_PASS}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     volumes:
-      - ./:/var/www
+      - ./:/app
     ports:
       - "8080:80"
     expose:
