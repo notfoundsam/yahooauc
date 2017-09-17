@@ -21,7 +21,8 @@
         "rmccue/requests": ">=1.0",
         "dropbox/dropbox-sdk": "1.1.*",
         "notfoundsam/yahoo-auction": "dev-master",
-        "aws/aws-sdk-php": "^3.36"
+        "aws/aws-sdk-php": "^3.36",
+        "cboden/ratchet": "^0.3.6"
     },
     "require-dev": {
         "fuel/docs": "1.8.*"
