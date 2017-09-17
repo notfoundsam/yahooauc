@@ -21,6 +21,8 @@ var mainView = myApp.addView('.view-main', {
 });
 
 var conn = null;
+var socket_host = 'localhost';
+var socket_port = '9090';
 
 console.log('START');
 
@@ -32,6 +34,12 @@ $$.ajax({
         if (d_obj.status_code == 100) {
             $$('#username').text(d_obj.result.current_user);
             current_bidder = d_obj.result.current_bidder;
+            socket_host = d_obj.result.socket_host;
+            socket_port = d_obj.result.socket_port;
+
+            console.log(current_bidder);
+            console.log(socket_host);
+            console.log(socket_port);
 
             mainView.router.load({
                 url: 'status.html'
@@ -256,8 +264,8 @@ function bid(auc_id, price, rebid) {
 
 function activateConnection() {
     if (conn == null) {
-        conn = new WebSocket('ws://yahooauc.ap-northeast-1.elasticbeanstalk.com:9090/?key=web_secret_key');
-        // conn = new WebSocket('ws://localhost:9090/?key=web_secret_key');
+        // conn = new WebSocket('ws://yahooauc.ap-northeast-1.elasticbeanstalk.com:9090/?key=web_secret_key');
+        conn = new WebSocket('ws://' + socket_host + ':' + socket_port + '/?key=web_secret_key');
     }
     conn.onopen = function(e) {
         console.log("Connection established!");

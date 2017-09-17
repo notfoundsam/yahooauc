@@ -67,7 +67,10 @@ class Controller_Admin_Api extends Controller_Rest
             }
             break;
         }
+
         $result['current_bidder'] = \Config::get('my.yahoo.user_name');
+        $result['socket_host'] = \Config::get('raspberry.socket_server.server_host');
+        $result['socket_port'] = \Config::get('raspberry.socket_server.server_port');
 
         $this->response([
             'status_code' => $this->_status_code['success'],

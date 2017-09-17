@@ -13,17 +13,40 @@ use Ratchet\WebSocket\WsServer;
 */
 class Web_socket
 {
-    public static function run()
-    {
-        $server = IoServer::factory(
-            new HttpServer(
-                new WsServer(
-                    new \Chat()
-                )
-            ),
-            9090
-        );
+    private $server = null;
 
-        $server->run();
+    public function run()
+    {
+
+        try
+        {
+            $is_run = \Cache::get('raspberry.server');
+        }
+        catch (\CacheNotFoundException $e)
+        {
+            $is_run = false;
+        }
+
+        \Cache::set('raspberry.server', true, 80);
+
+        if ($is_run === false)
+        {
+            $this->server = IoServer::factory(
+                new HttpServer(
+                    new WsServer(
+                        new \Server($this)
+                    )
+                ),
+                9090
+            );
+
+            $this->server->run();
+        }
+    }
+
+    public function stopCallback()
+    {
+        \Cache::delete('raspberry.server');
+        $this->server->loop->stop();
     }
 }

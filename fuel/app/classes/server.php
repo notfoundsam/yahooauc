@@ -5,13 +5,16 @@
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-class Chat implements MessageComponentInterface
+class Server implements MessageComponentInterface
 {
     protected $clients;
     protected $raspberry;
+    protected $task;
 
-    public function __construct()
+
+    public function __construct($task)
     {
+        $this->task = $task;
         $this->clients = new \SplObjectStorage;
         $this->raspberry = null;
     }
@@ -40,7 +43,10 @@ class Chat implements MessageComponentInterface
         }
     }
 
-    public function onMessage(ConnectionInterface $from, $msg) {
+    public function onMessage(ConnectionInterface $from, $msg)
+    {
+        // $this->task->stopCallback();
+        // call_user_func($this->task->);
         // $numRecv = count($this->clients) - 1;
         // echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
         //     , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
