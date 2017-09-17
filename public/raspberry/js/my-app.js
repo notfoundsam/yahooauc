@@ -256,7 +256,8 @@ function bid(auc_id, price, rebid) {
 
 function activateConnection() {
     if (conn == null) {
-        conn = new WebSocket('ws://localhost:9090/?key=web_secret_key');
+        conn = new WebSocket('ws://yahooauc.ap-northeast-1.elasticbeanstalk.com:9090/?key=web_secret_key');
+        // conn = new WebSocket('ws://localhost:9090/?key=web_secret_key');
     }
     conn.onopen = function(e) {
         console.log("Connection established!");
