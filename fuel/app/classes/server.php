@@ -10,6 +10,7 @@ class Server implements MessageComponentInterface
     protected $clients;
     protected $raspberry;
     protected $task;
+    protected $clients_id;
 
 
     public function __construct($task)
@@ -17,6 +18,7 @@ class Server implements MessageComponentInterface
         $this->task = $task;
         $this->clients = new \SplObjectStorage;
         $this->raspberry = null;
+        $this->clients_id = [];
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -33,6 +35,7 @@ class Server implements MessageComponentInterface
         {
             // Store the new connection to send messages to later
             $this->clients->attach($conn);
+            $this->clients_id[] = $conn->resourceId;
             echo "New connection! ({$conn->resourceId})\n";
         }
         else
@@ -51,14 +54,18 @@ class Server implements MessageComponentInterface
         // echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
         //     , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
-        // foreach ($this->clients as $client) {
-        //     if ($from !== $client) {
-        //         // The sender is not the receiver, send to each client connected
-        //         $client->send($msg);
-        //     }
-        // }
+        if ($from->resourceId == $this->raspberry->resourceId)
+        {
+            foreach ($this->clients as $client) {
+                $client->send($msg);
+            }
+        }
+        else
+        {
+            $this->raspberry->send($msg);
+        }
 
-        $this->raspberry->send($msg);
+        
     }
 
     public function onClose(ConnectionInterface $conn) {

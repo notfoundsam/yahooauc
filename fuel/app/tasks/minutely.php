@@ -156,11 +156,11 @@ class Minutely
 
 	public static function db_backup()
 	{
-		$host = getenv('OPENSHIFT_MYSQL_DB_HOST');
-		$port = getenv('OPENSHIFT_MYSQL_DB_PORT');
-		$user = getenv('OPENSHIFT_MYSQL_DB_USERNAME');
-		$pass = getenv('OPENSHIFT_MYSQL_DB_PASSWORD');
-		$db   = 'htmlunit';
+		$host = getenv('RDS_HOSTNAME');
+		$port = getenv('RDS_PORT');
+		$user = getenv('RDS_USERNAME');
+		$pass = getenv('RDS_PASSWORD');
+		$db   = getenv('RDS_DB_NAME');
 
 		$name = \Fuel::$env . "_" . \Date::forge(time())->format('db_backup') . '.sql.gz';
 		$path = APPPATH.'/tmp/' . $name;
