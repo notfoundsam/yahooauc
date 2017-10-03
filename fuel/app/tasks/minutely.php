@@ -163,7 +163,7 @@ class Minutely
 		$db   = getenv('RDS_DB_NAME');
 
 		$name = \Fuel::$env . "_" . \Date::forge(time())->format('db_backup') . '.sql.gz';
-		$path = APPPATH.'/tmp/' . $name;
+		$path = APPPATH.'tmp/' . $name;
 
 		exec("mysqldump --user={$user} --password={$pass} --host={$host} --port={$port} {$db} | gzip > {$path}");
 		Dbx::save_to_dbx($path, \Config::get('my.dropbox.db_path')."/{$name}");
