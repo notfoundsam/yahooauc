@@ -177,6 +177,9 @@ $('.part-wrapper .fa-picture-o').each(function() {
 		var wrap = $(this).closest('.conteiner-wrapper');
 		wrap.find('.image-wrapper').each(function() {
 			var image_box = $(this);
+			if (image_box.hasClass('show-images')) {
+				return true;
+			}
 			var auc_id = $(this).attr('data-auc-id');
 			$.ajax({
 				url: '/admin/api/images',
