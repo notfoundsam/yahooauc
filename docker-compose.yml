@@ -22,6 +22,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - WEB_SOCKET_HOST=localhost
       - WEB_SOCKET_PORT=9090
+      - CLOUDFRONT_URL=${CLOUDFRONT_URL}
     volumes:
       - ./:/app
     ports:

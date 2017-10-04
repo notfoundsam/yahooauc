@@ -71,6 +71,7 @@ $summ = 0;
 		</div>
 		<div class="comment hidden"><?= $auction->memo; ?></div>
 	</div>
+	<div class="item-wrapper image-wrapper" data-auc-id="<?= $auction->id ?>"></div>
 					
 	<?php endforeach; ?>
 
@@ -86,6 +87,7 @@ $summ = 0;
 			<i class="fa fa-chevron-up" aria-hidden="true"></i>
 			<i class="fa fa-chevron-down" aria-hidden="true"></i>
 			<?php endif; ?>
+			<i class="fa fa-picture-o" aria-hidden="true"></i>
 			<i class="fa fa-comment<?= $item->memo ? '' : ' hidden'; ?>" aria-hidden="true"></i>
 			<?php if (Auth::member(\Config::get('my.groups.superadmin'))) : ?>
 			<i class="fa fa-pencil-square-o part-edit-button" aria-hidden="true"></i>
