@@ -20,7 +20,7 @@
         "sunra/php-simple-html-dom-parser": "v1.5.0",
         "rmccue/requests": ">=1.0",
         "dropbox/dropbox-sdk": "1.1.*",
-        "notfoundsam/yahoo-auction": "dev-develop",
+        "notfoundsam/yahoo-auction": "dev-master",
         "aws/aws-sdk-php": "^3.36",
         "cboden/ratchet": "^0.3.6"
     },
