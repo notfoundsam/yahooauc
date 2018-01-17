@@ -34,7 +34,7 @@ class Minutely
 			\Cache::set('yahoo.won_last_check', time());
 		}
 
-		self::db_backup_at_time();
+		// self::db_backup_at_time();
 		self::check_won_at_time();
 	}
 
@@ -156,14 +156,14 @@ class Minutely
 
 	public static function db_backup()
 	{
-		$host = getenv('OPENSHIFT_MYSQL_DB_HOST');
-		$port = getenv('OPENSHIFT_MYSQL_DB_PORT');
-		$user = getenv('OPENSHIFT_MYSQL_DB_USERNAME');
-		$pass = getenv('OPENSHIFT_MYSQL_DB_PASSWORD');
-		$db   = 'htmlunit';
+		$host = getenv('RDS_HOSTNAME');
+		$port = getenv('RDS_PORT');
+		$user = getenv('RDS_USERNAME');
+		$pass = getenv('RDS_PASSWORD');
+		$db   = getenv('RDS_DB_NAME');
 
 		$name = \Fuel::$env . "_" . \Date::forge(time())->format('db_backup') . '.sql.gz';
-		$path = APPPATH.'/tmp/' . $name;
+		$path = APPPATH.'tmp/' . $name;
 
 		exec("mysqldump --user={$user} --password={$pass} --host={$host} --port={$port} {$db} | gzip > {$path}");
 		Dbx::save_to_dbx($path, \Config::get('my.dropbox.db_path')."/{$name}");

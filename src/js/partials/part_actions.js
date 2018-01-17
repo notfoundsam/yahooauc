@@ -169,3 +169,41 @@ $('.part-wrapper .fa-comment').each(function() {
 		popup.show();
 	});
 });
+
+// Part show image button
+$('.part-wrapper .fa-picture-o').each(function() {
+	$(this).on('click', function() {
+
+		var wrap = $(this).closest('.conteiner-wrapper');
+		wrap.find('.image-wrapper').each(function() {
+			var image_box = $(this);
+			if (image_box.hasClass('show-images')) {
+				return true;
+			}
+			var auc_id = $(this).attr('data-auc-id');
+			$.ajax({
+				url: '/admin/api/images',
+				type: 'GET',
+				data: {
+					csrf_token_key: "<?= \Security::fetch_token();?>",
+					id: auc_id,
+				},
+				success: function (data) {
+					if (!data.error) {
+						if (data.result) {
+							data.result.forEach(function(element) {
+								var img = $('<img>');
+								img.attr('src', element);
+								img.appendTo(image_box);
+							});
+							image_box.addClass('show-images');
+						}
+					}
+				},
+				error: function() {
+					showAlert("API error has occurred!", 'alert-danger');
+				}
+			});
+		});
+	});
+});

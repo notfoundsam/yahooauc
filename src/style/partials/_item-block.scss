@@ -216,6 +216,22 @@
 	}
 }
 
+/* Auction list wrapper for images */
+.image-wrapper {
+	display: none;
+	align-items: center;
+	justify-content: space-between;
+	height: 150px;
+
+	img {
+		height: 100%;
+	}
+}
+
+.show-images {
+	display: flex;
+}
+
 /* Part Item wrapper */
 .part-wrapper {
 	@include contaner-wrapper(#808080);

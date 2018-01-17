@@ -27,3 +27,5 @@ Also it have automatic DB backup an update won lots by cron task
     7.2 Create new user $ Auth::create_user('username', 'password', 'your@email.com')
     7.3 Do not foget set this username to fuel/app/config/my.php field main_bidder
 9. Restart your application
+
+php ./composer.phar install --no-ansi --no-interaction --no-dev

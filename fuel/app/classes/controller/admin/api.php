@@ -67,7 +67,10 @@ class Controller_Admin_Api extends Controller_Rest
             }
             break;
         }
+
         $result['current_bidder'] = \Config::get('my.yahoo.user_name');
+        $result['socket_host'] = \Config::get('raspberry.socket_server.server_host');
+        $result['socket_port'] = \Config::get('raspberry.socket_server.server_port');
 
         $this->response([
             'status_code' => $this->_status_code['success'],
@@ -622,6 +625,28 @@ class Controller_Admin_Api extends Controller_Rest
             {
                 $val_error[] = $error->get_message();
             }
+        }
+
+        $this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);
+    }
+
+    public function get_images()
+    {
+        $id = \Input::get('id');
+
+        $result    = [];
+        $val_error = [];
+
+        $s3 = \Helper::getS3Client();
+
+        $objects = $s3->getIterator('ListObjects', array(
+            "Bucket" => \Config::get('my.aws.bucket'),
+            "Prefix" => "{$id}/"
+        ));
+
+        foreach ($objects as $o)
+        {
+            $result[] = \Config::get('my.aws.cloudfront') . '/' . $o['Key'];
         }
 
         $this->response(['result' => $result, 'error' => implode('<br>', (array) $val_error)]);

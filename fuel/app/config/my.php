@@ -49,6 +49,7 @@ return [
 	'aws' => [
 		'region' => 'ap-northeast-1',
 		'bucket' => 'auc-image',
+		'cloudfront' => Input::server('CLOUDFRONT_URL'),
 	],
 
 	'task' => [
