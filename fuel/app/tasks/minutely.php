@@ -34,7 +34,7 @@ class Minutely
 			\Cache::set('yahoo.won_last_check', time());
 		}
 
-		self::db_backup_at_time();
+		// self::db_backup_at_time();
 		self::check_won_at_time();
 	}
 
