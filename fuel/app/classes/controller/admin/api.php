@@ -11,6 +11,7 @@ class Controller_Admin_Api extends Controller_Rest
     protected $USER_PASS;
     protected $APP_ID;
     protected $COOKIE_JAR;
+    protected $username;
 
     protected $rest_format = 'json';
     protected $_status_code = [
@@ -49,6 +50,7 @@ class Controller_Admin_Api extends Controller_Rest
     {
         if (Auth::check() || in_array(Request::active()->action, ['login', 'logout']))
         {
+            $this->username = Auth::instance()->get('username');
             return true;
         }
 
@@ -184,6 +186,15 @@ class Controller_Admin_Api extends Controller_Rest
                 $val_error[] = $error->get_message();
             }
         }
+
+        $bid_log = new \Model_Bid([
+            'username' => $this->username,
+            'ip' => \Input::real_ip(),
+            'auc_id' => $val->validated('auc_id'),
+            'price' => $val->validated('price'),
+        ]);
+        $bid_log->save();
+
         $this->response([
             'status_code' => $status_code,
             'result' => $result,

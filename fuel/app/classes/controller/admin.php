@@ -69,17 +69,39 @@ class Controller_Admin extends Controller_Base
 									'status'  => 'success',
 									'message' => e('Welcome, '.$current_user->username)
 								]);
+
+								$login = new \Model_Login([
+									'username' => Input::post('email'),
+									'ip' => \Input::real_ip(),
+									'result' => 'success'
+								]);
+								$login->save();
+
 								\Response::redirect(\Cookie::get('redirect_back_url', 'admin'));
 							}
 						}
 					}
 					else
 					{
+						$login = new \Model_Login([
+							'username' => Input::post('email'),
+							'ip' => \Input::real_ip(),
+							'result' => 'fail'
+						]);
+						$login->save();
+
 						$this->template->set_global('login_error', 'Login failed!');
 					}
 				}
 				else
 				{
+					$login = new \Model_Login([
+						'username' => Input::post('email'),
+						'ip' => \Input::real_ip(),
+						'result' => 'already'
+					]);
+					$login->save();
+
 					$this->template->set_global('login_error', 'Already logged in!');
 				}
 			}
