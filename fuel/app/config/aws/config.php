@@ -1,5 +1,5 @@
 <?php
 
 return array(
-	'base_url'  => env('APP_URL', null),
+	'base_url'  => getenv('APP_URL'),
 );
