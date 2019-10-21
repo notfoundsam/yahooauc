@@ -7,11 +7,11 @@
 	<?php echo Asset::css(['main.css']); ?>
 </head>
 <body>
-	<?php if ($current_user): ?>
+	<?php if (\Auth::check()): ?>
 	<?= render('admin/navigation'); ?>
+	<?= render('admin/popup'); ?>
 	<?php endif; ?>
 
-	<?= render('admin/popup'); ?>
 
 	<main id="panel" class="slideout-panel">
 		<div class="menu-header">

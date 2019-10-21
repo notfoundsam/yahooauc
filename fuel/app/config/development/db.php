@@ -9,7 +9,7 @@ return array(
 		'connection'  => array(
 			'hostname'   => 'db',
 			'port'       => '3306',
-			'database'   => 'htmlunit',
+			'database'   => 'ebdb',
 			'username'   => 'root',
 			'password'   => 'root',
 		),
